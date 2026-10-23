@@ -41,3 +41,5 @@
 Благодарности: **Players Patch team, Fear/Novaras, участники 2.3Test и авторы карт**. [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337), [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511), [исходники Test](https://github.com/Novaras/2.3-Test). Код опубликован в публичном hwrm-mp-patch; публикация Workshop не выполнялась.
 
 Нативная проверка подготовлена в NATIVE_TESTS.md готового пакета (в репозитории — docs/NATIVE_TESTS.md). Результаты сохраняются командой `python tools/native_checks.py --new-run Russian`: все статусы изначально not_run. Штатный Launcher не перечисляет произвольные локальные папки; текущий способ — CMD, слот Vast Reaches сохранён. Workshop планируется после завершения патча. Подробности — docs/LOCAL_INSTALLATION.md.
+
+Аналитические этапы экономики, прогрессии, ракет и Assault/Flak/платформ завершены. Последний разбор — docs/ANTISTRIKE_AUDIT.md; новых рабочих чисел им не внесено. Три текстовых варианта для отдельных A/B не входят в BIG. Текущий протокол содержит22 сценария/81 подвариант, все нативные результаты ещё not_run.

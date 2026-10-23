@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "wiki_repository": "https://github.com/HWRM/KarosGraveyard.wiki.git",
+  "wiki_revision": "b4109bb4a4cc0aaa02a6df81e23ff33e6cb73ac7",
+  "pages": {
+    "Function;-setBallistics.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setBallistics",
+      "sha256_git_blob": "b93d0fae75cd47c76c55ce5fb5c12b3f5e646123c430464c3b2d7ebca1f3419e"
+    },
+    "Function;-setDamageFalloff.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setDamageFalloff",
+      "sha256_git_blob": "c8f240b5b2b1da337765cfd656f178737b986f15908bd4ccd9dc918a3b2c6912"
+    },
+    "Function;-setAccuracyFalloff.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setAccuracyFalloff",
+      "sha256_git_blob": "724c9892733ae18fe3bdc972f2fca7bda7efc7cdd407f01286e54f622370b1bd"
+    },
+    "Function;-setSpeedvsAccuracyAgainst.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setSpeedvsAccuracyAgainst",
+      "sha256_git_blob": "d85ef3a0089c51865499c394a8d3c91e6f5e1604049697657323523090a27c9d"
+    },
+    "Function;-setSpeedvsAccuracyApplied.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setSpeedvsAccuracyApplied",
+      "sha256_git_blob": "08ea8ada5b540ca90e8e21182c09c754c9bd95b682ed6ba11dfcfcad28d628ba"
+    },
+    "Function;-setMiscValues.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setMiscValues",
+      "sha256_git_blob": "88b8e2741699962357a9c3e1c5408f9000db8aceecf89d0f6378fedfc8eae87b"
+    },
+    "Function;-setMissileKiller.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setMissileKiller",
+      "sha256_git_blob": "8cab800b8107b50bd96d0db4b0a469ce755fd6195a19052d326ee35b1c9878e0"
+    },
+    "Function;-setTacticsMults.md": {
+      "url": "https://github.com/HWRM/KarosGraveyard/wiki/Function%3B-setTacticsMults",
+      "sha256_git_blob": "02fd7b79f946dc09658a3cb41210dd21035fbb40700342a8e5d083a56a642870"
+    }
+  },
+  "upstream_pull_requests": {
+    "23": {
+      "url": "https://github.com/Novaras/2.3-Test/pull/23",
+      "merge_commit": "13cd2c5e3c15f8027c37a68948c6e2f9b9e587d3"
+    },
+    "26": {
+      "url": "https://github.com/Novaras/2.3-Test/pull/26",
+      "merge_commit": "91907bf2044f746a2e74278c1310ee019f8e692e"
+    },
+    "31": {
+      "url": "https://github.com/Novaras/2.3-Test/pull/31",
+      "merge_commit": "139bbc4e87c48ee1cb6f8f43d51f49c34823e11a"
+    },
+    "32": {
+      "url": "https://github.com/Novaras/2.3-Test/pull/32",
+      "merge_commit": "28d626175aca707a73df899ff8ae57b2d52cecfc"
+    },
+    "40": {
+      "url": "https://github.com/Novaras/2.3-Test/pull/40",
+      "merge_commit": "0e9dac3b438e37d76e969963e2b745a87270d787"
+    }
+  },
+  "documentation_is_not_native_engine_validation": true,
+  "reference_hash_bytes": "Git blob content, independent of checkout line endings"
+}
