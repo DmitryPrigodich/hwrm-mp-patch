@@ -1,7 +1,7 @@
 {
   "identity": "HWMP-Patch-2.4-dev1",
   "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
-  "fix_revision": "2d0d1d0ecbf305d1663f931e491ce32af5f6d44b88974182cf9d7afd776987ee",
+  "fix_revision": "275e371e275917921f780602739f0695824d171c99cf8e2dc789225125e6d1f4",
   "overrides": {
     "locale/english/hwmp24_tooltips.lua": "0cfffcccb991cc7d3f271b1421efd0fa805a42b0c39a34d099e04ae1b95269d9",
     "locale/russian/hwmp24_tooltips.lua": "d2cb8147af2286c1634399bd69c1d1391a98d8d13bcf1600da36baf34298a244",
@@ -20,6 +20,8 @@
     "scripts/playerspatch/ships_util/lib/gravwells.lua": "3d2ecbcf3050d499964a696598b422b5b6abb8aa128066f07c7e4eb1d2092a51",
     "ship/kus_supportfrigate/kus_supportfrigate.lua": "c8ab429ea5714dfa01072a0ad2bd03af0015266327342f398414de3f5d5b8680",
     "ship/tai_defensefighter/tai_defensefighter.lua": "f8bb2231a9a29208515312973d4dff080aa773106ed43c3a52b9f588cc6479c2",
-    "ship/tai_supportfrigate/tai_supportfrigate.lua": "82c08d7d3f68547fd2599f4b9cea082befed0628a27536336173d8c72755c13c"
+    "ship/tai_supportfrigate/tai_supportfrigate.lua": "82c08d7d3f68547fd2599f4b9cea082befed0628a27536336173d8c72755c13c",
+    "weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn": "c8a8f722d23c04928b40b925c32a41f6939b4d6f9662f8ee309936c4eb378abf",
+    "weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn": "bacb0382b1bfef3c20a2e9ab1978a1b8dac6cae2c189e99f234c8fe2d62f0aae"
   }
 }

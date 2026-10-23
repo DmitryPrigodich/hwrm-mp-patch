@@ -217,6 +217,18 @@ end''')
 end''')
     text='defenseFighterMissileTargets = defenseFighterMissileTargets or {}\n'+text
     write(out,name,text)
+    # PR23: both platform launchers should use the stated 5500 range.
+    name='weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn'
+    text=(DONOR/name).read_text(encoding='utf-8-sig')
+    old='"Normal",40,6000,0,0,0,0,1,0,1,15,'
+    assert text.count(old)==1
+    write(out,name,text.replace(old,'"Normal",40,5500,0,0,0,0,1,0,1,15,'))
+    # PR20 explicitly selects 0.85; remove the conflicting earlier 0.8 entry.
+    name='weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn'
+    text=(DONOR/name).read_text(encoding='utf-8-sig')
+    assert text.count('{SuperUtilityArmour = 0.8},\n')==1
+    assert text.count('{SuperUtilityArmour = 0.85}')==1
+    write(out,name,text.replace('{SuperUtilityArmour = 0.8},\n',''))
     write(out,'scripts/productiontimes/applybuildtimes.lua',BUILD_TIMES)
     write(out,'scripts/productiontimes/applyresearchtimes.lua',RESEARCH_TIMES)
     from production_data import generate

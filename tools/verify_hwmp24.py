@@ -305,10 +305,15 @@ def verify_source():
         else:assert sha(files[name])==sha(upstream[name]),name
     for name,path in overrides.items():assert sha(files[name])==sha(path)
     assert not any(n.startswith(('leveldata/campaign/vastreaches','weapon/nkr_')) for n in files)
-    assert not any(p.suffix in ('.ship','.wepn','.subs') for p in overrides.values())
+    expected_weapons={
+        'weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn',
+        'weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn'}
+    assert {n for n,p in overrides.items() if p.suffix in ('.ship','.wepn','.subs','.miss')}==expected_weapons
+    from audit_missiles import verify_fixes
+    weapon_fixes=verify_fixes(SOURCE)
     from production_data import verify as verify_data
     result={'status':'passed','production_data':verify_data(SOURCE),'files':len(files),'fix_revision':manifest['fix_revision'],
-            'upstream_combat_definitions':'unchanged','effect_regression':check_effects(),
+            'upstream_combat_definitions':'two scoped weapon corrections; others unchanged','weapon_fixes':weapon_fixes,'effect_regression':check_effects(),
             'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
             'transport':check_transport(),
             'tooltips':check_tooltips(),'engine_tested':False,'installed':False}
