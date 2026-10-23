@@ -38,3 +38,7 @@
 Повторно прочитаны исходники локального Test и соответствующие определения подготовленного мода. Через GitHub read-only получены авторские описания PR22/31/32/37. В изолированной Lua5.1 проверены выбранные функции с mocks: кэш защитного истребителя, команды освобождения от гравиполя, nil-ветка UI. В mock гравиполя синтаксис обхода таблицы Lua4 заменён на `pairs` только для запуска проверки; игровой код не редактировался. Это демонстрация логики команд, не нативная проверка боя, AI, FPS, сохранений или синхронизации.
 
 Исходники для сверки: `players-patch/runtime-code/scripts/playerspatch/ships_util/{core/global.lua,lib/gravwells.lua,lib/frigates.lua}`, `ship/tai_defensefighter/tai_defensefighter.lua`, `scripts/productiontimes/applybuildtimes.lua`, `weapon/vgr_flechettecannonassaultfrigateleft/vgr_flechettecannonassaultfrigateleft.wepn`. Подготовленный release и установленная версия этим разбором не менялись.
+
+## Продолжение: первый аудит данных 23 октября
+
+Сверены все времена строительства и использование подозрительных ресурсов. Пропуски подсказок и UCS-ссылки исправлены; числовая аномалия Asteroid0 пока оставлена. Актуальные выводы и границы проверки — [DATA_AUDIT.md](DATA_AUDIT.md).

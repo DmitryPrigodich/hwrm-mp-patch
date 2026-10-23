@@ -1,0 +1,117 @@
+{
+  "purpose": "Pin inherited native text definitions used for base production times; no assets included.",
+  "files": {
+    "subsystem/hgn_ms_production_fighter/hgn_ms_production_fighter.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_production_fighter/hgn_ms_production_fighter.subs",
+      "sha256": "366616e866d51ce070e7f77900a17b526e57a1fbffc3d73aabcdf48737a7be65"
+    },
+    "subsystem/hgn_ms_production_corvette/hgn_ms_production_corvette.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_production_corvette/hgn_ms_production_corvette.subs",
+      "sha256": "14554f07f161ad6025dff6fcd5e370a82115d7baa39adb20afbc385adb45b9fd"
+    },
+    "subsystem/hgn_ms_production_frigate/hgn_ms_production_frigate.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_production_frigate/hgn_ms_production_frigate.subs",
+      "sha256": "665bae6f3a583136e42dad20c5b869b183289dd0d887cd34808b6bb165eb5f01"
+    },
+    "subsystem/hgn_sy_production_capship/hgn_sy_production_capship.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_sy_production_capship/hgn_sy_production_capship.subs",
+      "sha256": "4ad9159be5bce8e6ec823ddc2dfa39372b2abf3d443a123ebe97e3a498e7a7cb"
+    },
+    "subsystem/hgn_ms_module_platformcontrol/hgn_ms_module_platformcontrol.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_module_platformcontrol/hgn_ms_module_platformcontrol.subs",
+      "sha256": "a5dad5cf1c4180fde064c1554bff9a5477fb0e677903b7b29c6cacf7f59a49bb"
+    },
+    "subsystem/hgn_c_module_research/hgn_c_module_research.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_c_module_research/hgn_c_module_research.subs",
+      "sha256": "01e4ccb9e2060aaf34d3e9c7239760454d764843a4c01926b996d713e8c1c7d1"
+    },
+    "subsystem/hgn_ms_module_research/hgn_ms_module_research.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_module_research/hgn_ms_module_research.subs",
+      "sha256": "ca337782993399fdfa3b1534bd4b9cf6c5ab80cfe53543ea99b2cd6633f9677a"
+    },
+    "subsystem/hgn_c_module_researchadvanced/hgn_c_module_researchadvanced.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_c_module_researchadvanced/hgn_c_module_researchadvanced.subs",
+      "sha256": "b3ec604ed4076bcf3704610f509a924ec886c42ec64af86087af7276ef4378ce"
+    },
+    "subsystem/hgn_ms_module_researchadvanced/hgn_ms_module_researchadvanced.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_module_researchadvanced/hgn_ms_module_researchadvanced.subs",
+      "sha256": "eaf25ff712312a3eab2d140cb67577472c4057a1bedd832e98542a418bb5643f"
+    },
+    "subsystem/hgn_c_module_hyperspace/hgn_c_module_hyperspace.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_c_module_hyperspace/hgn_c_module_hyperspace.subs",
+      "sha256": "21270d5463e488a87e3b28404a56fabe17a8fe26323ab9a35126c09fab34bc18"
+    },
+    "subsystem/hgn_ms_module_hyperspace/hgn_ms_module_hyperspace.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_module_hyperspace/hgn_ms_module_hyperspace.subs",
+      "sha256": "2fa3d59a6fa11677c483831f12a5ed81de0ff9ee724c9c64c9343912e7c1a3a5"
+    },
+    "subsystem/hgn_c_module_cloakgenerator/hgn_c_module_cloakgenerator.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_c_module_cloakgenerator/hgn_c_module_cloakgenerator.subs",
+      "sha256": "7f06f984dfb0aa6e9d146d61fbb12dafc658aa819738006d5a34b8d73f4e6d95"
+    },
+    "subsystem/hgn_ms_module_cloakgenerator/hgn_ms_module_cloakgenerator.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_module_cloakgenerator/hgn_ms_module_cloakgenerator.subs",
+      "sha256": "97dbb9c938a9b0cd39516ba1afa15f79996f50ed6b1692f46781fe8b6d855e6c"
+    },
+    "ship/kpr_mover/kpr_mover.ship": {
+      "cache_path": "players-patch-audit/rm-base/ship/kpr_mover/kpr_mover.ship",
+      "sha256": "3d20a5d0977f474cd2d7c1bd64156def467e0f0d9aec8847bb652f2937478f50"
+    },
+    "subsystem/hgn_ms_production_corvettemover/hgn_ms_production_corvettemover.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/hgn_ms_production_corvettemover/hgn_ms_production_corvettemover.subs",
+      "sha256": "3e97a9b67d0bb0a778888ed8f1665222f256a10ad1453787eee1e0e02e7934d1"
+    },
+    "subsystem/vgr_ms_production_fighter/vgr_ms_production_fighter.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_production_fighter/vgr_ms_production_fighter.subs",
+      "sha256": "5e9f65a7e25fe1a9fc470d7b2a41779c083bc227d622ce212067fc040906c432"
+    },
+    "subsystem/vgr_ms_production_corvette/vgr_ms_production_corvette.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_production_corvette/vgr_ms_production_corvette.subs",
+      "sha256": "ae80a66c7e377f049c7b4f0fe014d30afe553ec941d4cf2be8ff3667c2ef3a5f"
+    },
+    "subsystem/vgr_ms_production_frigate/vgr_ms_production_frigate.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_production_frigate/vgr_ms_production_frigate.subs",
+      "sha256": "1525b095d6beb65438b680df7e24ad8d4c794bb434d03987b9512f50fc9e9597"
+    },
+    "subsystem/vgr_ms_module_platformcontrol/vgr_ms_module_platformcontrol.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_module_platformcontrol/vgr_ms_module_platformcontrol.subs",
+      "sha256": "422f1a4bb8bf992cd73e6d3a018d617053ddbb373265d22ea00d1eb54e0a38d6"
+    },
+    "subsystem/vgr_ms_production_capship/vgr_ms_production_capship.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_production_capship/vgr_ms_production_capship.subs",
+      "sha256": "3f6c3548b1f1ab7edeb574691f4315aa95f69b6e944b7875fbbce24deff91d33"
+    },
+    "subsystem/vgr_sy_production_capship/vgr_sy_production_capship.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_sy_production_capship/vgr_sy_production_capship.subs",
+      "sha256": "3f6c3548b1f1ab7edeb574691f4315aa95f69b6e944b7875fbbce24deff91d33"
+    },
+    "subsystem/vgr_c_module_research/vgr_c_module_research.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_c_module_research/vgr_c_module_research.subs",
+      "sha256": "c3ef7346ad5d1f5faf7b21db3ab39665ced0a67c8a9d94f218c4c581da45dd77"
+    },
+    "subsystem/vgr_ms_module_research/vgr_ms_module_research.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_module_research/vgr_ms_module_research.subs",
+      "sha256": "dd54f7f16f9ccdac311290e67e83c6a75075743e18763837bd713e9b40ed6984"
+    },
+    "subsystem/vgr_c_module_cloakgenerator/vgr_c_module_cloakgenerator.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_c_module_cloakgenerator/vgr_c_module_cloakgenerator.subs",
+      "sha256": "fd9b13a617e672d68b28aaaac14b25aefa3a90eccc2d6f9c6db32503f33ff08e"
+    },
+    "subsystem/vgr_ms_module_cloakgenerator/vgr_ms_module_cloakgenerator.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_module_cloakgenerator/vgr_ms_module_cloakgenerator.subs",
+      "sha256": "b41e368299fd85feaa0d587dc69f99e9c8cd2c99fc3de044dacf3201ae068bdd"
+    },
+    "subsystem/vgr_c_module_hyperspace/vgr_c_module_hyperspace.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_c_module_hyperspace/vgr_c_module_hyperspace.subs",
+      "sha256": "68c92f77501819b75baf60f7b393cf981d3408f1356f797a5d41bddbc296eddf"
+    },
+    "subsystem/vgr_ms_module_hyperspace/vgr_ms_module_hyperspace.subs": {
+      "cache_path": "players-patch-audit/rm-base/subsystem/vgr_ms_module_hyperspace/vgr_ms_module_hyperspace.subs",
+      "sha256": "f3162013a50c33a35b35c615ade4732fc859bc83dafe632b1eea8a008533e1c4"
+    },
+    "ship/vgr_planetkillermissile/vgr_planetkillermissile.ship": {
+      "cache_path": "players-patch-audit/rm-hw2/ship/vgr_planetkillermissile/vgr_planetkillermissile.ship",
+      "sha256": "5033b79dca062c4da49ec4926ade85fb1d7126c4ced2fd068d312414a8ea00b7"
+    }
+  }
+}

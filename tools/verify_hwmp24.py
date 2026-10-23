@@ -249,6 +249,8 @@ SupportFrigate_HyperspaceDock('carrier',51)
 
 
 def check_tooltips():
+    from production_data import RACES,catalog,effective_files
+    rows,expected,_=catalog(SOURCE);definitions=effective_files(SOURCE)
     checks=[]
     for language in ('English','Russian'):
         vm=LuaRuntime(register_eval=False,register_builtins=False)
@@ -274,6 +276,22 @@ def check_tooltips():
         vm.execute('assert(build[1].Description=="$999999999" and build[3].Description==nil);assert(research[1].Description=="$999999999");assert(string.find(build[2].Description,HWMP_TooltipBaseTimeLabel,1,true));assert(string.find(research[2].Description,"+25%",1,true))')
         if language=='Russian':assert vm.globals().HWMP_TooltipBaseTimeLabel=='Базовое время'
         checks.append(language)
+        # Exercise actual race build tables through the packaged Lua callback.
+        vm.globals().dofilepath=load
+        for race in RACES:
+            vm.execute(definitions[f'scripts/races/{race}/scripts/def_build.lua'].read_text(encoding='ascii'))
+            original={i:row.Description for i,row in vm.globals().build.items()}
+            load('data:scripts/productiontimes/applybuildtimes.lua')
+            for i,row in vm.globals().build.items():
+                text=original[i]
+                if text:
+                    assert text in labels,(language,race,row.ThingToBuild,text)
+                    assert labels[text] in row.Description
+                    assert ('</b>  '+format(expected[row.ThingToBuild],'g')+'s') in row.Description
+                else:assert row.Description==text,(race,row.ThingToBuild)
+        vm.execute('build={{ThingToBuild="Hgn_MS_Module_Research",Description=""}};research={{Description="",Time=75}}')
+        load('data:scripts/productiontimes/applybuildtimes.lua');load('data:scripts/productiontimes/applyresearchtimes.lua')
+        vm.execute('assert(build[1].Description=="" and research[1].Description=="")')
     return checks
 
 
@@ -288,7 +306,8 @@ def verify_source():
     for name,path in overrides.items():assert sha(files[name])==sha(path)
     assert not any(n.startswith(('leveldata/campaign/vastreaches','weapon/nkr_')) for n in files)
     assert not any(p.suffix in ('.ship','.wepn','.subs') for p in overrides.values())
-    result={'status':'passed','files':len(files),'fix_revision':manifest['fix_revision'],
+    from production_data import verify as verify_data
+    result={'status':'passed','production_data':verify_data(SOURCE),'files':len(files),'fix_revision':manifest['fix_revision'],
             'upstream_combat_definitions':'unchanged','effect_regression':check_effects(),
             'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
             'transport':check_transport(),

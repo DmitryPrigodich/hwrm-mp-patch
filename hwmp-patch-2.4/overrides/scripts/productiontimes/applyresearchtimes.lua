@@ -4,7 +4,7 @@ if GetProductionTimeSetting() == 2 then
     dofilepath("data:scripts/hwmp24/tooltips.lua")
     for i, item in research do
         local description = HWMP_TooltipText(item.Description)
-        if description ~= nil and item.Time ~= nil then
+        if description ~= nil and description ~= "" and item.Time ~= nil then
             local value = ""
             if item.UpgradeValue ~= nil then
                 local percent = item.UpgradeValue * 100 - 100

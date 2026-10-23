@@ -78,7 +78,7 @@ if GetProductionTimeSetting() == 2 then
     for i, item in build do
         local seconds = buildtimes[item.ThingToBuild]
         local description = HWMP_TooltipText(item.Description)
-        if seconds ~= nil and description ~= nil then
+        if seconds ~= nil and description ~= nil and description ~= "" then
             build[i].Description = description .. "  \\n\\n<b>" .. HWMP_TooltipBaseTime() .. ":</b>  " .. seconds .. "s"
         end
     end
@@ -91,7 +91,7 @@ if GetProductionTimeSetting() == 2 then
     dofilepath("data:scripts/hwmp24/tooltips.lua")
     for i, item in research do
         local description = HWMP_TooltipText(item.Description)
-        if description ~= nil and item.Time ~= nil then
+        if description ~= nil and description ~= "" and item.Time ~= nil then
             local value = ""
             if item.UpgradeValue ~= nil then
                 local percent = item.UpgradeValue * 100 - 100
@@ -219,6 +219,8 @@ end''')
     write(out,name,text)
     write(out,'scripts/productiontimes/applybuildtimes.lua',BUILD_TIMES)
     write(out,'scripts/productiontimes/applyresearchtimes.lua',RESEARCH_TIMES)
+    from production_data import generate
+    generate()
     locale_tables()
 
 

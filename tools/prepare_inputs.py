@@ -19,6 +19,11 @@ def prepare():
     assert {n:sha(p) for n,p in index(DONOR).items()}==expected,'The extracted donor differs.'
     extract(GAME/'HomeworldRM/Data/Russian.big',RUSSIAN_STOCK)
     assert any(RUSSIAN_STOCK.glob('*.ucs')),'Stock Russian UCS files are missing.'
+    for archive_name,folder in (('Homeworld2.big','rm-base'),('HW2Ships.big','rm-hw2'),('HW1Ships.big','rm-hw1'),
+                                ('HW1Campaign.big','rm-campaign-hw1'),('HW2Campaign.big','rm-campaign-hw2')):
+        extract(GAME/'HomeworldRM/Data'/archive_name,CACHE/'players-patch-audit'/folder)
+    from production_data import catalog
+    catalog()  # Reject stale or changed inherited native definitions.
     report={'status':'passed','donor_sha256':DONOR_SHA,'files':len(expected),'asset_cache':str(CACHE),'game_launched':False}
     save(PROJECT/'local/inputs.json',report);print(json.dumps(report))
 
