@@ -272,6 +272,7 @@ def package():
     for path in RELEASE.glob('*.log'):
         shutil.move(str(path),str(WORK/path.name))
     shutil.copy2(ROOT/'README.md',RELEASE/'README.md')
+    shutil.copy2(PROJECT/'docs/NATIVE_TESTS.md',RELEASE/'NATIVE_TESTS.md')
     (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nIndependent Test21-derived fixes; retains upstream multiplayer balance.\n',encoding='ascii')
     for name in ('start_hwmp_patch.ps1','HWMP Patch 2.4.cmd'):
         shutil.copy2(ROOT/name,RELEASE/name)

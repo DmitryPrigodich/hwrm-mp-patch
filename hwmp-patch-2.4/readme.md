@@ -19,7 +19,7 @@
 
 ## Подготовка и запуск
 
-Готовый пакет: `local/HWMPPatch24-release`, ZIP рядом. Путь подготовленного исходника записан в `local/hwmp-patch-2.4/manifest.json` (короткий каталог кеша для Archive.exe). Этот этап ничего не устанавливает и не запускает. Установка/первый нативный тест — отдельный следующий шаг. Для будущей ручной установки предназначен собственный каталог `HomeworldRM/DataWorkshopMODs/HWMPPatch24`; не заменять BananaDLC или слот Vast Reaches. Стартер ожидает там основной BIG и языковые BIG рядом. Не подключать второй экземпляр Players Patch поверх этого мода.
+Готовый пакет: `local/HWMPPatch24-release`, ZIP рядом. Путь подготовленного исходника записан в `local/hwmp-patch-2.4/manifest.json` (короткий каталог кеша для Archive.exe). Сборка ничего не устанавливает и не запускает. Явная установка: `python tools/install_hwmp24.py --install`; по умолчанию установщик только печатает план. Используется собственный каталог `HomeworldRM/DataWorkshopMODs/HWMPPatch24`; не заменять BananaDLC или слот Vast Reaches. Стартер ожидает там основной BIG и языковые BIG рядом. Не подключать второй экземпляр Players Patch поверх этого мода.
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 tools/hwmp24.py --package
@@ -39,3 +39,5 @@
 База: `2.3Test.big`, SHA256 `f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41`. Сохранены ресурсы, карты и их авторские сведения. Два нулевых `ai_special.lua` заменены комментариями без исполняемого кода из-за сбоя распаковщика WorkshopTool.
 
 Благодарности: **Players Patch team, Fear/Novaras, участники 2.3Test и авторы карт**. [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337), [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511), [исходники Test](https://github.com/Novaras/2.3-Test). Код опубликован в публичном hwrm-mp-patch; публикация Workshop не выполнялась.
+
+Нативная проверка подготовлена в NATIVE_TESTS.md готового пакета (в репозитории — docs/NATIVE_TESTS.md). Результаты сохраняются командой `python tools/native_checks.py --new-run Russian`: все статусы изначально not_run. Штатный Launcher не перечисляет произвольные локальные папки; текущий способ — CMD, слот Vast Reaches сохранён. Workshop планируется после завершения патча. Подробности — docs/LOCAL_INSTALLATION.md.
