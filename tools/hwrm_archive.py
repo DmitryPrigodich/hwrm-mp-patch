@@ -7,6 +7,10 @@ from hwrm_common import PROJECT,TOOL,short_path,index,sha,build_directory
 ROOT=PROJECT
 def runtime_file(path,root):return True
 
+def data_file(name):
+    # The dictionary registry is a data resource, not a language-TOC payload.
+    return not name.startswith('locale/') or name == 'locale/localedat.lua'
+
 def native_aliases(path):
     with path.open('rb') as f:
         header=f.read(180)
@@ -46,7 +50,7 @@ def package_source(source,release,filename,title):
     global ROOT
     ROOT=Path(source).resolve();release=Path(release).resolve();release.mkdir(parents=True,exist_ok=True)
     short=short_path(ROOT)
-    data=[short+'\\'+str(p.relative_to(ROOT)) for n,p in sorted(index(ROOT).items()) if not n.startswith('locale/')]
+    data=[short+'\\'+str(p.relative_to(ROOT)) for n,p in sorted(index(ROOT).items()) if data_file(n)]
     manifest=release/'main.archive.txt'
     lines=['Archive name="'+title+'"','TOCStart name="ModData" alias="data" relativeroot=""','FileSettingsStart defcompression="2"','FileSettingsEnd',*data,'TOCEnd',*locale_toc('English','ModLocale',short),'']
     manifest.write_text('\r\n'.join(lines),encoding='ascii',newline='')
@@ -71,7 +75,7 @@ def verify_payload(source,output):
         assert proc.returncode==0,('Archive extraction failed',path,proc.returncode)
         expected={}
         for name,source_path in sources.items():
-            if not name.startswith('locale/'):
+            if data_file(name):
                 if language is None:expected[name]=sha(source_path)
             elif name.startswith('locale/'+(language or 'English').lower()+'/'):
                 expected[name.split('/',2)[2]]=sha(source_path)

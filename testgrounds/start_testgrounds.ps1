@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference='Stop'
 $exe=Join-Path $GameRoot 'HomeworldRM\Bin\Release\HomeworldRM.exe'
 $archive=Join-Path $GameRoot 'HomeworldRM\DataWorkshopMODs\HWMPTestGrounds\HWMPTestGrounds.big'
-$arguments=@('-workshopmod','"HWMPTestGrounds\HWMPTestGrounds.big"','-locale',$Language)
+$arguments=@('-workshopmod','"HWMPTestGrounds\HWMPTestGrounds.big"','-locale',$Language,'-luatrace')
 if ($PrintOnly) { Write-Output ($exe+' '+($arguments -join ' ')); return }
 if (-not (Test-Path -LiteralPath $exe)) { throw 'Homeworld Remastered was not found. Supply -GameRoot.' }
 if (-not (Test-Path -LiteralPath $archive)) { throw 'HWMP Test Grounds must be installed separately before launch.' }

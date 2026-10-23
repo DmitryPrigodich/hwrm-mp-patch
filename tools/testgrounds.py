@@ -24,16 +24,17 @@ MISSIONS = [('GravityOverlap', 'gravity', 9984010, 9984012),
             ('MissileTargetLoss', 'missiles', 9984030, 9984032)]
 IDENTITY = 'HWMP-TestGrounds-v1'
 THUMB = CACHE/'players-patch-audit/rm-campaign-hw2/ui/mapthumbnails/campaign/ascension/m03_staging.dds'
+REGISTRY = CACHE/'players-patch-audit/rm-base/locale/localedat.lua'
 
 
 def digest_tree(folder):
     return {n: sha(p) for n, p in index(folder).items()}
 
 
-def put(name, text, encoding='ascii'):
+def put(name, text, encoding='ascii', newline='\n'):
     p = SOURCE/name
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(text+'\n', encoding=encoding, newline='\n')
+    p.write_text(text+'\n', encoding=encoding, newline=newline)
 
 
 def level(chapter, script, title):
@@ -106,15 +107,25 @@ def prepare():
         dest = SOURCE/name
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(p, dest)
+    registry_text = REGISTRY.read_text(encoding='ascii')
+    if 'hwmp_testgrounds.dat' in registry_text: raise ValueError('Unexpected pre-existing test dictionary')
+    registry_end = registry_text.rfind('}')
+    if registry_end < 0: raise ValueError('Invalid native dictionary registry')
+    put('locale/localedat.lua', registry_text[:registry_end]+'    {name="hwmp_testgrounds.dat"},\n}\n')
     revision = hashlib.sha256(json.dumps({'scripts': overlays, 'strings': strings,
-        'builder': sha(Path(__file__)), 'base': baseline}, sort_keys=True).encode()).hexdigest()
+        'builder': sha(Path(__file__)), 'registry': sha(REGISTRY), 'base': baseline}, sort_keys=True).encode()).hexdigest()
     put('scripts/hwmp24/testgrounds/version.lua', f'HWT_REVISION="{revision}"')
     lines = ['displayName="$9984000"', 'contentType=2', f'contentName="{COLLECTION}"',
-             'contentOrdered=0', 'contentChooseText="$9984001"', 'contentThumbName="$9984000"',
+             'contentOrdered=0', 'contentChooseText="$3492"', 'contentThumbName="$9984000"',
              'contentThumbDesc="$9984000"', 'contentSort=0.25', 'contentRules="SinglePlayer"',
              'ExtFilter="campaign_gbx"', 'Mission={}']
     fixtures = {}
     if not THUMB.is_file(): raise FileNotFoundError('Extract the native campaign thumbnail: '+str(THUMB))
+    # Native Extra Missions uses a sibling .dds next to the .campaign file.
+    # Chapter thumbnails under UI/MapThumbnails are a separate resource.
+    cover = SOURCE/f'leveldata/campaign/{COLLECTION}.dds'
+    cover.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(THUMB, cover)
     for i, (chapter, script, title, desc) in enumerate(MISSIONS, 1):
         lines.append(f'Mission[{i}]={{postload=function() end,directory="{chapter}",level="{chapter}.level",postlevel=function() end,displayName="${title}",description="${desc}"}}')
         text, fixtures[chapter] = level(chapter, script, title)
@@ -130,7 +141,7 @@ def prepare():
         for number, pair in sorted(strings.items()):
             if len(pair) != 2 or not all(pair) or pair[0] == pair[1]: raise ValueError('Invalid RU/EN pair')
             entries.append(number+'\t'+pair[i])
-        put(f'locale/{lang}/hwmp_testgrounds.ucs', '\n'.join(entries), 'utf-16')
+        put(f'locale/{lang}/hwmp_testgrounds.ucs', '\n'.join(entries), 'utf-16', newline='\r\n')
     actual = digest_tree(SOURCE)
     changed = [n for n in baseline if actual.get(n) != baseline[n]]
     if changed: raise ValueError('Base runtime changed: '+repr(changed))
@@ -142,6 +153,7 @@ def prepare():
               'base_source': str(base), 'base_files': baseline, 'base_runtime_unchanged': True,
               'additions': additions, 'fixtures': fixtures, 'strings': len(strings),
               'thumbnail_source': str(THUMB), 'thumbnail_sha256': sha(THUMB),
+              'dictionary_registry_source': str(REGISTRY), 'dictionary_registry_sha256': sha(REGISTRY),
               'engine_tested': False, 'installed': False, 'launched': False}
     save(WORK/'source.json', result)
     return result

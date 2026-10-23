@@ -9,7 +9,7 @@ import re
 import subprocess
 from lupa.lua51 import LuaRuntime
 from hwrm_common import index, save, sha
-from testgrounds import SOURCE, WORK, ROOT, MISSIONS, COLLECTION, digest_tree, read_ucs
+from testgrounds import SOURCE, WORK, ROOT, MISSIONS, COLLECTION, REGISTRY, digest_tree, read_ucs
 from collect_testgrounds import collect
 
 MOCK = r'''
@@ -78,14 +78,27 @@ def check(luac=None):
     g = menu.globals()
     assert g.contentType == 2 and g.contentName == COLLECTION and g.contentRules == 'SinglePlayer'
     assert len(g.Mission) == 3 and g.ExtFilter == 'campaign_gbx'
+    assert g.contentChooseText == '$3492', 'Use the native early-loaded choose-mission label'
+    assert (SOURCE/f'leveldata/campaign/{COLLECTION}.dds').is_file(), 'Missing collection cover'
+    registry_vm=LuaRuntime()
+    registry_vm.execute(REGISTRY.read_text())
+    stock_names=[registry_vm.globals().Dictionaries[i].name for i in range(1,len(registry_vm.globals().Dictionaries)+1)]
+    registry_vm.execute((SOURCE/'locale/localedat.lua').read_text())
+    names=[registry_vm.globals().Dictionaries[i].name for i in range(1,len(registry_vm.globals().Dictionaries)+1)]
+    assert names == stock_names+['hwmp_testgrounds.dat'], 'Dictionary registration must preserve all native entries'
     ucs = {}
     for lang in ('English','Russian'):
         text = read_ucs(SOURCE/f'locale/{lang}/hwmp_testgrounds.ucs')
+        assert text.count('\r\n') == source['strings'], 'Native UCS needs one CRLF per record'
+        assert '\n' not in text.replace('\r\n',''), 'Bare LF merges native UCS records'
+        assert len([row for row in text.split('\r\n') if row]) == source['strings']
         pairs = [line.split('\t',1) for line in text.splitlines() if line.strip()]
         assert len(pairs) == len(dict(pairs)) == source['strings']
         ucs[lang] = dict(pairs)
     assert set(ucs['English']) == set(ucs['Russian'])
     assert all(ucs['English'][n] != ucs['Russian'][n] for n in ucs['English'])
+    for lang in ('English','Russian'):
+        assert (SOURCE/f'locale/{lang}/hwmp_testgrounds.ucs').is_file(), 'Registered dictionary missing'
     for n, path in additions.items():
         if path in snippets:
             for number in re.findall(r'\$(9984\d+)',path.read_text()): assert number in ucs['English']
@@ -172,6 +185,7 @@ def check(luac=None):
     else: raise AssertionError('Stale log revision accepted')
     report={'status':'passed','revision':source['revision'],'base_runtime_unchanged':True,
             'menu_chapters':3,'ru_en_pairs':source['strings'],'lua4':parse,'control_flow_mocks':results,
+            'native_dictionary_registered':True,'collection_cover_present':True,
             'collector':'passed; synthetic only; no native passes','engine_tested':False,'installed':False}
     save(WORK/'verification-source.json',report)
     return report
