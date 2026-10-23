@@ -96,7 +96,7 @@ def install(game_root=GAME, apply=False):
         'HomeworldRM/DataWorkshopMODs/Gearbox/BananaMothership/config.txt',
         'HomeworldRM/DataWorkshopMODs/VastReachesMiniCampaign/VastReachesMiniCampaign.big',
         'HomeworldRM/DataWorkshopMODs/76561198011852645/1413859511/2.3Test.big',
-        'HomeworldRM/DataWorkshopMODs/76561198011852645/1190476337/2.3.big')]
+        'HomeworldRM/DataWorkshopMODs/76561198011852645/1190476337/2.3PlayersPatch.big')]
     guard = {str(p): sha(p) for p in protected if p.is_file()}
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     backup = PROJECT/'local/installed-backups'/stamp/'HWMPPatch24'
