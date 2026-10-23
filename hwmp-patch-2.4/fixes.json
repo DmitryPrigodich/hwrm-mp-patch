@@ -1,0 +1,19 @@
+{
+  "identity": "HWMP-Patch-2.4-dev1",
+  "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
+  "fix_revision": "c29f96a2a3aaf8da2ec73b54f7a9438294dbd5d4232cb86c375c37d8bcc4374d",
+  "overrides": {
+    "locale/english/hwmp24_tooltips.lua": "0cfffcccb991cc7d3f271b1421efd0fa805a42b0c39a34d099e04ae1b95269d9",
+    "locale/russian/hwmp24_tooltips.lua": "d2cb8147af2286c1634399bd69c1d1391a98d8d13bcf1600da36baf34298a244",
+    "scripts/hwmp24/effects.lua": "94096de95510f230b8d4c01c71acc800cdcb9ae5ef1bfb2e505c0b73480d34b3",
+    "scripts/hwmp24/tooltips.lua": "d1b3c8424dc1699923dfc55881f5562214095a39b1e057c3cec37bf74ccc5af8",
+    "scripts/productiontimes/applybuildtimes.lua": "c8876262bdf57f8a41ae50bee9072ede8d8ed0adfcd2c0e2eeacf5b7bcc64726",
+    "scripts/productiontimes/applyresearchtimes.lua": "ebd01135b4cf8b9da8bb2cc5f16bac1f2674c02d9d390e44e4c4610241eba458",
+    "scripts/playerspatch/ships_util/core/global.lua": "f9737bb9870f35a6ce1d4e8e9e6e341ca7f63e93f6bbdf5322756c97f87df70b",
+    "scripts/playerspatch/ships_util/lib/frigates.lua": "6b195abf472eb3942d55ec7db9134534203e6d6540a9563e8e4ba0e879f6bf9b",
+    "scripts/playerspatch/ships_util/lib/gravwells.lua": "3d2ecbcf3050d499964a696598b422b5b6abb8aa128066f07c7e4eb1d2092a51",
+    "ship/kus_supportfrigate/kus_supportfrigate.lua": "c8ab429ea5714dfa01072a0ad2bd03af0015266327342f398414de3f5d5b8680",
+    "ship/tai_defensefighter/tai_defensefighter.lua": "f8bb2231a9a29208515312973d4dff080aa773106ed43c3a52b9f588cc6479c2",
+    "ship/tai_supportfrigate/tai_supportfrigate.lua": "82c08d7d3f68547fd2599f4b9cea082befed0628a27536336173d8c72755c13c"
+  }
+}

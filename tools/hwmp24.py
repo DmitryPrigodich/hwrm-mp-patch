@@ -1,0 +1,290 @@
+"""HWMP Patch 2.4: independent Test-derived general fixes and original races.
+
+Only project-local preparation/package operations. No install, game or launcher.
+"""
+from __future__ import annotations
+import json
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import zipfile
+
+from hwrm_common import PROJECT,DONOR,ARCHIVE,DONOR_SHA,RUSSIAN_STOCK,sha,index,save,copy_layer,donor_runtime
+
+ROOT=PROJECT/'hwmp-patch-2.4'
+WORK=PROJECT/'local/hwmp-patch-2.4'
+SOURCE=WORK/'source'
+RELEASE=PROJECT/'local/HWMPPatch24-release'
+IDENTITY='HWMP-Patch-2.4-dev1'
+
+
+def write(root,name,text):
+    p=root/name;p.parent.mkdir(parents=True,exist_ok=True)
+    p.write_text(text,encoding='ascii',newline='\n')
+
+
+def replace_function(text,name,replacement):
+    pattern=r'^function '+re.escape(name)+r'\([^\n]*\).*?(?=^function |\Z)'
+    result,n=re.subn(pattern,lambda _:replacement+'\n\n',text,count=1,flags=re.M|re.S)
+    assert n==1,name
+    return result
+
+
+SPLIT='''function SobGroup_Split(group, granularity)
+    granularity = granularity or 1
+    if granularity < 1 then granularity = 1 end
+    local result = {}
+    for i = 0, SobGroup_Count(group) - 1, granularity do
+        local subgroup = SobGroup_Fresh(group .. "-subgroup-" .. i)
+        SobGroup_FillShipsByIndexRange(subgroup, group, i, granularity)
+        if SobGroup_Empty(subgroup) == 0 then result[getn(result) + 1] = subgroup end
+    end
+    return result
+end'''
+
+SCUTTLE='''function SobGroup_NoSalvageScuttle(group)
+    local owner = "salvage:" .. group
+    if SobGroup_IsDoingAbility(group, AB_Dock) == 1 then
+        HWMP_BlockGroup(group, owner, { AB_Scuttle }, 0)
+    else HWMP_ReleaseOwner(owner) end
+end'''
+
+DOCK='''HWMP_DockStalls = HWMP_DockStalls or {}
+function SobGroup_UnderAttackReissueDock(group)
+    if SobGroup_GetCurrentOrder(group) ~= COMMAND_Dock or SobGroup_IsDocked(group) == 1 or
+       SobGroup_UnderAttack(group) ~= 1 or SobGroup_CanDoAbility(group, AB_Dock) ~= 1 or
+       SobGroup_CanDoAbility(group, AB_Move) ~= 1 then
+        HWMP_DockStalls[group] = nil
+        return
+    end
+    local now = Universe_GameTime()
+    if SobGroup_GetActualSpeed(group) >= 1 then HWMP_DockStalls[group] = nil; return end
+    local state = HWMP_DockStalls[group]
+    if state == nil then state = { since = now, retry = -100 }; HWMP_DockStalls[group] = state end
+    if now - state.since >= 3 and now - state.retry >= 5 then
+        SobGroup_DockSobGroupWithAny(group)
+        state.retry = now
+        state.since = now
+    end
+end'''
+
+BUILD_TIMES='''-- HWMP2.4: selected-language text; unknown descriptions retain their UCS ID.
+doscanpath("data:ui", "playerspatch_ui_util.lua")
+if GetProductionTimeSetting() == 2 then
+    dofilepath("data:scripts/hwmp24/tooltips.lua")
+    dofilepath("data:scripts/productiontimes/buildtimes.lua")
+    for i, item in build do
+        local seconds = buildtimes[item.ThingToBuild]
+        local description = HWMP_TooltipText(item.Description)
+        if seconds ~= nil and description ~= nil then
+            build[i].Description = description .. "  \\n\\n<b>" .. HWMP_TooltipBaseTime() .. ":</b>  " .. seconds .. "s"
+        end
+    end
+end
+'''
+
+RESEARCH_TIMES='''-- HWMP2.4: do not replace localized text with a forced English dictionary.
+doscanpath("data:ui", "playerspatch_ui_util.lua")
+if GetProductionTimeSetting() == 2 then
+    dofilepath("data:scripts/hwmp24/tooltips.lua")
+    for i, item in research do
+        local description = HWMP_TooltipText(item.Description)
+        if description ~= nil and item.Time ~= nil then
+            local value = ""
+            if item.UpgradeValue ~= nil then
+                local percent = item.UpgradeValue * 100 - 100
+                local sign = ""
+                if percent > 0 then sign = "+" end
+                value = "\\n<b>" .. HWMP_TooltipValue() .. ":</b> " .. sign .. percent .. "% "
+            end
+            research[i].Description = description .. "  \\n" .. value .. "\\n<b>" .. HWMP_TooltipBaseTime() .. ":</b> " .. item.Time .. "s"
+        end
+    end
+end
+'''
+
+
+def lua_quote(value):
+    result='"'
+    for c in value.encode('utf8'):
+        if c in (34,92):result+='\\'+chr(c)
+        elif c<32 or c>=127:result+='\\'+format(c,'03d')
+        else:result+=chr(c)
+    return result+'"'
+
+
+def locale_tables():
+    from lupa.lua51 import LuaRuntime
+    vm=LuaRuntime(register_eval=False,register_builtins=False)
+    vm.execute((DONOR/'scripts/productiontimes/localeenglish.lua').read_text(encoding='ascii'))
+    english=dict(vm.globals().localization.items())
+    russian={}
+    for path in RUSSIAN_STOCK.glob('*.ucs'):
+        for line in path.read_text(encoding='utf16').splitlines():
+            row=re.match(r'^(\d+)\s+(.+)$',line)
+            if row:russian['$'+row[1]]=row[2]
+    assert len(russian)>1000,'Extract stock Russian.big before building the localized tooltip dictionary.'
+    # Only the IDs used by the upstream helper belong in this derived dictionary.
+    russian={key:russian[key] for key in english if key in russian}
+    for language,table,base,value in [('English',english,'Base time','Value'),('Russian',russian,'Базовое время','Значение')]:
+        text='HWMP_TooltipLocalization={\n'+''.join('['+lua_quote(k)+']='+lua_quote(v)+',\n' for k,v in sorted(table.items()))+'}\n'
+        text+='HWMP_TooltipBaseTimeLabel='+lua_quote(base)+'\nHWMP_TooltipValueLabel='+lua_quote(value)+'\n'
+        write(ROOT/'overrides',f'locale/{language}/hwmp24_tooltips.lua',text)
+
+
+def make_overrides():
+    out=ROOT/'overrides'
+    core=(DONOR/'scripts/playerspatch/ships_util/core/global.lua').read_text()
+    core='dofilepath("data:scripts/hwmp24/effects.lua")\n'+core
+    core=replace_function(core,'SobGroup_Split',SPLIT)
+    core=replace_function(core,'SobGroup_NoSalvageScuttle',SCUTTLE)
+    core=replace_function(core,'SobGroup_UnderAttackReissueDock',DOCK)
+    core=core.replace('SobGroup_CreateIfNotExist(all_ships)\n','SobGroup_CreateIfNotExist(all_ships)\n\tSobGroup_Clear(all_ships)\n',1)
+    core=core.replace('if (Player_IsAlive(i)) then','if (Player_IsAlive(i) == 1) then',1)
+    write(out,'scripts/playerspatch/ships_util/core/global.lua',core)
+    name='scripts/playerspatch/ships_util/lib/gravwells.lua'
+    text=(DONOR/name).read_text()
+    start=text.index('\tfunction GRAVWELL_PROTO:StunGroup')
+    end=text.index('\n\t-- tumbles',start)
+    text=text[:start]+'''    function GRAVWELL_PROTO:StunGroup(group, stunned)
+        local owner = "gravwell:" .. self.ship_id
+        if stunned == 0 then HWMP_UnblockGroup(group, owner)
+        else HWMP_BlockGroup(group, owner, GW_MEM_PROTO.abilities_to_disable, 1) end
+    end
+'''+text[end:]
+    text=text.replace('SobGroup_ClearTumble(group);','HWMP_ClearReleasedTumble(group, "gravwell:" .. self.ship_id);')
+    text=text.replace('SobGroup_AbilityActivate(this_gravwell.own_group, AB_Hyperspace, 0)','HWMP_BlockGroup(this_gravwell.own_group, "gravwell-self:" .. ship_id, { AB_Hyperspace }, 0)')
+    text=text.replace('SobGroup_AbilityActivate(group, AB_Hyperspace, 1);','HWMP_ReleaseOwner("gravwell-self:" .. ship_id);\n    HWMP_ReleaseOwner("gravwell:" .. ship_id);')
+    anchor='function GW_MEM:Destroy(group, player_index, ship_id)'
+    text=text.replace(anchor,anchor+'\n    HWMP_ReleaseOwner("gravwell:" .. ship_id)\n    HWMP_ReleaseOwner("gravwell-self:" .. ship_id)',1)
+    text=re.sub(r'\bprint\(', 'HWMP_Log(',text)
+    text+='''
+-- New mods register additional valid hull IDs without editing the core list.
+function HWMP_RegisterGravityTarget(ship_type)
+    for i = 1, getn(GW_MEM_PROTO.target_types) do
+        if GW_MEM_PROTO.target_types[i] == ship_type then return end
+    end
+    GW_MEM_PROTO.target_types[getn(GW_MEM_PROTO.target_types) + 1] = ship_type
+end
+'''
+    write(out,name,text)
+    name='scripts/playerspatch/ships_util/lib/frigates.lua'
+    text=(DONOR/name).read_text()
+    text=text.replace('function SupportFrigate_HyperspaceDock(CustomGroup, shipID)','function SupportFrigate_HyperspaceDock(CustomGroup, shipID)\n    local owner = "transport:" .. shipID',1)
+    text=re.sub(r'SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Dock, 1\)', 'HWMP_ReleaseAbility("LatchDockTempGroup"..shipID, owner, AB_Dock)',text,count=1)
+    ones=r'SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Dock, 1\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Scuttle, 1\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Attack, 1\)'
+    text,n=re.subn(ones,'HWMP_ReleaseOwner(owner)',text);assert n==1
+    zeros=r'SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Dock, 0\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Scuttle, 0\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Attack, 0\)'
+    text,n=re.subn(zeros,'HWMP_BlockGroup("LatchDockTempGroup"..shipID, owner, { AB_Dock, AB_Scuttle, AB_Attack }, 0)',text);assert n==1
+    write(out,name,text)
+    for prefix in ('kus','tai'):
+        name=f'ship/{prefix}_supportfrigate/{prefix}_supportfrigate.lua'
+        text=(DONOR/name).read_text()
+        text,n=re.subn(r'(function Destroy_[^\n]+\n)',lambda m:m[1]+'    HWMP_ReleaseOwner("transport:" .. shipID)\n',text,count=1);assert n==1
+        text,n=re.subn(r'^\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_(?:Dock|Scuttle|Attack), 1\)\s*$', '',text,flags=re.M);assert n==3
+        write(out,name,text)
+    name='ship/tai_defensefighter/tai_defensefighter.lua'
+    text=(DONOR/name).read_text()
+    start=text.index('    if (defenseFighterMissileTargets[shipID] ~= numberEnemyMissiles) then')
+    end=text.index('    return incomingEnemyMissiles',start)
+    text=text[:start]+'''    -- Refresh at the existing 1.25s unit callback cadence. A count is not a target identity.
+    defenseFighterMissileTargets[shipID] = incomingEnemyMissiles
+    SobGroup_AttackSelection(playerID, CustomGroup, "IncomingMissiles", 1)
+
+'''+text[end:]
+    # Keep the guard target across the missile attack (which has no ship target).
+    text=replace_function(text,'updateDefenseFighterDefense','''function updateDefenseFighterDefense(CustomGroup, playerID, shipID)
+    local guard = "DefenseFighterGuardTargets" .. shipID
+    local current = "defenseFighterGuardCurrent"
+    SobGroup_CreateIfNotExist(guard)
+    SobGroup_CreateIfNotExist(current)
+    SobGroup_Clear(current)
+    SobGroup_GetCommandTargets(current, CustomGroup, COMMAND_Guard)
+    if SobGroup_Empty(current) == 0 then SobGroup_Copy(guard, current) end
+    findAndAttackEnemyMissiles(CustomGroup, playerID, shipID)
+end''')
+    text=replace_function(text,'updateDefenseFighterAttack','''function updateDefenseFighterAttack(CustomGroup, playerID, shipID)
+    -- Missile selections need not appear in SobGroup_GetCommandTargets.
+    if findAndAttackEnemyMissiles(CustomGroup, playerID, shipID) > 0 then return end
+    local guard = "DefenseFighterGuardTargets" .. shipID
+    SobGroup_CreateIfNotExist(guard)
+    if SobGroup_Empty(guard) == 0 then
+        SobGroup_GuardSobGroup(CustomGroup, guard)
+        SobGroup_Clear(guard)
+    end
+end''')
+    text='defenseFighterMissileTargets = defenseFighterMissileTargets or {}\n'+text
+    write(out,name,text)
+    write(out,'scripts/productiontimes/applybuildtimes.lua',BUILD_TIMES)
+    write(out,'scripts/productiontimes/applyresearchtimes.lua',RESEARCH_TIMES)
+    locale_tables()
+
+
+def prepare():
+    assert sha(ARCHIVE)==DONOR_SHA,'Pinned Test changed.'
+    inventory=json.loads((PROJECT/'baseline/test-inventory.json').read_text(encoding='utf8'))['inventory']
+    expected={row['path']:row['sha256'] for row in inventory if row['patch']=='test'}
+    assert {name:sha(path) for name,path in index(DONOR).items()}==expected,'Donor extraction changed.'
+    make_overrides()
+    SOURCE.mkdir(parents=True,exist_ok=True)
+    marker=SOURCE/'hwmp24-id.txt'
+    if any(SOURCE.iterdir()):
+        assert marker.is_file() and marker.read_text().strip()==IDENTITY
+        assert SOURCE.resolve().is_relative_to(WORK.resolve())
+        shutil.rmtree(SOURCE);SOURCE.mkdir()
+    write(SOURCE,'hwmp24-id.txt',IDENTITY+'\n')
+    names=copy_layer(DONOR,SOURCE,donor_runtime)
+    for name,path in index(SOURCE).items():
+        if path.stat().st_size==0 and path.suffix=='.lua':write(SOURCE,name,'-- Intentionally empty upstream Lua file.\n')
+    overrides=copy_layer(ROOT/'overrides',SOURCE)
+    files={name:sha(path) for name,path in index(SOURCE).items()}
+    fix_hashes={name:sha(path) for name,path in index(ROOT/'overrides').items()}
+    revision=__import__('hashlib').sha256(json.dumps(fix_hashes,sort_keys=True).encode()).hexdigest()
+    report={'identity':IDENTITY,'source':str(SOURCE),'base_sha256':DONOR_SHA,'base_runtime_files':names,'overrides':fix_hashes,'fix_revision':revision,'files':files,'engine_tested':False,'installed':False}
+    save(WORK/'manifest.json',report);save(ROOT/'fixes.json',{'identity':IDENTITY,'base_sha256':DONOR_SHA,'fix_revision':revision,'overrides':fix_hashes})
+    print(json.dumps({'hwmp24_source':str(SOURCE),'files':len(files),'fix_files':len(overrides),'fix_revision':revision}))
+    return report
+
+
+def package():
+    import hwrm_archive as builder
+    from hwrm_common import short_path
+    from verify_hwmp24 import verify_source,verify_archive
+    report=prepare();verify_source()
+    RELEASE.mkdir(parents=True,exist_ok=True)
+    output=RELEASE/'HWMPPatch24.big'
+    oldroot=builder.ROOT;builder.ROOT=SOURCE
+    short=short_path(SOURCE)
+    data=[short+'\\'+str(path.relative_to(SOURCE)) for name,path in sorted(index(SOURCE).items()) if not name.startswith('locale/')]
+    lines=['Archive name="HWMP Patch 2.4"','TOCStart name="HWMP24Data" alias="data" relativeroot=""','FileSettingsStart defcompression="2"','FileSettingsEnd',*data,'TOCEnd',*builder.locale_toc('English','HWMP24Locale',short),'']
+    manifest=WORK/'HWMPPatch24.archive.txt';manifest.write_text('\r\n'.join(lines),encoding='ascii',newline='')
+    builder.archive(manifest,output)
+    for language in ('English','Russian'):
+        manifest=WORK/(language+'.archive.txt')
+        manifest.write_text('\r\n'.join(['Archive name="HWMP Patch 2.4 '+language+'"',*builder.locale_toc(language,'HWMP24'+language,short),'']),encoding='ascii',newline='')
+        builder.archive(manifest,RELEASE/(language+'.big'))
+    builder.ROOT=oldroot
+    verify_archive(output)
+    for path in RELEASE.glob('*.log'):
+        shutil.move(str(path),str(WORK/path.name))
+    shutil.copy2(ROOT/'README.md',RELEASE/'README.md')
+    (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nIndependent Test21-derived fixes; retains upstream multiplayer balance.\n',encoding='ascii')
+    for name in ('start_hwmp_patch.ps1','HWMP Patch 2.4.cmd'):
+        shutil.copy2(ROOT/name,RELEASE/name)
+    shutil.copy2(ROOT/'fixes.json',RELEASE/'version.json')
+    sums={p.name:sha(p) for p in RELEASE.iterdir() if p.is_file() and p.name!='SHA256SUMS.txt'}
+    (RELEASE/'SHA256SUMS.txt').write_text(''.join(v+'  '+k+'\n' for k,v in sorted(sums.items())),encoding='ascii')
+    with zipfile.ZipFile(RELEASE.with_suffix('.zip'),'w',zipfile.ZIP_DEFLATED) as z:
+        for p in RELEASE.iterdir():
+            if p.is_file():z.write(p,RELEASE.name+'/'+p.name)
+    result={'identity':IDENTITY,'release':str(RELEASE),'main_sha256':sha(output),'main_bytes':output.stat().st_size,'fix_revision':report['fix_revision'],'installed':False,'engine_tested':False}
+    save(WORK/'release.json',result)
+    print(json.dumps(result));return result
+
+
+if __name__=='__main__':
+    import argparse
+    p=argparse.ArgumentParser();p.add_argument('--package',action='store_true');args=p.parse_args()
+    if args.package:package()
+    else:prepare()

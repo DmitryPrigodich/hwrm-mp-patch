@@ -1,0 +1,18 @@
+# hwrm-mp-patch
+
+HWMP Patch2.4 dev1: общие исправления HWRM и оригинальные четыре расы на полном Players Patch2.3Test build21. Следующий потребитель — hwrm-hw1-races-reimogined; затем hwvr-to-hwrm-mod добавляет кампанию.
+
+Сборка независима от репозитория кампании. Общие файловые функции, пассивный Lua-рекордер и упаковщик BIG находятся в tools/hwrm_common.py, hwrm_inspect.py и hwrm_archive.py. Проверенный вход Test закреплён SHA и полным inventory в baseline/. Наши исправления — hwmp-patch-2.4/overrides/.
+
+```powershell
+python -m pip install -r requirements.txt
+python tools/prepare_inputs.py
+python tools/hwmp24.py --package
+python tools/verify_hwmp24.py
+```
+
+local/settings.json либо HWRM_ASSET_CACHE указывает на локальные извлечённые исходники. Этот файл не входит в Git; пример — settings.example.json. Основные каталоги кэша: players-patch-audit/test и hwmp-patch-2.4/russian-stock. Данные игры/модели/звук/BIG не публикуются. Выпуск — local/HWMPPatch24-release. Инструменты не устанавливают и не запускают игру.
+
+Перекрывающиеся гравиполя, сохранение запретов/скорости, захват/перевозка, ракетный перехват/охрана, Dock, SobGroup и RU/EN прошли скриптовые проверки. Полная распаковка/хеши BIG проверяются при сборке. Нативная проверка боя, save/load и MP ещё нужна. Подробности — hwmp-patch-2.4/README.md и docs/.
+
+Происхождение: выделено из hwvr-to-hwrm-mod после решения Дмитрия23октября2026. Сохранены благодарности Players Patch team, Fear/Novaras и авторам карт. Test21 SHA256: f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41.
