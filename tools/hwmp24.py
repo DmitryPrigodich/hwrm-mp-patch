@@ -10,11 +10,12 @@ import shutil
 import subprocess
 import zipfile
 
-from hwrm_common import PROJECT,DONOR,ARCHIVE,DONOR_SHA,RUSSIAN_STOCK,sha,index,save,copy_layer,donor_runtime
+from hwrm_common import PROJECT,DONOR,ARCHIVE,DONOR_SHA,RUSSIAN_STOCK,sha,index,save,copy_layer,donor_runtime,build_directory
 
 ROOT=PROJECT/'hwmp-patch-2.4'
 WORK=PROJECT/'local/hwmp-patch-2.4'
-SOURCE=WORK/'source'
+BUILD=build_directory('hwmp24',PROJECT)
+SOURCE=BUILD/'source'
 RELEASE=PROJECT/'local/HWMPPatch24-release'
 IDENTITY='HWMP-Patch-2.4-dev1'
 
@@ -231,7 +232,7 @@ def prepare():
     marker=SOURCE/'hwmp24-id.txt'
     if any(SOURCE.iterdir()):
         assert marker.is_file() and marker.read_text().strip()==IDENTITY
-        assert SOURCE.resolve().is_relative_to(WORK.resolve())
+        assert SOURCE.resolve().is_relative_to(BUILD.resolve())
         shutil.rmtree(SOURCE);SOURCE.mkdir()
     write(SOURCE,'hwmp24-id.txt',IDENTITY+'\n')
     names=copy_layer(DONOR,SOURCE,donor_runtime)

@@ -8,7 +8,7 @@ import re
 import shutil
 import subprocess
 from lupa.lua51 import LuaRuntime
-from hwmp24 import ROOT,WORK,SOURCE,RELEASE,DONOR,index,sha,save
+from hwmp24 import ROOT,WORK,SOURCE,RELEASE,DONOR,BUILD,index,sha,save
 
 
 def inspect_lua(text):
@@ -303,8 +303,8 @@ def verify_archive(archive):
     sources=index(SOURCE)
     results=[]
     for path,language in [(archive,None),(archive.parent/'English.big','English'),(archive.parent/'Russian.big','Russian')]:
-        target=WORK/('extracted-'+(language or 'main'))
-        assert target.resolve().is_relative_to(WORK.resolve())
+        target=BUILD/('extracted-'+(language or 'main'))
+        assert target.resolve().is_relative_to(BUILD.resolve())
         if target.exists():shutil.rmtree(target)
         target.mkdir()
         proc=subprocess.run([str(TOOL),'-a',str(path),'-e',short_path(target)],capture_output=True,text=True)

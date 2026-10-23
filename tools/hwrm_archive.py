@@ -3,7 +3,7 @@ import struct
 import subprocess
 import shutil
 from pathlib import Path
-from hwrm_common import PROJECT,TOOL,short_path,index,sha
+from hwrm_common import PROJECT,TOOL,short_path,index,sha,build_directory
 ROOT=PROJECT
 def runtime_file(path,root):return True
 
@@ -62,8 +62,9 @@ def package_source(source,release,filename,title):
 def verify_payload(source,output):
     results=[];sources=index(source)
     for path,language in [(Path(output),None),(Path(output).parent/'English.big','English'),(Path(output).parent/'Russian.big','Russian')]:
-        target=path.parent/('verification-'+(language or 'main'))
-        assert target.resolve().is_relative_to(path.parent.resolve())
+        work=build_directory('archive-verification',path.parent)
+        target=work/('extracted-'+(language or 'main'))
+        assert target.resolve().is_relative_to(work.resolve())
         if target.exists():shutil.rmtree(target)
         target.mkdir()
         proc=subprocess.run([str(TOOL),'-a',str(path),'-e',short_path(target)],capture_output=True,text=True)

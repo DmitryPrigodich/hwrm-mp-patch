@@ -24,6 +24,13 @@ def short_path(path):
         raise OSError('Cannot resolve short path: '+str(path))
     return buffer.value
 
+def build_directory(name,repository):
+    CACHE.mkdir(parents=True,exist_ok=True)
+    key=hashlib.sha256((str(Path(repository).resolve())+'|'+name).encode()).hexdigest()[:10]
+    target=Path(short_path(CACHE))/'build'/key
+    target.mkdir(parents=True,exist_ok=True)
+    return target
+
 def game_base():
     result={}
     for folder in ('rm-base','rm-hw1','rm-hw2','test'):
