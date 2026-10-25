@@ -1,3 +1,5 @@
+> Решение25 октября: в HWMP принят старт6/6; обычный и2x стандартный старт Vgr7→6. Остальные параметры флота/сборщиков сохранены. Таблица ниже описывает исторические входы Test21; [нативные измерения и решение](AUTO_TEST_RESULTS.md).
+
 > Follow-up 25 October: [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) supersedes the earlier candidate status. Assault final node 4→1.2 is accepted; clean 600s income supports proposed 6/6 (runtime still 6/7). Gravity save/load remains an SP blocker for all four target races.
 
 > Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
@@ -27,7 +29,7 @@ python tools/audit_economy.py
 
 В ячейках Hgn / Vgr. Обычный начальный флот, без специальных суффиксов и сценарных поправок.
 
-| Параметр | HW2 Classic | Штатный HWRM | PP 2.3 | Test21 / нынешний HWMP |
+| Параметр | HW2 Classic | Штатный HWRM | PP 2.3 | Test21 |
 |---|---|---|---|---|
 | Начальные сборщики | 6 / 6 | 6 / 7 | 6 / 7 | 6 / 7 |
 | Начальные производители | по 1 Материнскому Кораблю и авианосцу | то же | то же | то же |
@@ -39,7 +41,7 @@ python tools/audit_economy.py
 | Радиус Harvest | 300 / 300 | 300 / 300 | 300 / 300 | 300 / 300 |
 | Основная скорость | 276 / 276 | 276 / 280 | 276 / 276 | 276 / 276 |
 
-Шесть/семь наследуются из штатных `scripts/startingfleets/{hiigaran,vaygr}00.lua`: моды не заменяют эти два обычных файла. Дополнительный сборщик появился до Test. Обычный PP уже вернул Vgr вместимость 200 и скорость 276; Test унаследовал этот выбор.
+В исходных версиях шесть/семь наследуются из штатных `scripts/startingfleets/{hiigaran,vaygr}00.lua`: моды не заменяют эти два обычных файла. Дополнительный сборщик появился до Test. Обычный PP уже вернул Vgr вместимость 200 и скорость 276; Test унаследовал этот выбор.
 
 **Исправление исторической задержки не доказано.** У сборщиков и принимающих HW2-кораблей модели/внешние анимационные файлы в Test совпали по содержимому со штатными входами. Общие задержки Dock на сборщиках одинаковы: 1/1 с; у контроллеров 2/1 с. Но это не полный маршрут и не таймер всей сдачи. У рас различаются геометрия, движение и состояния анимаций; например, Vgr сохраняет другое ускорение/торможение. Само равенство Harvest/Dock не доказывает равенства цикла. Историческую причину, о которой говорил Дмитрий, пока нельзя ни подтвердить, ни объявить устранённой.
 

@@ -1,3 +1,9 @@
+## 25 October decisions: six collectors and future hyperspace-only new-race generators
+
+User approved equal Hgn/Vgr 6/6 starting collectors, pending later human playtest tuning. Implement in ordinary vaygr00 and 2x_vaygr00 only: both had 7; corresponding Hiigaran starts have 6. Carrier/full-fleet presets already have 6; empty presets stay empty. Change no other fleet fields or collector parameters. Pin both source files and verify the exact edit plus actual PersistantData counts and full release extraction. Rebuild standalone base only; no install, launch or consumer pin/build change.
+
+User chose native hyperspace-only generators for Novokushan/Novotaiidan, recording now for future race-layer work. See that repository's docs/epics/HYPERSPACE_ONLY_GENERATORS.md. Remove anti-strike stun/tumble/ability/speed locks and accuracy aura there, not from original base races. This design bypasses the observed anti-strike state path; native inhibitor/save-load still needs testing. Current HWMP save loads but leaves targets blocked; do not call it proven file corruption or blame unmodified Test21 without its own control. Original-race save/load and other uncovered automated mechanics remain open in the base. It is not yet only human playtesting.
+
 ## 25 October follow-up: accepted Assault, clean economy and four-race save/load
 
 Read docs/AUTO_TEST_RESULTS.md and docs/AUTO_TESTS.md; this update supersedes earlier candidates/counts/status below. User accepted the narrow Assault change: final speed node 535/4 -> 535/1.2 on three cannons only. Fix revision 3cfca90f9523d4bd1213acf2544fbe1c47c313580cccdc8ba24b47ea4716c2a5; normal main BIG 24097797de499792f73512b98ae76715021c9cdb420888ad6721676d39023ad5, 105152360 bytes. Prepared, not installed in regular HWMP; no downstream builds/pin changes. Native applied ship verified alongside pinned-Test controls (48 Antistrike and 60 isolated speed measurements). Do not claim universal DPS or full-match balance.
@@ -97,3 +103,5 @@ Flak сохраняет площадную механику: Hit и Miss соз�
 ## Зависимости и публикация
 
 Потребители закреплены на a3973a7/c29f96a2…; автоматически не продвигать их. Действующая цепочка: hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod. Последние две рабочие копии остаются без изменений. Все три репозитория публичные по просьбе Дмитрия; публикуются только код и документация, без ассетов, BIG/ZIP и local/.
+
+Prepared six-collector release: fix b7e7e753a237f11c7e68825674f15abbac6a28bbc7a35132ffa9a41d4bf1e05d; main BIG d748e600291016a9148b2f1fbc234555a5c073f3166aa0f061c57ed15d7f8c56, 105152835 bytes, 27 overrides/1123 source files. Source regression and full extraction of all three archives passed. Previous prepared release preserved in local/six-collector-start/previous-release. No native launch/install, downstream builds or pin updates.

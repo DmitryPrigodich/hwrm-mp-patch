@@ -8,7 +8,7 @@ import re
 import shutil
 import subprocess
 from lupa.lua51 import LuaRuntime
-from hwmp24 import ROOT,WORK,SOURCE,RELEASE,DONOR,BUILD,index,sha,save
+from hwmp24 import ROOT,WORK,SOURCE,RELEASE,DONOR,BUILD,CACHE,START_FLEET_INPUTS,equal_collector_start,index,sha,save
 
 
 def inspect_lua(text):
@@ -304,6 +304,18 @@ def verify_source():
         elif upstream[name].stat().st_size==0 and name.endswith('.lua'):assert files[name].read_text()=='-- Intentionally empty upstream Lua file.\n'
         else:assert sha(files[name])==sha(upstream[name]),name
     for name,path in overrides.items():assert sha(files[name])==sha(path)
+    expected_starts={'scripts/startingfleets/'+row[0] for row in START_FLEET_INPUTS}
+    assert {n for n in overrides if n.startswith('scripts/startingfleets/')}==expected_starts
+    for filename,folder,digest in START_FLEET_INPUTS:
+        name='scripts/startingfleets/'+filename
+        original=CACHE/'players-patch-audit'/folder/name
+        assert sha(original)==digest
+        assert files[name].read_text(encoding='ascii')==equal_collector_start(original.read_text(encoding='ascii'))
+        for prefix,expected in (('vaygr',6),('hiigaran',6)):
+            candidate=files[name] if prefix=='vaygr' else CACHE/'players-patch-audit'/folder/'scripts/startingfleets'/filename.replace('vaygr','hiigaran')
+            vm=LuaRuntime(unpack_returned_tuples=True);vm.execute(candidate.read_text(encoding='ascii'))
+            collectors=[s for _,s in vm.globals().PersistantData.Squadrons.items() if s.type.lower().endswith('_resourcecollector')]
+            assert len(collectors)==1 and collectors[0].number==expected,(filename,prefix)
     assert not any(n.startswith(('leveldata/campaign/vastreaches','weapon/nkr_')) for n in files)
     expected_weapons={
         'weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn',
@@ -330,6 +342,7 @@ def verify_source():
     weapon_fixes=verify_fixes(SOURCE)
     from production_data import verify as verify_data
     result={'status':'passed','production_data':verify_data(SOURCE),'files':len(files),'fix_revision':manifest['fix_revision'],
+            'starting_collectors':{'hiigaran':6,'vaygr':6,'changed_files':sorted(expected_starts),'other_start_fields_unchanged':True},
             'upstream_combat_definitions':'two missile corrections, restored Medium weaponfire and approved Assault final speed node; other combat coefficients unchanged','weapon_fixes':weapon_fixes,'assault_fix':{'last_speed_node':[535,1.2],'weapons':sorted(assault_weapons),'all_other_normalized_text_unchanged':True},'effect_regression':check_effects(),
             'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
             'transport':check_transport(),'research_id_fix':'ScoutSpeedLimiter internal ID only; cost/time/effect and display names unchanged',

@@ -1,7 +1,7 @@
 {
   "identity": "HWMP-Patch-2.4-dev1",
   "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
-  "fix_revision": "3cfca90f9523d4bd1213acf2544fbe1c47c313580cccdc8ba24b47ea4716c2a5",
+  "fix_revision": "b7e7e753a237f11c7e68825674f15abbac6a28bbc7a35132ffa9a41d4bf1e05d",
   "overrides": {
     "locale/english/hwmp24_tooltips.lua": "0cfffcccb991cc7d3f271b1421efd0fa805a42b0c39a34d099e04ae1b95269d9",
     "locale/russian/hwmp24_tooltips.lua": "d2cb8147af2286c1634399bd69c1d1391a98d8d13bcf1600da36baf34298a244",
@@ -15,6 +15,8 @@
     "scripts/productiontimes/applybuildtimes.lua": "6afa69317d436e0a4f99934e9f72018db2795f623ec7fe9a37dde5a4f566f94f",
     "scripts/productiontimes/applyresearchtimes.lua": "cea5f57e147e5e3850765551098b74501dab1a440ba2601946fd190bb92cd3a8",
     "scripts/productiontimes/buildtimes.lua": "507c825360cab8caa9f2f0a0a2a3a952742bcab36300f5aee837aa1c097ab703",
+    "scripts/startingfleets/2x_vaygr00.lua": "3711ea82d51205be84e94a69d5bcc680622fb7952b8971daddc745fb1850400c",
+    "scripts/startingfleets/vaygr00.lua": "3711ea82d51205be84e94a69d5bcc680622fb7952b8971daddc745fb1850400c",
     "scripts/playerspatch/ships_util/core/global.lua": "f9737bb9870f35a6ce1d4e8e9e6e341ca7f63e93f6bbdf5322756c97f87df70b",
     "scripts/playerspatch/ships_util/lib/frigates.lua": "6b195abf472eb3942d55ec7db9134534203e6d6540a9563e8e4ba0e879f6bf9b",
     "scripts/playerspatch/ships_util/lib/gravwells.lua": "3d2ecbcf3050d499964a696598b422b5b6abb8aa128066f07c7e4eb1d2092a51",

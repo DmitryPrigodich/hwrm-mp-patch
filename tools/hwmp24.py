@@ -18,6 +18,18 @@ BUILD=build_directory('hwmp24',PROJECT)
 SOURCE=BUILD/'source'
 RELEASE=PROJECT/'local/HWMPPatch24-release'
 IDENTITY='HWMP-Patch-2.4-dev1'
+START_FLEET_INPUTS=(
+    ('vaygr00.lua','rm-base','8e22ba6545d98a62e611ee2533bd5068201d0640843939696177d45a9a852b30'),
+    ('2x_vaygr00.lua','test','410f75fde0724cc5fc52a90dfb8177961cfa64e1935a4b500e2c742d99a98d8a'),
+)
+
+
+def equal_collector_start(text):
+    # Only the resource-collector entry changes; preserve every other field.
+    pattern=r'(type\s*=\s*"Vgr_ResourceCollector",[\s\S]*?\bnumber\s*=\s*)7(?=\s*,)'
+    result,n=re.subn(pattern,lambda m:m[1]+'6',text)
+    assert n==1,'Expected exactly one seven-collector Vaygr entry'
+    return result
 
 
 def write(root,name,text):
@@ -136,6 +148,13 @@ def locale_tables():
 
 def make_overrides():
     out=ROOT/'overrides'
+    # Approved 25 October after native clean-income tests: equal six-collector starts.
+    # Carrier/full-fleet starts already have six; empty starts stay empty.
+    for filename,folder,digest in START_FLEET_INPUTS:
+        name='scripts/startingfleets/'+filename
+        source=CACHE/'players-patch-audit'/folder/name
+        assert sha(source)==digest,name
+        write(out,name,equal_collector_start(source.read_text(encoding='ascii')))
     core=(DONOR/'scripts/playerspatch/ships_util/core/global.lua').read_text()
     core='dofilepath("data:scripts/hwmp24/effects.lua")\n'+core
     core=replace_function(core,'SobGroup_Split',SPLIT)
