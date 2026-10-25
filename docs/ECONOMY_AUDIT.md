@@ -1,3 +1,5 @@
+> Follow-up 25 October: [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) supersedes the earlier candidate status. Assault final node 4→1.2 is accepted; clean 600s income supports proposed 6/6 (runtime still 6/7). Gravity save/load remains an SP blocker for all four target races.
+
 > Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
 
 # Экономика хиигарян и вэйгров: Classic → HWRM → PP 2.3 → Test21

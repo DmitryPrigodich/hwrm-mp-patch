@@ -1,7 +1,7 @@
 {
   "identity": "HWMP-Patch-2.4-dev1",
   "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
-  "fix_revision": "e0b245912fa9faa80dd2f0f38272425d7d5f2d3739324f3b8ec61f9e578f1497",
+  "fix_revision": "3cfca90f9523d4bd1213acf2544fbe1c47c313580cccdc8ba24b47ea4716c2a5",
   "overrides": {
     "locale/english/hwmp24_tooltips.lua": "0cfffcccb991cc7d3f271b1421efd0fa805a42b0c39a34d099e04ae1b95269d9",
     "locale/russian/hwmp24_tooltips.lua": "d2cb8147af2286c1634399bd69c1d1391a98d8d13bcf1600da36baf34298a244",
@@ -24,6 +24,9 @@
     "ship/tai_defensefighter/tai_defensefighter.lua": "f8bb2231a9a29208515312973d4dff080aa773106ed43c3a52b9f588cc6479c2",
     "ship/tai_supportfrigate/tai_supportfrigate.lua": "82c08d7d3f68547fd2599f4b9cea082befed0628a27536336173d8c72755c13c",
     "weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn": "c8a8f722d23c04928b40b925c32a41f6939b4d6f9662f8ee309936c4eb378abf",
+    "weapon/vgr_flechettecannonassaultfrigatebottom/vgr_flechettecannonassaultfrigatebottom.wepn": "4ee04fff0013ee85c0f3e21ce8c1d1893e03e310d120e5349d99b6780efc4895",
+    "weapon/vgr_flechettecannonassaultfrigateleft/vgr_flechettecannonassaultfrigateleft.wepn": "936b02594a01a50d38e468549694d41e9f90d86dfe056c7f3ed548bca535d072",
+    "weapon/vgr_flechettecannonassaultfrigateright/vgr_flechettecannonassaultfrigateright.wepn": "92618d372708cf6c1cd37510c5582193f09420d3b1b5f82b90328200c0680e97",
     "weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn": "bacb0382b1bfef3c20a2e9ab1978a1b8dac6cae2c189e99f234c8fe2d62f0aae"
   }
 }

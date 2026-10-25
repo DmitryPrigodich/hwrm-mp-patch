@@ -55,18 +55,23 @@ end
 
 function HWA_InitCase(c)
     c.last_sample=-1
-    if c.kind=="gravity" then
+    if c.kind=="gravity" or c.kind=="gravity_scope" then
         SobGroup_SetROE(c.a,PassiveROE)
         SobGroup_SetROE(c.b,PassiveROE)
         SobGroup_SetROE(c.target,PassiveROE)
-        SobGroup_SetROE(c.enemy,PassiveROE)
+        if c.enemy then SobGroup_SetROE(c.enemy,PassiveROE) end
         SobGroup_AbilityActivate(c.target,AB_Attack,0)
         SobGroup_SetSpeed(c.target,0.75)
         c.base_speed=SobGroup_GetSpeed(c.target)
         c.base_move=SobGroup_CanDoAbility(c.target,AB_Move)
         c.base_attack=SobGroup_CanDoAbility(c.target,AB_Attack)
-        c.base_enemy_move=SobGroup_CanDoAbility(c.enemy,AB_Move)
-        HWA_Log(c,"baseline","move="..c.base_move.."|attack="..c.base_attack.."|enemy_move="..c.base_enemy_move.."|speed="..c.base_speed.."|configured_single_hw1_target=1")
+        c.base_enemy_move=-1
+        if c.enemy then c.base_enemy_move=SobGroup_CanDoAbility(c.enemy,AB_Move) end
+        if c.vgr then
+            SobGroup_SetROE(c.vgr,PassiveROE)
+            c.base_vgr_move=SobGroup_CanDoAbility(c.vgr,AB_Move)
+        end
+        HWA_Log(c,"baseline","move="..c.base_move.."|attack="..c.base_attack.."|enemy_move="..c.base_enemy_move.."|speed="..c.base_speed.."|target_race="..(c.target_race or "hw1"))
     elseif c.kind=="missile" then
         HWA_Freeze(c.source);HWA_Freeze(c.target);HWA_Freeze(c.replacement)
         c.initial_hp=HWA_Hp(c.target);c.replacement_hp=HWA_Hp(c.replacement)
@@ -91,14 +96,14 @@ function HWA_InitCase(c)
         if c.shooter=="flak" then c.source_player=0 end
         c.initial_hp=HWA_Hp(c.target);c.in_range=0;c.peak_speed=0
         HWA_Log(c,"baseline","hp="..c.initial_hp.."|shooter="..c.shooter.."|stance="..c.stance.."|native_stance="..SobGroup_GetStance(c.target).."|upgrade="..c.upgrade.."|target_owner="..c.owner)
-    elseif c.kind=="economy" then
+    elseif c.kind=="economy" or c.kind=="economy_clean" then
         HWA_Freeze(c.receiver)
         SobGroup_SetInvulnerability(c.receiver,1)
         SobGroup_AbilityActivate(c.receiver,AB_Builder,0)
         SobGroup_Create(c.id)
         for j=1,getn(c.members) do SobGroup_SobGroupAdd(c.id,c.members[j]) end
         c.initial_ru=Player_GetRU(c.player)
-        HWA_Log(c,"baseline","ru="..c.initial_ru.."|collectors="..SobGroup_Count(c.id).."|count_configured="..c.count.."|initial_receiver_hp="..SobGroup_GetHardPointHealth(c.receiver,"Resource"))
+        HWA_Log(c,"baseline","ru="..c.initial_ru.."|collectors="..SobGroup_Count(c.id).."|count_configured="..c.count.."|receiver_hull_hp="..HWA_Hp(c.receiver).."|receiver_type="..(c.receiver_type or "mothership").."|distance="..(c.distance or 5000))
     elseif c.kind=="progression" then
         HWA_Freeze(c.first);HWA_Freeze(c.second)
         Player_SetRU(c.player,10000)
@@ -118,27 +123,29 @@ end
 
 function HWA_Gravity(c,t)
     if not SobGroup_CustomCommand then HWA_Result(c,"blocked","reason=CustomCommand_unavailable");return end
-    if t>=4 and not c.a_on then
+    if t>=4 and not c.a_on and c.driver~=0 then
         c.a_on=1;SobGroup_CustomCommand(c.a);HWA_Log(c,"activate","generator=A")
     end
     if t>=7 and not c.first_check then
         c.first_check=1;c.first_move=SobGroup_CanDoAbility(c.target,AB_Move)
         HWA_Log(c,"first_field","move="..c.first_move.."|attack="..SobGroup_CanDoAbility(c.target,AB_Attack))
     end
-    if t>=8 and not c.b_on then c.b_on=1;SobGroup_CustomCommand(c.b);HWA_Log(c,"activate","generator=B") end
-    if t>=12 and not c.a_killed then c.a_killed=1;SobGroup_TakeDamage(c.a,1);HWA_Log(c,"destroy","generator=A") end
+    if t>=8 and not c.b_on and c.driver~=0 then c.b_on=1;SobGroup_CustomCommand(c.b);HWA_Log(c,"activate","generator=B") end
+    if t>=12 and not c.a_killed and c.driver~=0 then c.a_killed=1;SobGroup_TakeDamage(c.a,1);HWA_Log(c,"destroy","generator=A") end
     if t>=15 and not c.remaining_check then
         c.remaining_check=1;c.remaining_move=SobGroup_CanDoAbility(c.target,AB_Move)
-        c.remaining_enemy_move=SobGroup_CanDoAbility(c.enemy,AB_Move)
+        c.remaining_enemy_move=-1
+        if c.enemy then c.remaining_enemy_move=SobGroup_CanDoAbility(c.enemy,AB_Move) end
         HWA_Log(c,"remaining_field","move="..c.remaining_move.."|enemy_move="..c.remaining_enemy_move)
     end
-    if t>=16 and not c.b_killed then c.b_killed=1;SobGroup_TakeDamage(c.b,1);HWA_Log(c,"destroy","generator=B") end
+    if t>=16 and not c.b_killed and c.driver~=0 then c.b_killed=1;SobGroup_TakeDamage(c.b,1);HWA_Log(c,"destroy","generator=B") end
     if t>=20 then
         local move=SobGroup_CanDoAbility(c.target,AB_Move)
         local attack=SobGroup_CanDoAbility(c.target,AB_Attack)
-        local enemy=SobGroup_CanDoAbility(c.enemy,AB_Move)
+        local enemy=-1
+        if c.enemy then enemy=SobGroup_CanDoAbility(c.enemy,AB_Move) end
         local status="failed"
-        if c.base_move==1 and c.first_move==0 and c.remaining_move==0 and c.remaining_enemy_move==0 and
+        if c.base_move==1 and c.first_move==0 and c.remaining_move==0 and (not c.enemy or c.remaining_enemy_move==0) and
            move==c.base_move and attack==c.base_attack and enemy==c.base_enemy_move and SobGroup_GetSpeed(c.target)==c.base_speed and
            SobGroup_Count(c.a)==0 and SobGroup_Count(c.b)==0 then status="passed" end
         HWA_Result(c,status,"move="..move.."|attack="..attack.."|enemy_move="..enemy.."|speed="..SobGroup_GetSpeed(c.target).."|release_mode=destruction|squadron_all_hulls_proven=0")
@@ -231,17 +238,37 @@ function HWA_Economy(c,t)
     end
 end
 
+function HWA_EconomyClean(c,t)
+    if t>=5 and not c.started then
+        c.started=1;SobGroup_Resource(c.player,c.id)
+        HWA_Log(c,"harvest_started","collectors="..SobGroup_Count(c.id).."|damage_injected=0|purchases=0")
+    end
+    if t>=c.warmup and not c.ru_warmup then c.ru_warmup=Player_GetRU(c.player);HWA_Log(c,"warmup_end","ru="..c.ru_warmup) end
+    if t>=c.steady_start and not c.ru_steady then c.ru_steady=Player_GetRU(c.player);HWA_Log(c,"steady_window_start","ru="..c.ru_steady) end
+    if c.last_sample<0 or t-c.last_sample>=1 then
+        c.last_sample=t
+        HWA_Log(c,"sample","ru="..Player_GetRU(c.player).."|collectors="..SobGroup_Count(c.id).."|receiver_hull_hp="..HWA_Hp(c.receiver))
+    end
+    if t>=c.finish then
+        local ru=Player_GetRU(c.player)
+        local status="measured"
+        if not c.ru_warmup or not c.ru_steady or ru<=c.ru_warmup or SobGroup_Count(c.id)~=c.count or Universe_PlayerCount()~=6 then status="blocked" end
+        HWA_Result(c,status,"income="..(ru-c.initial_ru).."|after_warmup_income="..(ru-(c.ru_warmup or ru)).."|last_300_income="..(ru-(c.ru_steady or ru)).."|collectors="..SobGroup_Count(c.id).."|window="..c.finish.."|warmup="..c.warmup.."|receiver_type="..c.receiver_type.."|distance="..c.distance.."|damage_injected=0")
+    end
+end
+
 function HWA_Tick()
     local t=Universe_GameTime()-HWA_START
     local done=0
     for i=1,getn(HWA_CASES) do
         local c=HWA_CASES[i]
         if not c.done then
-            if HWA_MODE=="SaveLoad" then HWA_SaveCase(c,t)
-            elseif c.kind=="gravity" then HWA_Gravity(c,t)
+            if HWA_MODE=="SaveLoad" or (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then HWA_SaveCase(c,t)
+            elseif c.kind=="gravity" or c.kind=="gravity_scope" then HWA_Gravity(c,t)
             elseif c.kind=="missile" then HWA_Missile(c,t)
             elseif c.kind=="pass" then HWA_Pass(c,t)
             elseif c.kind=="economy" then HWA_Economy(c,t)
+            elseif c.kind=="economy_clean" then HWA_EconomyClean(c,t)
             elseif c.kind=="progression" then HWA_Progression(c,t)
             elseif c.kind=="platform_range" then
                 local missiles=HWA_CountNear(c,{c.x,0,c.z+2500},8000)
@@ -345,9 +372,11 @@ end
 
 function OnInit()
     HWA_START=Universe_GameTime();HWA_LAST_PROGRESS=-10
+    HWA_POSTSAVE_MUTATION=0
     HWA_Log({id="suite"},"begin","total="..getn(HWA_CASES).."|native=1|physical_hull_counts_inferred=0")
     HWA_Log({id="suite"},"native_constants","neutral="..NeutralStance.."|evasive="..EvasiveStance.."|aggressive="..AggressiveStance)
-    for p=1,5 do CPU_Enable(p,0) end
+    for p=1,Universe_PlayerCount()-1 do CPU_Enable(p,0) end
+    HWA_Log({id="suite"},"native_players","count="..Universe_PlayerCount())
     if Selection_Create then Selection_Create("HWA_AllMissiles");Selection_Create("HWA_NearMissiles") end
     HWA_Freeze("HWA_MotherH");HWA_Freeze("HWA_MotherV")
     SobGroup_SetInvulnerability("HWA_MotherH",1);SobGroup_SetInvulnerability("HWA_MotherV",1)
@@ -359,7 +388,7 @@ function OnInit()
     end
     for i=1,getn(HWA_CASES) do HWA_InitCase(HWA_CASES[i]) end
     Camera_Interpolate("here","HWA_Home",0)
-    if HWA_MODE=="Mechanics" or HWA_MODE=="Antistrike" or HWA_MODE=="SaveLoad" then Camera_Interpolate("here",HWA_CASES[1].id,0) end
+    if HWA_MODE=="Mechanics" or HWA_MODE=="Antistrike" or HWA_MODE=="SaveLoad" or HWA_MODE=="SaveLoadAuto" or HWA_MODE=="GravityScope" or HWA_MODE=="EconomyMatrix6" or HWA_MODE=="EconomyMatrix7" then Camera_Interpolate("here",HWA_CASES[1].id,0) end
     Subtitle_Message("$9985001",20)
     Rule_AddInterval("HWA_Tick",0.25)
 end
@@ -367,9 +396,9 @@ end
 function OnStartOrLoad()
     HWA_LOADS=(HWA_LOADS or 0)+1
     HWA_Log({id="suite"},"start_or_load","load_count="..HWA_LOADS)
-    if HWA_MODE=="SaveLoad" and HWA_SAVE_REQUESTED==1 and HWA_LOADS>=2 then
+    if (HWA_MODE=="SaveLoad" or HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") and HWA_SAVE_REQUESTED==1 and HWA_LOADS>=2 then
         HWA_RELEASE_START=Universe_GameTime()
-        HWA_Log({id="suite"},"save_loaded","saved_globals_restored=1")
+        HWA_Log({id="suite"},"save_loaded","mutation_marker="..(HWA_POSTSAVE_MUTATION or -1))
         HWA_EffectState("after_load")
     end
 end
@@ -380,22 +409,43 @@ function HWA_SaveCase(c,t)
     if HWA_RELEASE_START then
         local dt=Universe_GameTime()-HWA_RELEASE_START
         if dt>=2 and not c.a_killed then c.a_killed=1;SobGroup_TakeDamage(c.a,1) end
-        if dt>=5 and not c.check then c.check=1;c.remaining=SobGroup_CanDoAbility(c.target,AB_Move) end
+        if dt>=5 and not c.check then
+            c.check=1;c.remaining=SobGroup_CanDoAbility(c.target,AB_Move)
+            c.remaining_enemy=SobGroup_CanDoAbility(c.enemy,AB_Move)
+            if c.vgr then c.remaining_vgr=SobGroup_CanDoAbility(c.vgr,AB_Move) end
+        end
         if dt>=6 and not c.b_killed then c.b_killed=1;SobGroup_TakeDamage(c.b,1) end
         if dt>=10 then
             local status="failed"
             local alive=SobGroup_Count(c.a)+SobGroup_Count(c.b)
-            if c.remaining==0 and SobGroup_CanDoAbility(c.target,AB_Move)==c.base_move and
+            local hgn_move=SobGroup_CanDoAbility(c.enemy,AB_Move)
+            local vgr_move=-1
+            if c.vgr then vgr_move=SobGroup_CanDoAbility(c.vgr,AB_Move) end
+            if c.remaining==0 and c.remaining_enemy==0 and hgn_move==c.base_enemy_move and (not c.vgr or c.remaining_vgr==0 and vgr_move==c.base_vgr_move) and SobGroup_CanDoAbility(c.target,AB_Move)==c.base_move and
                SobGroup_CanDoAbility(c.target,AB_Attack)==c.base_attack and SobGroup_GetSpeed(c.target)==c.base_speed and alive==0 then status="passed" end
             if alive>0 then status="blocked" end
-            HWA_Result(c,status,"after_real_load=1|remaining_field_move="..c.remaining.."|final_move="..SobGroup_CanDoAbility(c.target,AB_Move).."|final_attack="..SobGroup_CanDoAbility(c.target,AB_Attack).."|speed="..SobGroup_GetSpeed(c.target).."|generators_remaining="..alive.."|generator_a_hp="..HWA_Hp(c.a).."|generator_b_hp="..HWA_Hp(c.b))
+            HWA_Result(c,status,"after_real_load=1|remaining_field_move="..c.remaining.."|final_move="..SobGroup_CanDoAbility(c.target,AB_Move).."|hgn_move="..hgn_move.."|vgr_move="..vgr_move.."|final_attack="..SobGroup_CanDoAbility(c.target,AB_Attack).."|speed="..SobGroup_GetSpeed(c.target).."|generators_remaining="..alive.."|generator_a_hp="..HWA_Hp(c.a).."|generator_b_hp="..HWA_Hp(c.b))
             HWA_EffectState("after_destroy")
         end
     elseif t>=5 and not HWA_SAVE_REQUESTED then
         HWA_SAVE_REQUESTED=1
-        HWA_Log({id="suite"},"save_requested","field_active="..(1-SobGroup_CanDoAbility(c.target,AB_Move)).."|checkpoint=HWMP_AutoFields_"..strsub(HWA_RUN,1,8).."|universe_pause=0")
+        local label="HWMP_AutoFields_"..strsub(HWA_RUN,1,8)
+        if (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then label="HWMP_AutoFields_Auto_"..strsub(HWA_RUN,1,8) end
+        HWA_Log({id="suite"},"save_requested","field_active="..(1-SobGroup_CanDoAbility(c.target,AB_Move)).."|checkpoint="..label.."|universe_pause=0")
         HWA_EffectState("before_save")
-        Campaign_QuickSaveNb(5,"HWMP_AutoFields_"..strsub(HWA_RUN,1,8))
+        Campaign_QuickSaveNb(5,label)
+    elseif (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then
+        if t>=8 and not c.post_save_killed then
+            c.post_save_killed=1;HWA_POSTSAVE_MUTATION=1
+            SobGroup_TakeDamage(c.a,1);SobGroup_TakeDamage(c.b,1)
+            HWA_Log(c,"post_save_mutation","old_generators_destroyed=1|mission_marker=1")
+        end
+        if t>=30 and not HWA_AUTOLOAD_TRIGGERED then
+            HWA_AUTOLOAD_TRIGGERED=1
+            HWA_Log({id="suite"},"auto_load_requested","screen=HWMPAutoReload|owned_checkpoint_only=1")
+            UI_SetScreenVisible("HWMPAutoReload",1)
+        end
+        if t>=75 then HWA_Result(c,"blocked","reason=automatic_load_not_observed") end
     end
 end
 

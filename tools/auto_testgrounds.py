@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-from hwrm_common import PROJECT,CACHE,GAME,index,sha,save,build_directory
+from hwrm_common import PROJECT,CACHE,GAME,DONOR,index,sha,save,build_directory
 from hwrm_archive import package_source
 from install_hwmp24 import active_processes,other_mod_files
 
@@ -18,7 +18,7 @@ BUILD=build_directory('native-auto-tests',PROJECT)
 SOURCE=BUILD/'source'
 IDENTITY='HWMP-native-auto-tests-v1'
 CAMPAIGN='HWMPAutoTests'
-MODES=('Mechanics','Antistrike','Economy6','Economy7','SaveLoad','SpeedCurve','Progression')
+MODES=('Mechanics','Antistrike','Economy6','Economy7','SaveLoad','SpeedCurve','Progression','EconomyMatrix6','EconomyMatrix7','GravityScope','SaveLoadAuto','SaveLoadTrace')
 
 def lua(v):
     if isinstance(v,str):return json.dumps(v,ensure_ascii=True)
@@ -44,6 +44,7 @@ def prepare():
         native.update(index(CACHE/'players-patch-audit'/folder))
     native.update(index(base))
     alterations={}
+    diagnostic_overrides={}
     def clone_ship(original,name,transform):
         src=native[f'ship/{original}/{original}.ship'];old=src.read_text(encoding='utf-8-sig');new=transform(old)
         put(f'ship/{name}/{name}.ship',new)
@@ -82,19 +83,19 @@ def prepare():
         clone_ship(ship,'hwa_launcher_'+tag,launcher)
     for variant in ('control','flat','cap'):
         def assault(text,variant=variant):
-            if variant=='control':return text
             changed=0
             # The three cannons are native innate weapon subsystems.
             weapons=sorted(set(re.findall(r'"(Vgr_FlechetteCannonAssaultFrigate[^\"]+)"',text)))
             for weapon in weapons:
-                old=native[f'weapon/{weapon.lower()}/{weapon.lower()}.wepn'].read_text(encoding='utf-8-sig')
+                # Keep the pinned Test21 control even after the main patch adopts the cap.
+                old=(DONOR/f'weapon/{weapon.lower()}/{weapon.lower()}.wepn').read_text(encoding='utf-8-sig')
                 m=re.search(r'setSpeedvsAccuracyAgainst\(NewWeaponType,([^;]+)\);',old)
                 if not m:continue
                 changed+=1
                 parts=m[1].split(',');assert len(parts)==11
                 if variant=='flat':
                     for i in (2,4,6,8,10):parts[i]='1'
-                else:parts[10]='1.2'
+                elif variant=='cap':parts[10]='1.2'
                 new=old[:m.start(1)]+','.join(parts)+old[m.end(1):]
                 w='hwa_'+variant+'_'+weapon.lower();put(f'weapon/{w}/{w}.wepn',new)
                 sub='hwa_'+variant+'_sub_'+weapon.lower()
@@ -117,13 +118,59 @@ def prepare():
                 if attr!='minRegenTime':assert n==1,(attr,n)
             return text
         clone_ship('hgn_interceptor','hwa_speed_'+tag,speed_probe)
+    trace='''dofilepath("data:scripts/hwmp24/autotests/run.lua")
+function HWA_TraceShip(event,group,player,id)
+    local count=-1
+    if type(HWMP_EffectRecords)=="table" then count=getn(HWMP_EffectRecords) end
+    print("HWMP_SHIP|run="..HWA_RUN.."|t="..Universe_GameTime().."|event="..event.."|ship_id="..id.."|group="..group.."|records="..count.."|serial="..(HWMP_EffectSerial or -1))
+    if count>0 and event~="update" then
+        for i=1,count do
+            local r=HWMP_EffectRecords[i]
+            local speed=-1
+            if r.speed then speed=r.speed.baseline end
+            local owners=""
+            if r.speed then
+                local key=next(r.speed.owners,nil)
+                while key do owners=owners..key..",";key=next(r.speed.owners,key) end
+            end
+            print("HWMP_SHIP_RECORD|run="..HWA_RUN.."|t="..Universe_GameTime().."|event="..event.."|ship_id="..id.."|record="..i.."|target="..r.group.."|entries="..SobGroup_Count(r.group).."|speed_baseline="..speed.."|owners="..owners)
+        end
+    end
+end
+'''
+    for race in ('kus','tai'):
+        original=race+'_gravwellgenerator';private='hwa_trace_'+original
+        path=f'ship/{private}/{private}.lua'
+        mapping={prefix+'_'+race.capitalize()+'_GravWellGenerator':'HWA_'+prefix+'_'+race+'_GW' for prefix in ('Start','Do','Finish','Create','Update','Destroy')}
+        body='dofilepath("data:ship/'+original+'/'+original+'.lua")\n'+trace
+        for old,new in mapping.items():
+            event=old.split('_')[0].lower()
+            body+=f'function {new}(g,p,id)\n HWA_TraceShip("{event}_before",g,p,id)\n {old}(g,p,id)\n HWA_TraceShip("{event}_after",g,p,id)\nend\n'
+        put(path,body)
+        def wrap(text,original=original,path=path,mapping=mapping):
+            text,n=re.subn(r'data:ship/'+original+'/'+original+r'\.lua','data:'+path,text,flags=re.I)
+            assert n>=2,(original,n)
+            for old,new in mapping.items():text=text.replace('"'+old+'"','"'+new+'"')
+            return text
+        clone_ship(original,private,wrap)
+    # Diagnostic UI adapter only; all gameplay files remain byte-identical.
+    ui='ui/newui/uisettings.lua'
+    before=(SOURCE/ui).read_text(encoding='ascii')
+    screen_count=len(re.findall(r'(?m)^\s*name\s*=',before.split('GameScreens = {',1)[1]))
+    assert screen_count>10
+    after=before+'\nGameScreens['+str(screen_count+1)+']={name="HWMPAutoReload",filename="data:ui/newui/hwmpautoreload.lua",activated=0}\n'
+    put(ui,after)
+    diagnostic_overrides[ui]={'before':base_hashes[ui],'after':sha(SOURCE/ui),'purpose':'register inactive screen for loading only an owned test checkpoint'}
+    callback="if not HWMPReloadAttempted then HWMPReloadAttempted=1; LoadGame('player:Campaign/HWMPAUTOTESTS/HWMPAutoCheckpoint.sav') end"
+    put('ui/newui/hwmpautoreload.lua','HWMPAutoReload={stylesheet="HW2StyleSheet",RootElementSettings={Layout={size_WH={w=1,h=1,wr="scr",hr="scr"}}},giveParentMouseInput=1,eventOpaque=0,pixelUVCoords=1,onShow='+lua(callback)+'}')
     put('scripts/hwmp24/autotests/runtime.lua',(ROOT/'runtime.lua').read_text(encoding='ascii'))
     plans={};fixtures={};generated=[]
     for mode in MODES:
         ships=[];volumes=[];asteroids=[];cases=[]
         def add(name,kind,pos,owner,size=1):ships.append([name,kind,list(pos),owner,size]);return name
-        add('HWA_MotherH','hgn_mothership',[-80000,0,-80000],0)
-        add('HWA_MotherV','vgr_mothership',[80000,0,-80000],1)
+        if not mode.startswith('EconomyMatrix'):
+            add('HWA_MotherH','hgn_mothership',[-80000,0,-80000],0)
+            add('HWA_MotherV','vgr_mothership',[80000,0,-80000],1)
         if mode=='Mechanics':
             for j,race in enumerate(('kus','tai','kus','tai')):
                 x=-70000+j*18000;z=-10000;prefix='gw_'+race
@@ -166,12 +213,12 @@ def prepare():
         if mode=='Antistrike':
             k=0
             for rep in range(1,4):
-                for shooter in ('control','flat','flak'):
+                for shooter in ('control','flat','applied','flak'):
                     for upgrade in (0,1):
                         for stance in (1,2):
                             x=-100000+(k%12)*18000;z=(k//12)*23000;k+=1
                             c=f'aa_{shooter}_u{upgrade}_s{stance}_r{rep}';isflak=shooter=='flak'
-                            source=add(c+'_s','hgn_assaultfrigate' if isflak else 'hwa_assault_'+shooter,[x+1000,0,z],0 if isflak else 1)
+                            source=add(c+'_s','hgn_assaultfrigate' if isflak else 'vgr_assaultfrigate' if shooter=='applied' else 'hwa_assault_'+shooter,[x+1000,0,z],0 if isflak else 1)
                             owner=(3 if upgrade else 1) if isflak else (2 if upgrade else 0)
                             target=add(c+'_t','vgr_interceptor' if isflak else 'hgn_interceptor',[x,0,z-9000],owner,0)
                             volume=c+'_end';volumes.append([volume,[x,0,z+17000],100])
@@ -180,10 +227,10 @@ def prepare():
             k=0
             for rep in range(1,6):
                 for speed_tag,speed in [('base',348),('upgraded',487.2),('fast',535.92)]:
-                    for shooter in ('control','flat','cap'):
+                    for shooter in ('control','flat','cap','applied'):
                         x=-90000+(k%10)*18000;z=(k//10)*23000;k+=1
                         c=f'curve_{speed_tag}_{shooter}_r{rep}'
-                        source=add(c+'_s','hwa_assault_'+shooter,[x+1000,0,z],1)
+                        source=add(c+'_s','vgr_assaultfrigate' if shooter=='applied' else 'hwa_assault_'+shooter,[x+1000,0,z],1)
                         target=add(c+'_t','hwa_speed_'+speed_tag,[x,0,z-9000],0,1)
                         volume=c+'_end';volumes.append([volume,[x,0,z+17000],100])
                         cases.append({'id':c,'kind':'pass','source':source,'target':target,'owner':0,'stance':1,'upgrade':0,'shooter':shooter,'nominal_speed':speed,'volume':volume,'x':x,'z':z})
@@ -195,15 +242,26 @@ def prepare():
                 second=add(c+'_second',race+'_carrier',[x,0,z+4000],owner)
                 initial={0:['Research'],1:['Research'],2:['AdvancedResearch'],3:['FighterProduction'],4:['FighterProduction'],5:['Research','FighterProduction']}[owner]
                 cases.append({'id':c,'kind':'progression','player':owner,'race':race,'first':first,'second':second,'initial_modules':initial,'initial_can_expected':1 if owner==5 else 0,'lab_count':1 if owner in (0,1) else 2,'speed_tech':'InterceptorMAXSPEEDUpgrade1' if race=='hgn' else 'FighterspeedUpgrade1','second_tech':'AttackBomberMAXSPEEDUpgrade1' if race=='hgn' else 'CorvetteTech','speed_cost':800 if race=='hgn' else 1200,'second_cost':400 if race=='hgn' else 500,'speed_time':30 if race=='hgn' else 45,'second_time':30 if race=='hgn' else 40,'x':x,'z':z})
-        if mode=='SaveLoad':
+        if mode in ('SaveLoad','SaveLoadAuto','SaveLoadTrace'):
             for j,race in enumerate(('kus','tai')):
                 x=-40000+j*18000;z=-10000;c='save_'+race
-                a=add(c+'_a',race+'_gravwellgenerator',[x-500,0,z],4+j)
-                b=add(c+'_b',race+'_gravwellgenerator',[x+500,0,z],4+j)
+                generator=('hwa_trace_' if mode=='SaveLoadTrace' else '')+race+'_gravwellgenerator'
+                a=add(c+'_a',generator,[x-500,0,z],4+j)
+                b=add(c+'_b',generator,[x+500,0,z],4+j)
                 target=add(c+'_target',race+'_interceptor',[x,0,z+1200],4+j)
                 enemy=add(c+'_enemy','hgn_interceptor',[x,0,z+1700],0,0)
-                cases.append({'id':c,'kind':'gravity','a':a,'b':b,'target':target,'enemy':enemy,'x':x,'z':z})
-        if mode.startswith('Economy'):
+                vgr=add(c+'_vgr','vgr_interceptor',[x+400,0,z+1700],1,0)
+                cases.append({'id':c,'kind':'gravity','a':a,'b':b,'target':target,'enemy':enemy,'vgr':vgr,'x':x,'z':z})
+        if mode=='GravityScope':
+            for j,race in enumerate(('kus','tai')):
+                x=-30000+j*60000;z=-10000;c='scope_'+race
+                a=add(c+'_a',race+'_gravwellgenerator',[x-500,0,z],4+j)
+                b=add(c+'_b',race+'_gravwellgenerator',[x+500,0,z],4+j)
+                for k,(target_race,owner) in enumerate((('kus',4),('tai',5),('hgn',0),('vgr',1))):
+                    name=c+'_'+target_race
+                    target=add(name+'_target',target_race+'_interceptor',[x-600+k*400,0,z+1200],owner)
+                    cases.append({'id':name,'kind':'gravity_scope','a':a,'b':b,'target':target,'driver':1 if k==0 else 0,'generator_race':race,'target_race':target_race,'x':x,'z':z})
+        if mode in ('Economy6','Economy7'):
             for rep in range(3):
                 z=-80000+rep*80000
                 for owner,race,x,count in [(2*rep,'hgn',-80000,6),(2*rep+1,'vgr',80000,int(mode[-1]))]:
@@ -213,6 +271,19 @@ def prepare():
                     for i in range(count):add(group+'_'+str(i),race+'_resourcecollector',[x-1000+i*300,0,z+2000],owner)
                     for i in range(48):asteroids.append(['Asteroid_3',[x+(i%8-4)*500,(i%3-1)*350,z+5000+(i//8)*600]])
                     cases.append({'id':group,'kind':'economy','player':owner,'race':race,'rep':rep+1,'count':count,'receiver':receiver,'members':[group+'_'+str(i) for i in range(count)]})
+        if mode.startswith('EconomyMatrix'):
+            configurations=[('mothership',5000,False),('carrier',13000,True),('resourcecontroller',7000,False)]
+            for rep,(receiver_type,distance,mirror) in enumerate(configurations):
+                z=-80000+rep*80000
+                for offset,race,count in ((0,'hgn',6),(1,'vgr',int(mode[-1]))):
+                    owner=rep*2+offset
+                    x=(-100000 if offset==0 else 100000)*(-1 if mirror else 1)
+                    group=f'matrix_{race}_r{rep+1}'
+                    receiver='HWA_MotherH' if owner==0 else 'HWA_MotherV' if owner==1 else group+'_receiver'
+                    add(receiver,race+'_'+receiver_type,[x,0,z],owner)
+                    members=[add(group+'_'+str(i),race+'_resourcecollector',[x-1000+i*300,0,z+2000],owner) for i in range(count)]
+                    for i in range(48):asteroids.append(['Asteroid_3',[x+(i%8-4)*500,(i%3-1)*350,z+distance+(i//8)*600]])
+                    cases.append({'id':group,'kind':'economy_clean','player':owner,'race':race,'rep':rep+1,'count':count,'receiver':receiver,'receiver_type':receiver_type,'distance':distance,'mirrored':int(mirror),'members':members,'finish':600,'warmup':180,'steady_start':300,'x':x,'z':z})
         plans[mode]=cases;fixtures[mode]=ships
         path=f'leveldata/campaign/{CAMPAIGN}/{mode}'
         lines=['function DetermChunk()']
@@ -222,13 +293,13 @@ def prepare():
         for kind,pos in asteroids:lines.append(f'addAsteroid({lua(kind)},{lua(pos)},100,0,0,0,0)')
         for c in cases:
             if 'x' in c:lines.append(f'addCamera({lua(c["id"])},{lua([c["x"],0,c["z"]+1000])},{lua([c["x"]+5000,6000,c["z"]-6000])})')
-        lines.extend(['addCamera("HWA_Home",{-80000,0,-78000},{-72000,9000,-88000})','setWorldBoundsInner({0,0,0},{250000,100000,250000})','end','function NonDetermChunk()','loadBackground("m01")','setSensorsManagerCameraDistances(100,1000000)','end','maxPlayers=6','levelDesc="$9985000"','player={}'])
         races=('Hiigaran','Vaygr')*3 if mode.startswith('Economy') or mode=='Progression' else ('Hiigaran','Vaygr','Hiigaran','Vaygr','Kushan','Taiidan')
+        lines.extend(['addCamera("HWA_Home",{-80000,0,-78000},{-72000,9000,-88000})','setWorldBoundsInner({0,0,0},{250000,100000,250000})','end','function NonDetermChunk()','loadBackground("m01")','setSensorsManagerCameraDistances(100,1000000)','end','maxPlayers='+str(len(races)),'levelDesc="$9985000"','player={}'])
         for p,race in enumerate(races):lines.append(f'player[{p}]={{id={p},name="",resources=0,raceName="{race}",startPos=0}}')
         put(path+'/'+mode+'.level','\n'.join(lines))
         put(path+'/'+mode+'.lua',f'HWA_MODE={lua(mode)}\nHWA_CASES={lua(cases)}\ndofilepath("data:scripts/hwmp24/autotests/runtime.lua")')
     strings={9985000:['HWMP 2.4 — автоматические испытания','HWMP 2.4 — Automatic Tests'],9985001:['Автоматический прогон. Не выдавайте приказы кораблям; результаты записываются в журнал.','Automatic run. Do not issue ship orders; results are recorded in the log.']}
-    for i,mode in enumerate(MODES):strings[9985010+i]=[{'Mechanics':'Механика: гравиполя, ракеты и наука','Antistrike':'Противоистребительная стрельба: сравнение вариантов','Economy6':'Экономика: шесть сборщиков каждой расы','Economy7':'Экономика: шесть хиигарских и семь вэйгрских сборщиков','SaveLoad':'Гравиполя: сохранение и загрузка','SpeedCurve':'Скоростная кривая: изолированная проверка','Progression':'Наука: условия доступа и общая очередь'}[mode],mode+' automatic test']
+    for i,mode in enumerate(MODES):strings[9985010+i]=[{'Mechanics':'Механика: гравиполя, ракеты и наука','Antistrike':'Противоистребительная стрельба: сравнение вариантов','Economy6':'Экономика: шесть сборщиков каждой расы','Economy7':'Экономика: шесть хиигарских и семь вэйгрских сборщиков','SaveLoad':'Гравиполя: сохранение и загрузка','SpeedCurve':'Скоростная кривая: изолированная проверка','Progression':'Наука: условия доступа и общая очередь','EconomyMatrix6':'Экономика 6/6: десять минут, три приёмника/маршрута','EconomyMatrix7':'Экономика 6/7: десять минут, три приёмника/маршрута','GravityScope':'Гравиполя: цели всех четырёх рас','SaveLoadAuto':'Гравиполя: автоматическая загрузка','SaveLoadTrace':'Гравиполя: загрузка с диагностикой callbacks'}[mode],mode+' automatic test']
     reg=(CACHE/'players-patch-audit/rm-base/locale/localedat.lua').read_text(encoding='ascii');put('locale/localedat.lua',reg[:reg.rfind('}')]+'{name="hwmp_autotests.dat"},\n}')
     for col,lang in enumerate(('Russian','English')):
         p=SOURCE/f'locale/{lang}/hwmp_autotests.ucs';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(''.join(str(n)+'\t'+v[col]+'\n' for n,v in sorted(strings.items())),encoding='utf-16',newline='\r\n')
@@ -239,14 +310,15 @@ def prepare():
         campaign.append(f'Mission[{i}]={{postload=function() end,directory="{mode}",level="{mode}.level",postlevel=function() end,displayName="${9985009+i}",description="$9985001"}}')
         dst=SOURCE/f'ui/mapthumbnails/campaign/{CAMPAIGN}/{mode}.dds';dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(thumb,dst)
     put(f'leveldata/campaign/{CAMPAIGN}.campaign','\n'.join(campaign))
-    inventory={n:sha(p) for n,p in index(SOURCE).items()};assert all(inventory[n]==h for n,h in base_hashes.items())
+    inventory={n:sha(p) for n,p in index(SOURCE).items()};assert all(inventory[n]==h or n in diagnostic_overrides for n,h in base_hashes.items())
     run=hashlib.sha256(json.dumps(inventory,sort_keys=True).encode()).hexdigest();put('scripts/hwmp24/autotests/run.lua','HWA_RUN="'+run+'"')
-    save(WORK/'source.json',{'identity':IDENTITY,'run':run,'source':str(SOURCE),'base_files':base_hashes,'plans':plans,'fixtures':fixtures,'private_diagnostic_types':alterations,'engine_tested':False})
+    save(WORK/'source.json',{'identity':IDENTITY,'run':run,'source':str(SOURCE),'base_files':base_hashes,'plans':plans,'fixtures':fixtures,'private_diagnostic_types':alterations,'diagnostic_overrides':diagnostic_overrides,'engine_tested':False})
     return run
 
 def package():
     run=prepare();compiler=CACHE/'hwmp-testgrounds-step/lua4/lua-4.0.1/luac4-x86.exe'
     own=[p for n,p in index(SOURCE).items() if n not in json.loads((WORK/'source.json').read_text(encoding='utf8'))['base_files'] and p.suffix in ('.lua','.level','.campaign','.wepn','.wf','.ship')]
+    own.append(SOURCE/'ui/newui/uisettings.lua')
     for p in own:
         r=subprocess.run([str(compiler),'-p',str(p)],capture_output=True,text=True);assert r.returncode==0,(p,r.stderr)
     from verify_save_compat import verify as verify_saver

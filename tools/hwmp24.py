@@ -229,6 +229,14 @@ end''')
     assert text.count('{SuperUtilityArmour = 0.8},\n')==1
     assert text.count('{SuperUtilityArmour = 0.85}')==1
     write(out,name,text.replace('{SuperUtilityArmour = 0.8},\n',''))
+    # Approved 25 October: smooth the Assault's last speed-accuracy node only.
+    for suffix in ('bottom','left','right'):
+        weapon='vgr_flechettecannonassaultfrigate'+suffix
+        name=f'weapon/{weapon}/{weapon}.wepn'
+        text=(DONOR/name).read_text(encoding='ascii')
+        old='487, 1.2, 535, 4.0);'
+        assert text.count(old)==1
+        write(out,name,text.replace(old,'487, 1.2, 535, 1.2);'))
     # Test21 omitted the weapon-fire binding for its Medium missile resource.
     default_name='scripts/races/vaygr/scripts/research/default.lua'
     default=(DONOR/default_name).read_text(encoding='ascii')
@@ -299,7 +307,7 @@ def package():
     shutil.copy2(ROOT/'README.md',RELEASE/'README.md')
     for name in ('NATIVE_TESTS.md','AUTO_TESTS.md','AUTO_TEST_RESULTS.md'):
         shutil.copy2(PROJECT/'docs'/name,RELEASE/name)
-    (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nIndependent Test21-derived fixes; retains upstream multiplayer balance.\n',encoding='ascii')
+    (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n',encoding='ascii')
     for name in ('start_hwmp_patch.ps1','HWMP Patch 2.4.cmd'):
         shutil.copy2(ROOT/name,RELEASE/name)
     shutil.copy2(ROOT/'fixes.json',RELEASE/'version.json')

@@ -17,7 +17,7 @@ from hwmp24 import IDENTITY, RELEASE, WORK
 
 MARKER = 'package-id.txt'
 PAYLOAD = {'HWMPPatch24.big', 'English.big', 'Russian.big', 'config.txt',
-           'README.md', 'NATIVE_TESTS.md', 'version.json',
+           'README.md', 'NATIVE_TESTS.md', 'AUTO_TESTS.md', 'AUTO_TEST_RESULTS.md', 'version.json',
            'HWMP Patch 2.4.cmd', 'start_hwmp_patch.ps1'}
 
 

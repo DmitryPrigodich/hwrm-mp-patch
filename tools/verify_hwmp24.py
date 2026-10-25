@@ -308,6 +308,15 @@ def verify_source():
     expected_weapons={
         'weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn',
         'weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn'}
+    assault_weapons=set()
+    for suffix in ('bottom','left','right'):
+        weapon='vgr_flechettecannonassaultfrigate'+suffix
+        name=f'weapon/{weapon}/{weapon}.wepn'
+        before=upstream[name].read_text(encoding='ascii')
+        assert before.count('487, 1.2, 535, 4.0);')==1
+        assert files[name].read_text(encoding='ascii')==before.replace('487, 1.2, 535, 4.0);','487, 1.2, 535, 1.2);')
+        assault_weapons.add(name)
+    expected_weapons.update(assault_weapons)
     assert {n for n,p in overrides.items() if p.suffix in ('.ship','.wepn','.subs','.miss')}==expected_weapons
     wf_name='scripts/weaponfire/vgr_mediummissile/vgr_mediummissile.wf'
     assert {n for n,p in overrides.items() if p.suffix=='.wf'}=={wf_name}
@@ -321,7 +330,7 @@ def verify_source():
     weapon_fixes=verify_fixes(SOURCE)
     from production_data import verify as verify_data
     result={'status':'passed','production_data':verify_data(SOURCE),'files':len(files),'fix_revision':manifest['fix_revision'],
-            'upstream_combat_definitions':'two scoped weapon corrections plus restored Medium weaponfire binding; other combat coefficients unchanged','weapon_fixes':weapon_fixes,'effect_regression':check_effects(),
+            'upstream_combat_definitions':'two missile corrections, restored Medium weaponfire and approved Assault final speed node; other combat coefficients unchanged','weapon_fixes':weapon_fixes,'assault_fix':{'last_speed_node':[535,1.2],'weapons':sorted(assault_weapons),'all_other_normalized_text_unchanged':True},'effect_regression':check_effects(),
             'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
             'transport':check_transport(),'research_id_fix':'ScoutSpeedLimiter internal ID only; cost/time/effect and display names unchanged',
             'tooltips':check_tooltips(),'engine_tested':False,'installed':False}
