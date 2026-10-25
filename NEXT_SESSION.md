@@ -1,3 +1,9 @@
+## 25 October: native auto-test results supersede earlier preparation-only status
+
+The human requested native automatic tests and assisted real save/load. Read docs/AUTO_TEST_RESULTS.md and docs/AUTO_TESTS.md. Seven worlds cover 151 cases: 18 passed mechanical/research checks, 131 measurements, and 2 failed gravity save/load checks. Do not mark the whole 22-case/81-variant manual plan passed. Final base fix e0b245912fa9faa80dd2f0f38272425d7d5f2d3739324f3b8ec61f9e578f1497; regular BIG b5f164d3b962159c6632795e66fb2d319001162480dd7a822cd44d0ebe201480 is prepared, not installed in the regular slot. Isolated HWMPAutoTests was installed/tested; all owned automatic processes are now closed. No consumer pins/builds or campaign installation changed.
+
+Fixed Medium missile WF, unsafe Scout speed limiter internal research ID (now ScoutSpeedLimiter), and serialization-compatible internal owner keys. General scripts/save.lua replacement was an ineffective experiment and removed. Native Lua parse errors disappeared after the ID fix, but both races still remain immobile after loading active fields and destroying all generators. This is the first unresolved SP blocker; diagnose custom-code persistence/ownership/callbacks before calling the base campaign-ready. Balance coefficients remain unchanged: Assault final speed node 4 -> 1.2 and economy 6/6 are measured candidates, not adopted changes. Second-client MP and physical hull/video checks remain open. Logs, checkpoint saves, process/environment metadata and experiments stay only in ignored local/auto-tests. Do not publish them.
+
 # HWMP Patch 2.4 — состояние на 23 октября 2026
 
 ## Нативный запуск полигонов: текущая поправка

@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import zipfile
 
-from hwrm_common import PROJECT,DONOR,ARCHIVE,DONOR_SHA,RUSSIAN_STOCK,sha,index,save,copy_layer,donor_runtime,build_directory
+from hwrm_common import PROJECT,CACHE,DONOR,ARCHIVE,DONOR_SHA,RUSSIAN_STOCK,sha,index,save,copy_layer,donor_runtime,build_directory
 
 ROOT=PROJECT/'hwmp-patch-2.4'
 WORK=PROJECT/'local/hwmp-patch-2.4'
@@ -229,6 +229,19 @@ end''')
     assert text.count('{SuperUtilityArmour = 0.8},\n')==1
     assert text.count('{SuperUtilityArmour = 0.85}')==1
     write(out,name,text.replace('{SuperUtilityArmour = 0.8},\n',''))
+    # Test21 omitted the weapon-fire binding for its Medium missile resource.
+    default_name='scripts/races/vaygr/scripts/research/default.lua'
+    default=(DONOR/default_name).read_text(encoding='ascii')
+    default,n=re.subn(r'(?m)^(\s*Name\s*=\s*)"Scout speed limiter"',r'\1"ScoutSpeedLimiter"',default)
+    assert n==1
+    write(out,default_name,default)
+    wf_source=CACHE/'players-patch-audit/rm-base/scripts/weaponfire/vgr_heavymissile/vgr_heavymissile.wf'
+    assert sha(wf_source)=='3471396674ab2458e33bedb24d766b5baebeb8def303a25a0b22872698350f65'
+    wf=wf_source.read_text(encoding='ascii')
+    assert wf.count('scartype = "Vgr_HeavyMissile/Vgr_HeavyMissile"')==1
+    write(out,'scripts/weaponfire/vgr_mediummissile/vgr_mediummissile.wf',
+          wf.replace('scartype = "Vgr_HeavyMissile/Vgr_HeavyMissile"',
+                     'scartype = "Vgr_MediumMissile/Vgr_MediumMissile"'))
     write(out,'scripts/productiontimes/applybuildtimes.lua',BUILD_TIMES)
     write(out,'scripts/productiontimes/applyresearchtimes.lua',RESEARCH_TIMES)
     from production_data import generate
@@ -284,7 +297,8 @@ def package():
     for path in RELEASE.glob('*.log'):
         shutil.move(str(path),str(WORK/path.name))
     shutil.copy2(ROOT/'README.md',RELEASE/'README.md')
-    shutil.copy2(PROJECT/'docs/NATIVE_TESTS.md',RELEASE/'NATIVE_TESTS.md')
+    for name in ('NATIVE_TESTS.md','AUTO_TESTS.md','AUTO_TEST_RESULTS.md'):
+        shutil.copy2(PROJECT/'docs'/name,RELEASE/name)
     (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nIndependent Test21-derived fixes; retains upstream multiplayer balance.\n',encoding='ascii')
     for name in ('start_hwmp_patch.ps1','HWMP Patch 2.4.cmd'):
         shutil.copy2(ROOT/name,RELEASE/name)

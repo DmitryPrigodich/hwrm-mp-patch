@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # Нативные проверки HWMP Patch 2.4
 
 Это порядок ручных проверок обычного HWMP, без диагностических правок характеристик, выдачи технологий или вмешательства в AI. Подготовка журнала не запускает игру и ничего не доказывает о движке. Все результаты пока `not_run`.

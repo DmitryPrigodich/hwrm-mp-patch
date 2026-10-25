@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # Ракеты вэйгров — аудит и две правки данных
 
 23 октября 2026. Третий аналитический этап принятого порядка **1 → 4 → 3 → 2 → 5**. Сравниваются локальные HW2 Classic, штатный HWRM, PP 2.3 и закреплённый Test21. Исследуется прежде всего Hgn↔Vgr; четыре оригинальные расы не уравниваются ради самого равенства. Новые расы и кампания остаются у потребителей.

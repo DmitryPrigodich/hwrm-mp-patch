@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # Assault/Flak и платформы — роли, стрельба и отход
 
 23 октября 2026. Четвёртый аналитический этап порядка **1 → 4 → 3 → 2 → 5**. Сравниваются HW2 Classic, штатный HWRM, PP2.3 и Test21. Основное сопоставление — Hgn↔Vgr в дизайне HW2; новые расы и кампания здесь не меняются.

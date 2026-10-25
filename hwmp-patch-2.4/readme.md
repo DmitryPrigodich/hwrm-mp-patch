@@ -1,3 +1,5 @@
+> Current native status, 25 October: see AUTO_TEST_RESULTS.md (repository docs/). Seven automatic worlds cover 151 cases; two gravity save/load checks still fail after removal of Lua parse errors. This is an open SP blocker; earlier not_run statements below are historical.
+
 # HWMP Patch 2.4 — development build 1
 
 Отдельный мод Homeworld Remastered на базе полного **Players Patch 2.3Test build21**. Сохраняет его мультиплеерный баланс и добавляет исправления скриптов и отдельных несогласованных записей данных. Это рабочая версия проекта Дмитрия, не официальный релиз команды Players Patch.
@@ -43,3 +45,5 @@
 Нативная проверка подготовлена в NATIVE_TESTS.md готового пакета (в репозитории — docs/NATIVE_TESTS.md). Результаты сохраняются командой `python tools/native_checks.py --new-run Russian`: все статусы изначально not_run. Штатный Launcher не перечисляет произвольные локальные папки; текущий способ — CMD, слот Vast Reaches сохранён. Workshop планируется после завершения патча. Подробности — docs/LOCAL_INSTALLATION.md.
 
 Аналитические этапы экономики, прогрессии, ракет и Assault/Flak/платформ завершены. Последний разбор — docs/ANTISTRIKE_AUDIT.md; новых рабочих чисел им не внесено. Три текстовых варианта для отдельных A/B не входят в BIG. Текущий протокол содержит22 сценария/81 подвариант, все нативные результаты ещё not_run.
+
+Native update 25 October: docs/AUTO_TEST_RESULTS.md records 151 automatic cases, including 2 failed gravity save/load checks. Medium WF and ScoutSpeedLimiter ID are repaired; no numeric Assault/economy candidate was adopted. The base is not yet SP-save validated. Source/archives/regressions passed; consumers and regular installation remain unchanged.

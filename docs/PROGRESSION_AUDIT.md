@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # Прогрессия хиигарян и вэйгров: что сохраняет и меняет Test21
 
 23 октября 2026. Второй аналитический этап после экономики, по порядку Дмитрия **1 → 4 → 3 → 2 → 5**. Рассматриваются оригинальные Hgn/Vgr, без переделки новых рас и кампании. Рабочая база остаётся Test21; этот проход ничего не меняет в игровых определениях или установленном BIG.

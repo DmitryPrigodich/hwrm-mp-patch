@@ -1,7 +1,7 @@
 {
   "identity": "HWMP-Patch-2.4-dev1",
   "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
-  "fix_revision": "275e371e275917921f780602739f0695824d171c99cf8e2dc789225125e6d1f4",
+  "fix_revision": "e0b245912fa9faa80dd2f0f38272425d7d5f2d3739324f3b8ec61f9e578f1497",
   "overrides": {
     "locale/english/hwmp24_tooltips.lua": "0cfffcccb991cc7d3f271b1421efd0fa805a42b0c39a34d099e04ae1b95269d9",
     "locale/russian/hwmp24_tooltips.lua": "d2cb8147af2286c1634399bd69c1d1391a98d8d13bcf1600da36baf34298a244",
@@ -10,7 +10,7 @@
     "resource/asteroid/asteroid2/asteroid2.resource": "5eed89eee5479ab2e87ac0923f2e9078e120cec0e15f0c617662eef0efd73101",
     "resource/asteroid/asteroid3/asteroid3.resource": "9cfc9c9d39dde2e36f3a5cae19628cab486b4730bf129ce8d33b78a3cd946ba2",
     "resource/asteroid/asteroid4/asteroid4.resource": "65276a660f4568a4bff943542934268bee74a4c8d7157a349bdc2748e1811db9",
-    "scripts/hwmp24/effects.lua": "94096de95510f230b8d4c01c71acc800cdcb9ae5ef1bfb2e505c0b73480d34b3",
+    "scripts/hwmp24/effects.lua": "55170e4a6315e0f2ad3721da05340527bf160c2d9393223bcb16e5d53310a40d",
     "scripts/hwmp24/tooltips.lua": "d1b3c8424dc1699923dfc55881f5562214095a39b1e057c3cec37bf74ccc5af8",
     "scripts/productiontimes/applybuildtimes.lua": "6afa69317d436e0a4f99934e9f72018db2795f623ec7fe9a37dde5a4f566f94f",
     "scripts/productiontimes/applyresearchtimes.lua": "cea5f57e147e5e3850765551098b74501dab1a440ba2601946fd190bb92cd3a8",
@@ -18,6 +18,8 @@
     "scripts/playerspatch/ships_util/core/global.lua": "f9737bb9870f35a6ce1d4e8e9e6e341ca7f63e93f6bbdf5322756c97f87df70b",
     "scripts/playerspatch/ships_util/lib/frigates.lua": "6b195abf472eb3942d55ec7db9134534203e6d6540a9563e8e4ba0e879f6bf9b",
     "scripts/playerspatch/ships_util/lib/gravwells.lua": "3d2ecbcf3050d499964a696598b422b5b6abb8aa128066f07c7e4eb1d2092a51",
+    "scripts/races/vaygr/scripts/research/default.lua": "6cdb3fa7377546c56b8acf445c7c9e29757553d50c98e06985d280a05339f389",
+    "scripts/weaponfire/vgr_mediummissile/vgr_mediummissile.wf": "4ef3f415b5112d429383380690c0c4504eeb3f52aee5e560030b2302cd1f00dc",
     "ship/kus_supportfrigate/kus_supportfrigate.lua": "c8ab429ea5714dfa01072a0ad2bd03af0015266327342f398414de3f5d5b8680",
     "ship/tai_defensefighter/tai_defensefighter.lua": "f8bb2231a9a29208515312973d4dff080aa773106ed43c3a52b9f588cc6479c2",
     "ship/tai_supportfrigate/tai_supportfrigate.lua": "82c08d7d3f68547fd2599f4b9cea082befed0628a27536336173d8c72755c13c",

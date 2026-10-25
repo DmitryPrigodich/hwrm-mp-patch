@@ -16,7 +16,7 @@ def inspect_lua(text):
 
 
 MOCK=r'''
-getn=table.getn; tremove=table.remove; strsub=string.sub
+getn=table.getn; tremove=table.remove; strsub=string.sub; strlen=string.len; strbyte=string.byte
 max=math.max; mod=math.fmod; sqrt=math.sqrt; abs=math.abs
 AB_Move=1; AB_Targeting=2; AB_Attack=3; AB_Dock=4; AB_Custom=5
 AB_Hyperspace=6; AB_Scuttle=7; AB_Lights=8; AB_SpecialAttack=9; AB_Steering=10
@@ -309,13 +309,21 @@ def verify_source():
         'weapon/vgr_heavyfusionmissilelauncherturret/vgr_heavyfusionmissilelauncherturret.wepn',
         'weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn'}
     assert {n for n,p in overrides.items() if p.suffix in ('.ship','.wepn','.subs','.miss')}==expected_weapons
+    wf_name='scripts/weaponfire/vgr_mediummissile/vgr_mediummissile.wf'
+    assert {n for n,p in overrides.items() if p.suffix=='.wf'}=={wf_name}
+    assert 'scartype = "Vgr_MediumMissile/Vgr_MediumMissile"' in files[wf_name].read_text(encoding='ascii')
+    assert all(('missile/vgr_mediummissile/vgr_mediummissile'+ext) in files for ext in ('.miss','.hod','.events'))
+    default='scripts/races/vaygr/scripts/research/default.lua'
+    expected,n=re.subn(r'(?m)^(\s*Name\s*=\s*)"Scout speed limiter"',r'\1"ScoutSpeedLimiter"',upstream[default].read_text(encoding='ascii'))
+    assert n==1 and files[default].read_text(encoding='ascii')==expected
+    assert 'scripts/save.lua' not in overrides,'Do not ship the ineffective serializer experiment'
     from audit_missiles import verify_fixes
     weapon_fixes=verify_fixes(SOURCE)
     from production_data import verify as verify_data
     result={'status':'passed','production_data':verify_data(SOURCE),'files':len(files),'fix_revision':manifest['fix_revision'],
-            'upstream_combat_definitions':'two scoped weapon corrections; others unchanged','weapon_fixes':weapon_fixes,'effect_regression':check_effects(),
+            'upstream_combat_definitions':'two scoped weapon corrections plus restored Medium weaponfire binding; other combat coefficients unchanged','weapon_fixes':weapon_fixes,'effect_regression':check_effects(),
             'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
-            'transport':check_transport(),
+            'transport':check_transport(),'research_id_fix':'ScoutSpeedLimiter internal ID only; cost/time/effect and display names unchanged',
             'tooltips':check_tooltips(),'engine_tested':False,'installed':False}
     save(WORK/'verification-source.json',result);print(json.dumps(result));return result
 

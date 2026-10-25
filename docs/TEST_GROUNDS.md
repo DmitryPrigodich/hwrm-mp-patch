@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # HWMP 2.4 — испытательные полигоны
 
 Отдельный диагностический пакет на полном подготовленном HWMP. Все файлы игровой основы сохраняются побайтно; добавляются только три Extra Missions, SCAR-измерения, RU/EN-строки и копии штатной миниатюры. Обычный выпуск, установленный HWMP, новые расы и кампания не заменяются. Модели и миниатюры остаются вне Git.

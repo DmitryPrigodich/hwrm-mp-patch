@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # Первый аудит данных HWMP 2.4 — 23 октября 2026
 
 Проверена полная локальная основа 2.3Test build21 с действующими исправлениями HWMP. Этот этап исправляет подсказки и локализацию ресурсов. Числа строительства, науки, добычи, движения и боя не менялись.

@@ -1,3 +1,5 @@
+> Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
+
 # Экономика хиигарян и вэйгров: Classic → HWRM → PP 2.3 → Test21
 
 23 октября 2026. Это первый этап утверждённого порядка **1 → 4 → 3 → 2 → 5**: экономика, прогрессия, ракеты, Assault/Flak/платформы, затем нативные проверки. Здесь разбираются оригинальные Hgn/Vgr. Новые расы и кампания остаются у потребителей. Числа игры и установленный HWMP не менялись.

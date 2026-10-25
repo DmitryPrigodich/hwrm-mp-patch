@@ -3,6 +3,16 @@
 if HWMP_EffectRecords == nil then HWMP_EffectRecords = {} end
 if HWMP_EffectSerial == nil then HWMP_EffectSerial = 0 end
 
+-- Stock save.lua emits string table keys as .key, without bracket quoting.
+-- Encode every byte so owner labels remain collision-free Lua identifiers.
+function HWMP_OwnerKey(owner)
+    local result = "owner"
+    for i = 1, strlen(owner) do
+        result = result .. "_" .. strbyte(owner, i)
+    end
+    return result
+end
+
 function HWMP_Keys(values)
     local result = {}
     local key = next(values, nil)
@@ -34,6 +44,7 @@ function HWMP_FindEffectRecord(group, create)
 end
 
 function HWMP_BlockRecord(record, owner, abilities, stop_speed)
+    owner = HWMP_OwnerKey(owner)
     for i = 1, getn(abilities) do
         local ability = abilities[i]
         local state = record.abilities[ability]
@@ -54,6 +65,7 @@ function HWMP_BlockRecord(record, owner, abilities, stop_speed)
 end
 
 function HWMP_ReleaseRecord(record, owner)
+    owner = HWMP_OwnerKey(owner)
     local keys = HWMP_Keys(record.abilities)
     for i = 1, getn(keys) do
         local ability = keys[i]
@@ -108,6 +120,7 @@ function HWMP_ReleaseOwner(owner)
 end
 
 function HWMP_ReleaseAbility(group, owner, ability)
+    owner = HWMP_OwnerKey(owner)
     local probe = "HWMP_EffectProbe"
     SobGroup_CreateIfNotExist(probe)
     for i = 0, SobGroup_Count(group) - 1 do
@@ -130,11 +143,13 @@ function HWMP_ReleaseAbility(group, owner, ability)
 end
 
 function HWMP_HasOtherOwner(record, owner)
+    owner = HWMP_OwnerKey(owner)
+    local prefix = HWMP_OwnerKey("gravwell:")
     local keys = HWMP_Keys(record.abilities)
     for i = 1, getn(keys) do
         local owners = HWMP_Keys(record.abilities[keys[i]].owners)
         for j = 1, getn(owners) do
-            if owners[j] ~= owner and strsub(owners[j], 1, 9) == "gravwell:" then return 1 end
+            if owners[j] ~= owner and strsub(owners[j], 1, strlen(prefix)) == prefix then return 1 end
         end
     end
     return 0
