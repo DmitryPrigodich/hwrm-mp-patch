@@ -1,3 +1,5 @@
+> Последнее решение25 октября: основная приёмка HWMP — skirmish/MP без сохранений. N12/N22, save/load-части N41/N51/N73 и кампанийные переходы отложены в конец; отрицательные результаты сохранены. Актуальная очередь/частичное покрытие — [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md). Extra Missions — диагностический инструмент.
+
 > Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
 
 # Нативные проверки HWMP Patch 2.4
