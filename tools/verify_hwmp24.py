@@ -18,6 +18,7 @@ def inspect_lua(text):
 MOCK=r'''
 getn=table.getn; tremove=table.remove; strsub=string.sub; strlen=string.len; strbyte=string.byte
 max=math.max; mod=math.fmod; sqrt=math.sqrt; abs=math.abs
+min=math.min;floor=math.floor;sort=table.sort;strfind=string.find;strchar=string.char;format=string.format
 AB_Move=1; AB_Targeting=2; AB_Attack=3; AB_Dock=4; AB_Custom=5
 AB_Hyperspace=6; AB_Scuttle=7; AB_Lights=8; AB_SpecialAttack=9; AB_Steering=10
 COMMAND_Dock=11; COMMAND_Attack=12; COMMAND_Guard=13
@@ -28,6 +29,15 @@ function unit(id,move,attack,scuttle,speed)
 end
 function SobGroup_CreateIfNotExist(g) if groups[g]==nil then groups[g]={} end end
 SobGroup_Create=SobGroup_CreateIfNotExist
+function SobGroup_Exists(g) return groups[g]~=nil and 1 or 0 end
+function SobGroup_FillSubstract(g,a,b)
+ groups[g]={}
+ for _,id in ipairs(groups[a] or {}) do
+  local found=false;for _,other in ipairs(groups[b] or {}) do if id==other then found=true end end
+  if not found then table.insert(groups[g],id) end
+ end
+end
+
 function SobGroup_Clear(g) groups[g]={} end
 function SobGroup_Count(g) return getn(groups[g] or {}) end
 function SobGroup_Empty(g) if SobGroup_Count(g)==0 then return 1 else return 0 end end
@@ -337,10 +347,11 @@ def verify_source():
     from audit_missiles import verify_fixes
     weapon_fixes=verify_fixes(SOURCE)
     from production_data import verify as verify_data
+    from verify_effect_journal import verify as verify_journal
     result={'status':'passed','production_data':verify_data(SOURCE),'files':len(files),'fix_revision':manifest['fix_revision'],
             'starting_collectors':{'hiigaran':6,'vaygr':6,'changed_files':sorted(expected_starts),'other_start_fields_unchanged':True},
             'upstream_combat_definitions':'two missile corrections, restored Medium weaponfire and approved Assault final speed node; other combat coefficients unchanged','weapon_fixes':weapon_fixes,'assault_fix':{'last_speed_node':[535,1.2],'weapons':sorted(assault_weapons),'all_other_normalized_text_unchanged':True},'effect_regression':check_effects(),
-            'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
+            'effect_checkpoint_journal':verify_journal(vm_for),'groups_and_dock':check_groups_and_dock(),'missile_defense':check_defense(),
             'transport':check_transport(),'research_id_fix':'ScoutSpeedLimiter internal ID only; cost/time/effect and display names unchanged',
             'tooltips':check_tooltips(),'engine_tested':False,'installed':False}
     save(WORK/'verification-source.json',result);print(json.dumps(result));return result

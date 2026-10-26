@@ -189,6 +189,8 @@ def locale_tables():
 
 def make_overrides():
     out=ROOT/'overrides'
+    from effect_journal import generate_effects,patch_gravity
+    write(out,'scripts/hwmp24/effects.lua',generate_effects())
     # Approved 25 October after native clean-income tests: equal six-collector starts.
     # Carrier/full-fleet starts already have six; empty starts stay empty.
     for filename,folder,digest in START_FLEET_INPUTS:
@@ -237,7 +239,7 @@ function HWMP_RegisterGravityTarget(ship_type)
     GW_MEM_PROTO.target_types[getn(GW_MEM_PROTO.target_types) + 1] = ship_type
 end
 '''
-    write(out,name,text)
+    write(out,name,patch_gravity(text))
     name='scripts/playerspatch/ships_util/lib/frigates.lua'
     text=(DONOR/name).read_text()
     text=replace_function(text,'SupportFrigate_HyperspaceDock','dofilepath("data:scripts/hwmp24/transport.lua")')
@@ -370,7 +372,7 @@ def package():
     for path in RELEASE.glob('*.log'):
         shutil.move(str(path),str(WORK/path.name))
     shutil.copy2(ROOT/'README.md',RELEASE/'README.md')
-    for name in ('NATIVE_TESTS.md','AUTO_TESTS.md','AUTO_TEST_RESULTS.md','NATIVE_FOLLOWUP_2026-10-25.md','CLOSURE_CHECKLIST.md'):
+    for name in ('NATIVE_TESTS.md','AUTO_TESTS.md','AUTO_TEST_RESULTS.md','NATIVE_FOLLOWUP_2026-10-25.md','CLOSURE_CHECKLIST.md','GRAVITY_SAVELOAD_FIX.md'):
         shutil.copy2(PROJECT/'docs'/name,RELEASE/name)
     (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n',encoding='ascii')
     for name in ('start_hwmp_patch.ps1','HWMP Patch 2.4.cmd'):

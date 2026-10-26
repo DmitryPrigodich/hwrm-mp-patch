@@ -90,7 +90,7 @@ function GW_MEM:Create(own_group, player_index, ship_id)
 		own_group = own_group,
 		player_index = player_index,
 		ship_id = ship_id,
-		previously_stunned = SobGroup_CreateAndClear("gravwell-" .. ship_id .. "-previously-stunned"),
+		previously_stunned = HWJ_PreviousGroup(ship_id),
 	} -- instance static data/methods
 	
 	-- should be called once, essentially a housekeep for the gravwell
@@ -123,6 +123,9 @@ function GW_MEM:Create(own_group, player_index, ship_id)
     function GRAVWELL_PROTO:StunGroup(group, stunned)
         local owner = "gravwell:" .. self.ship_id
         if stunned == 0 then HWMP_UnblockGroup(group, owner)
+        elseif HWJ_OwnerHas(owner,group)==1 then
+            for i=1,getn(GW_MEM_PROTO.abilities_to_disable) do SobGroup_AbilityActivate(group,GW_MEM_PROTO.abilities_to_disable[i],0) end
+            SobGroup_SetSpeed(group,0)
         else HWMP_BlockGroup(group, owner, GW_MEM_PROTO.abilities_to_disable, 1) end
     end
 

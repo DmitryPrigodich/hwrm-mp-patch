@@ -1,3 +1,5 @@
+> 26 October: the known active-gravity save/load defect is now repaired in prepared fix d2376f7b…; see [GRAVITY_SAVELOAD_FIX.md](GRAVITY_SAVELOAD_FIX.md). Earlier negative results remain historical controls.
+
 > Native update, 25 October: see [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md) for completed measurements, proven fixes and the still-failing gravity save/load. Preparation-only statements below describe the earlier stage; the detailed manual plan is not fully closed.
 
 # Первый аудит данных HWMP 2.4 — 23 октября 2026

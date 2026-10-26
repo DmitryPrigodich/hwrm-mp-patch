@@ -30,7 +30,7 @@ def status():
         i=line.find('HWMP_AUTO|')
         if i<0:continue
         fields=dict(x.split('=',1) for x in line[i+10:].split('|') if '=' in x)
-        if fields.get('run')!=run['run'] or fields.get('mode')!=run['mode']:continue
+        if fields.get('run')!=run['run'] or fields.get('mode') not in (run['mode'],run.get('event_mode',run['mode'])):continue
         events.append(fields)
     results=[e for e in events if e.get('event')=='result']
     ended=any(e.get('event')=='end' and e.get('case')=='suite' for e in events)
@@ -43,7 +43,7 @@ def status():
         row=json.loads(probe.stdout) if probe.stdout.strip() else None
         process_state='exited' if row is None else 'alive' if row['Name']=='HomeworldRM.exe' else 'pid_reused'
     report={'pid':run['pid'],'mode':run['mode'],'run':run['run'],'process_state':process_state,
-            'status':'finished' if ended else 'fatal_error' if errors else 'process_exited' if process_state=='exited' else 'waiting_for_load' if run['mode'] in ('SaveLoad','SaveLoadAuto','SaveLoadTrace') and any(e.get('event')=='save_requested' for e in events) and not any(e.get('event')=='save_loaded' for e in events) else 'running',
+            'status':'finished' if ended else 'fatal_error' if errors else 'process_exited' if process_state=='exited' else 'waiting_for_load' if run['mode'] in ('SaveLoad','SaveLoadAuto','SaveLoadTrace','SaveLoadEmpty','SaveLoadCoop') and any(e.get('event')=='save_requested' for e in events) and not any(e.get('event')=='save_loaded' for e in events) else 'running',
             'events':len(events),'game_time':float(events[-1]['t']) if events else None,
             'result_counts':dict(Counter(e.get('status') for e in results)),
             'results':results,'errors':errors}
@@ -55,13 +55,21 @@ def launch(mode):
     release=json.loads((WORK/'release.json').read_text(encoding='utf8'))
     assert installed['run']==release['run']
     for n,h in installed['files'].items():assert sha(Path(installed['target'])/n)==h,n
+    cold_checkpoint=None
+    if mode=='SaveLoadCold':
+        candidates=list((GAME/'HomeworldRM/Bin/Profiles').glob('*/Campaign/HWMPAUTOTESTS/HWMPAutoCheckpoint.sav'))
+        assert len(candidates)==1
+        checkpoint=candidates[0];owner=json.loads(checkpoint.with_suffix('.owner.json').read_text())
+        assert owner['run']==release['run'] and sha(checkpoint)==owner['sha256']
+        cold_checkpoint={'sha256':owner['sha256'],'run':owner['run']}
+
     directory=WORK/'runs'/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+'-'+mode)
     directory.mkdir(parents=True)
     if LOG.is_file():shutil.copy2(LOG,directory/'preceding-HwRM.log')
     prior_log_sha=sha(LOG) if LOG.is_file() else None
     previous_saves={str(p.resolve()):{'sha256':sha(p),'mtime_ns':p.stat().st_mtime_ns}
         for p in (GAME/'HomeworldRM/Bin/Profiles').glob('*/Campaign/HWMPAUTOTESTS/*.sav')}
-    if mode in ('SaveLoadAuto','SaveLoadTrace'):
+    if mode in ('SaveLoadAuto','SaveLoadTrace','SaveLoadEmpty','SaveLoadCoop'):
         # An old ready checkpoint must never be loaded if the new save/staging fails.
         for path in (GAME/'HomeworldRM/Bin/Profiles').glob('*/Campaign/HWMPAUTOTESTS/HWMPAutoCheckpoint.sav'):
             path=path.resolve()
@@ -80,6 +88,7 @@ def launch(mode):
     data={'pid':process.pid,'mode':mode,'run':installed['run'],'directory':str(directory),
           'started_at_utc':datetime.now(timezone.utc).isoformat(),'command':command,'archives':installed['files'],
           'preceding_log_sha256':prior_log_sha,'checkpoints_before_launch':previous_saves}
+    if cold_checkpoint:data['event_mode']='SaveLoadAuto';data['cold_checkpoint']=cold_checkpoint
     save(CURRENT,data);save(directory/'launch.json',data)
     shutil.copy2(WORK/'source.json',directory/'source.json')
     return {'launched':True,'mode':mode,'pid':process.pid,'directory':str(directory)}
@@ -96,7 +105,7 @@ def collect(close=False,abort_invalid=False):
         report['previous_status']=report['status']
         report['status']='aborted_invalid_fixture'
         report['abort_reason']='Native fixture produced blocked cells; preserve evidence before rebuilding'
-    if run['mode'] in ('SaveLoad','SaveLoadAuto','SaveLoadTrace'):
+    if run['mode'] in ('SaveLoad','SaveLoadAuto','SaveLoadTrace','SaveLoadEmpty','SaveLoadCoop'):
         label=next((e['checkpoint'] for e in events if e.get('event')=='save_requested'),'HWMP_AutoFields_'+run['run'][:8])
         candidates=[]
         for path in (GAME/'HomeworldRM/Bin/Profiles').glob('*/Campaign/HWMPAUTOTESTS/*.sav'):
@@ -128,7 +137,7 @@ def stage_auto_checkpoint():
     deadline=time.monotonic()+90
     while time.monotonic()<deadline:
         run=json.loads(CURRENT.read_text(encoding='utf8'))
-        assert run['mode'] in ('SaveLoadAuto','SaveLoadTrace')
+        assert run['mode'] in ('SaveLoadAuto','SaveLoadTrace','SaveLoadEmpty','SaveLoadCoop')
         if 'event=save_requested' in readlog():
             collect()
             directory=Path(run['directory'])
@@ -159,4 +168,4 @@ if __name__=='__main__':
     assert not a.abort_invalid_fixture or (a.collect and a.close and not a.launch)
     result=launch(a.launch) if a.launch else collect(a.close,a.abort_invalid_fixture) if a.collect else {k:v for k,v in status()[1].items() if k!='results'}
     print(json.dumps(result,ensure_ascii=False,indent=2))
-    if a.launch in ('SaveLoadAuto','SaveLoadTrace'):print(json.dumps(stage_auto_checkpoint()))
+    if a.launch in ('SaveLoadAuto','SaveLoadTrace','SaveLoadEmpty','SaveLoadCoop'):print(json.dumps(stage_auto_checkpoint()))

@@ -130,7 +130,7 @@ def summarize(runs):
                     'disabled_at':cutoff,'first_regeneration':first_regen,'first_five_percent':first_five,
                     'zero_hp_samples':len(zero_hp),'first_credit_after_damage':increments[0] if increments else None,
                     'credit_increments_after_damage':increments})
-        if mode in ('SaveLoad','SaveLoadAuto','SaveLoadTrace','Progression','GravityScope','Transport','Salvage','DockStall','SalvageBaselines','ResearchEffects','GravityToggle','GravityExpiry','HW1Damage','EconomyRaids','PaidProduction','EconomyRecovery','Mines','CombatGeometry'):suite['results']=result['results']
+        if mode in ('SaveLoad','SaveLoadAuto','SaveLoadTrace','SaveLoadCold','SaveLoadEmpty','SaveLoadCoop','JournalPressure','JournalRecycle','Progression','GravityScope','Transport','Salvage','DockStall','SalvageBaselines','ResearchEffects','GravityToggle','GravityExpiry','HW1Damage','EconomyRaids','PaidProduction','EconomyRecovery','Mines','CombatGeometry'):suite['results']=result['results']
     return report
 
 

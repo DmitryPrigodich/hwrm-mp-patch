@@ -1,7 +1,7 @@
 {
   "identity": "HWMP-Patch-2.4-dev1",
   "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
-  "fix_revision": "c71b74eeebaf4565ae6e0a0b877e73dbad71507182d1d37bd0e90a16987c48a2",
+  "fix_revision": "d2376f7b5526bbc0ae57255e1feabc2ecfdcd0137dcb328f7d51a963982a54d5",
   "overrides": {
     "locale/english/hwmp24_tooltips.lua": "0cfffcccb991cc7d3f271b1421efd0fa805a42b0c39a34d099e04ae1b95269d9",
     "locale/russian/hwmp24_tooltips.lua": "d2cb8147af2286c1634399bd69c1d1391a98d8d13bcf1600da36baf34298a244",
@@ -10,7 +10,7 @@
     "resource/asteroid/asteroid2/asteroid2.resource": "5eed89eee5479ab2e87ac0923f2e9078e120cec0e15f0c617662eef0efd73101",
     "resource/asteroid/asteroid3/asteroid3.resource": "9cfc9c9d39dde2e36f3a5cae19628cab486b4730bf129ce8d33b78a3cd946ba2",
     "resource/asteroid/asteroid4/asteroid4.resource": "65276a660f4568a4bff943542934268bee74a4c8d7157a349bdc2748e1811db9",
-    "scripts/hwmp24/effects.lua": "55170e4a6315e0f2ad3721da05340527bf160c2d9393223bcb16e5d53310a40d",
+    "scripts/hwmp24/effects.lua": "da2363bc9dd45cd11aa1b0a5d2c926b19663af3d66b3697fdb57edc6c8a91228",
     "scripts/hwmp24/tooltips.lua": "d1b3c8424dc1699923dfc55881f5562214095a39b1e057c3cec37bf74ccc5af8",
     "scripts/hwmp24/transport.lua": "0d54457c0158d33263ef78abcfeb006610b55718ac2f975d9b3bbaece6db5abd",
     "scripts/productiontimes/applybuildtimes.lua": "6afa69317d436e0a4f99934e9f72018db2795f623ec7fe9a37dde5a4f566f94f",
@@ -20,7 +20,7 @@
     "scripts/startingfleets/vaygr00.lua": "3711ea82d51205be84e94a69d5bcc680622fb7952b8971daddc745fb1850400c",
     "scripts/playerspatch/ships_util/core/global.lua": "5691287a313bb37aa950f2d8c422630066a915cf20823e0e796a74182878f313",
     "scripts/playerspatch/ships_util/lib/frigates.lua": "e9e62bf6d3559296b03463d7a6f1d20711b18d91a5a66c105302d33f50bf4dde",
-    "scripts/playerspatch/ships_util/lib/gravwells.lua": "3d2ecbcf3050d499964a696598b422b5b6abb8aa128066f07c7e4eb1d2092a51",
+    "scripts/playerspatch/ships_util/lib/gravwells.lua": "89e33fdfea732c22b98a84bb18d70b46c1a4c4ca6ec832861781e3ae1a3719cd",
     "scripts/races/vaygr/scripts/research/default.lua": "6cdb3fa7377546c56b8acf445c7c9e29757553d50c98e06985d280a05339f389",
     "scripts/weaponfire/vgr_mediummissile/vgr_mediummissile.wf": "4ef3f415b5112d429383380690c0c4504eeb3f52aee5e560030b2302cd1f00dc",
     "ship/hgn_assaultcorvette/hgn_assaultcorvette.lua": "465dfd0f8a5d9c3bdafaca413b214c74a200813811985b8dd14a0f37b0466355",

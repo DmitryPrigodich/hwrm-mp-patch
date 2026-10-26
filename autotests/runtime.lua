@@ -20,6 +20,9 @@ if HWA_MODE=="PaidProduction" then dofilepath("data:scripts/hwmp24/autotests/pro
 if HWA_MODE=="EconomyRecovery" then dofilepath("data:scripts/hwmp24/autotests/economy_recovery.lua") end
 if HWA_MODE=="Mines" then dofilepath("data:scripts/hwmp24/autotests/mines.lua") end
 
+if HWA_MODE=="JournalRecycle" then dofilepath("data:scripts/hwmp24/autotests/journal_recycle.lua") end
+if HWA_MODE=="JournalPressure" then dofilepath("data:scripts/hwmp24/autotests/journal_pressure.lua") end
+
 function HWA_Log(c,event,fields)
     print("HWMP_AUTO|v=1|run="..HWA_RUN.."|mode="..HWA_MODE.."|case="..(c.id or "suite")..
         "|t="..Universe_GameTime().."|event="..event.."|"..(fields or ""))
@@ -73,7 +76,9 @@ end
 
 function HWA_InitCase(c)
     c.last_sample=-1
-    if c.kind=="economy_recovery" then HWV_Init(c)
+    if c.kind=="journal_recycle" then HWY_Init(c)
+    elseif c.kind=="journal_pressure" then HWP_Init(c)
+    elseif c.kind=="economy_recovery" then HWV_Init(c)
     elseif c.kind=="mine_attack" then HWM_Init(c)
     elseif c.kind=="paid_production" then HWB_Init(c)
     elseif c.kind=="gravity_lifecycle" then HWG_Init(c)
@@ -298,7 +303,9 @@ function HWA_Tick()
     for i=1,getn(HWA_CASES) do
         local c=HWA_CASES[i]
         if not c.done then
-            if HWA_MODE=="SaveLoad" or (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then HWA_SaveCase(c,t)
+            if HWA_MODE=="SaveLoad" or (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace" or HWA_MODE=="SaveLoadEmpty" or HWA_MODE=="SaveLoadCoop") then HWA_SaveCase(c,t)
+            elseif c.kind=="journal_recycle" then HWY_Tick(c,t)
+            elseif c.kind=="journal_pressure" then HWP_Tick(c,t)
             elseif c.kind=="economy_recovery" then HWV_Tick(c,t)
             elseif c.kind=="mine_attack" then HWM_Tick(c,t)
             elseif c.kind=="paid_production" then HWB_Tick(c,t)
@@ -416,7 +423,22 @@ function HWA_Progression(c,t)
     end
 end
 
+function HWA_ColdWait()
+    if Universe_GameTime()>=2 and not HWA_COLD_SENT then
+        HWA_COLD_SENT=1;UI_SetScreenVisible("HWMPAutoReload",1)
+    end
+    if Universe_GameTime()>=30 then
+        for i=1,getn(HWA_CASES) do HWA_Result(HWA_CASES[i],"blocked","reason=cold_load_not_observed") end
+        HWA_Log({id="suite"},"end","cold_boot_failed=1");Rule_Remove("HWA_ColdWait")
+    end
+end
 function OnInit()
+    if HWA_MODE=="SaveLoadCoop" then dofilepath("data:scripts/hwmp24/effects.lua") end
+    if HWA_MODE=="SaveLoadCold" then
+        HWA_Log({id="suite"},"cold_boot_requested","new_process=1|owned_checkpoint_only=1")
+        Rule_AddInterval("HWA_ColdWait",1)
+        return
+    end
     HWA_START=Universe_GameTime();HWA_LAST_PROGRESS=-10
     HWA_POSTSAVE_MUTATION=0
     HWA_Log({id="suite"},"begin","total="..getn(HWA_CASES).."|native=1|physical_hull_counts_inferred=0")
@@ -451,18 +473,30 @@ end
 function OnStartOrLoad()
     HWA_LOADS=(HWA_LOADS or 0)+1
     HWA_Log({id="suite"},"start_or_load","load_count="..HWA_LOADS)
-    if (HWA_MODE=="SaveLoad" or HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") and HWA_SAVE_REQUESTED==1 and HWA_LOADS>=2 then
+    if (HWA_MODE=="SaveLoad" or HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace" or HWA_MODE=="SaveLoadEmpty" or HWA_MODE=="SaveLoadCoop") and HWA_SAVE_REQUESTED==1 and HWA_LOADS>=2 then
         HWA_RELEASE_START=Universe_GameTime()
         HWA_Log({id="suite"},"save_loaded","mutation_marker="..(HWA_POSTSAVE_MUTATION or -1))
         HWA_EffectState("after_load")
+        for i=1,getn(HWA_CASES) do
+            local c=HWA_CASES[i]
+            SobGroup_SetPosition(c.enemy,{c.x+10000,0,c.z+1700})
+            HWA_Log(c,"loaded_target_relocated","race=hgn|distance_from_field=10000|before_first_postload_tick=1")
+        end
     end
 end
 
 function HWA_SaveCase(c,t)
-    if t>=1 and not c.a_on then c.a_on=1;SobGroup_CustomCommand(c.a) end
-    if t>=2.5 and not c.b_on then c.b_on=1;SobGroup_CustomCommand(c.b) end
+    if HWA_MODE~="SaveLoadEmpty" and t>=1 and not c.a_on then c.a_on=1;SobGroup_CustomCommand(c.a) end
+    if HWA_MODE~="SaveLoadEmpty" and t>=2.5 and not c.b_on then c.b_on=1;SobGroup_CustomCommand(c.b) end
+    if HWA_MODE=="SaveLoadCoop" and not HWA_RELEASE_START and t>=3.5 and not c.cooperative_change then
+        c.cooperative_change=1
+        HWMP_SetAbilityAllowed(c.target,AB_Move,0);HWMP_SetSpeedAllowed(c.target,0.625)
+        c.base_move=0;c.base_speed=0.625
+        HWA_Log(c,"cooperative_baseline_changed","SCAR_to_ship_VM=1|allowed_move=0|speed=0.625|during_active_field=1")
+    end
     if HWA_RELEASE_START then
         local dt=Universe_GameTime()-HWA_RELEASE_START
+        if HWA_MODE=="SaveLoadEmpty" and dt>=1 and not c.empty_reactivated then c.empty_reactivated=1;SobGroup_CustomCommand(c.b) end
         if dt>=2 and not c.a_killed then c.a_killed=1;SobGroup_TakeDamage(c.a,1) end
         if dt>=5 and not c.check then
             c.check=1;c.remaining=SobGroup_CanDoAbility(c.target,AB_Move)
@@ -470,32 +504,63 @@ function HWA_SaveCase(c,t)
             if c.vgr then c.remaining_vgr=SobGroup_CanDoAbility(c.vgr,AB_Move) end
         end
         if dt>=6 and not c.b_killed then c.b_killed=1;SobGroup_TakeDamage(c.b,1) end
-        if dt>=10 then
+        if dt>=10 and not c.movement_sent then
+            c.movement_sent=1;c.release_origins={};c.allowed_moves={};c.move_groups={c.target,c.enemy,c.vgr}
+            for i=1,getn(c.move_groups) do
+                local g=c.move_groups[i];local p=SobGroup_GetPosition(g);c.release_origins[i]=p
+                c.allowed_moves[i]=SobGroup_CanDoAbility(g,AB_Move)
+                if c.allowed_moves[i]==1 then
+                    local volume="HWA_LoadMove_"..c.id.."_"..i
+                    Volume_AddSphere(volume,{p[1]+3000,p[2],p[3]},10)
+                    SobGroup_Move(SobGroup_GetPlayerOwner(g),g,volume)
+                end
+            end
+        end
+        if dt>=18 then
+            local minimum=1000000
+            for i=1,getn(c.move_groups) do
+                local p=SobGroup_GetPosition(c.move_groups[i]);local q=c.release_origins[i]
+                local distance=sqrt((p[1]-q[1])^2+(p[2]-q[2])^2+(p[3]-q[3])^2)
+                if c.allowed_moves[i]==1 then minimum=min(minimum,distance) end
+            end
             local status="failed"
             local alive=SobGroup_Count(c.a)+SobGroup_Count(c.b)
             local hgn_move=SobGroup_CanDoAbility(c.enemy,AB_Move)
             local vgr_move=-1
             if c.vgr then vgr_move=SobGroup_CanDoAbility(c.vgr,AB_Move) end
-            if c.remaining==0 and c.remaining_enemy==0 and hgn_move==c.base_enemy_move and (not c.vgr or c.remaining_vgr==0 and vgr_move==c.base_vgr_move) and SobGroup_CanDoAbility(c.target,AB_Move)==c.base_move and
+            if c.remaining==0 and c.remaining_enemy==c.base_enemy_move and minimum>=500 and hgn_move==c.base_enemy_move and (not c.vgr or c.remaining_vgr==0 and vgr_move==c.base_vgr_move) and SobGroup_CanDoAbility(c.target,AB_Move)==c.base_move and
                SobGroup_CanDoAbility(c.target,AB_Attack)==c.base_attack and SobGroup_GetSpeed(c.target)==c.base_speed and alive==0 then status="passed" end
             if alive>0 then status="blocked" end
-            HWA_Result(c,status,"after_real_load=1|remaining_field_move="..c.remaining.."|final_move="..SobGroup_CanDoAbility(c.target,AB_Move).."|hgn_move="..hgn_move.."|vgr_move="..vgr_move.."|final_attack="..SobGroup_CanDoAbility(c.target,AB_Attack).."|speed="..SobGroup_GetSpeed(c.target).."|generators_remaining="..alive.."|generator_a_hp="..HWA_Hp(c.a).."|generator_b_hp="..HWA_Hp(c.b))
+            HWA_Result(c,status,"after_real_load=1|minimum_movement="..minimum.."|range_exit_restored="..c.remaining_enemy.."|remaining_field_move="..c.remaining.."|final_move="..SobGroup_CanDoAbility(c.target,AB_Move).."|hgn_move="..hgn_move.."|vgr_move="..vgr_move.."|final_attack="..SobGroup_CanDoAbility(c.target,AB_Attack).."|speed="..SobGroup_GetSpeed(c.target).."|generators_remaining="..alive.."|generator_a_hp="..HWA_Hp(c.a).."|generator_b_hp="..HWA_Hp(c.b))
             HWA_EffectState("after_destroy")
         end
     elseif t>=5 and not HWA_SAVE_REQUESTED then
         HWA_SAVE_REQUESTED=1
         local label="HWMP_AutoFields_"..strsub(HWA_RUN,1,8)
-        if (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then label="HWMP_AutoFields_Auto_"..strsub(HWA_RUN,1,8) end
+        if (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace" or HWA_MODE=="SaveLoadEmpty" or HWA_MODE=="SaveLoadCoop") then label="HWMP_AutoFields_Auto_"..strsub(HWA_RUN,1,8) end
         HWA_Log({id="suite"},"save_requested","field_active="..(1-SobGroup_CanDoAbility(c.target,AB_Move)).."|checkpoint="..label.."|universe_pause=0")
         HWA_EffectState("before_save")
         Campaign_QuickSaveNb(5,label)
-    elseif (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then
+    elseif (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace" or HWA_MODE=="SaveLoadEmpty" or HWA_MODE=="SaveLoadCoop") then
         if t>=8 and not c.post_save_killed then
             c.post_save_killed=1;HWA_POSTSAVE_MUTATION=1
-            SobGroup_TakeDamage(c.a,1);SobGroup_TakeDamage(c.b,1)
-            HWA_Log(c,"post_save_mutation","old_generators_destroyed=1|mission_marker=1")
+            if HWA_MODE=="SaveLoadEmpty" then
+                c.future=c.id.."_future";c.future_volume=c.id.."_future_spawn"
+                SobGroup_CreateIfNotExist(c.future)
+                Volume_AddSphere(c.future_volume,{c.x,0,c.z},10)
+                local race="kus";if SobGroup_GetPlayerOwner(c.b)==5 then race="tai" end
+                SobGroup_SpawnNewShipInSobGroup(SobGroup_GetPlayerOwner(c.b),race.."_gravwellgenerator",c.future,c.future,c.future_volume)
+                HWA_Log(c,"future_generator_created","not_in_checkpoint=1|mission_marker=1")
+            else
+                SobGroup_TakeDamage(c.a,1);SobGroup_TakeDamage(c.b,1)
+                HWA_Log(c,"post_save_mutation","old_generators_destroyed=1|mission_marker=1")
+            end
         end
-        if t>=30 and not HWA_AUTOLOAD_TRIGGERED then
+        if HWA_MODE=="SaveLoadEmpty" and t>=9 and c.future and not c.future_on then
+            c.future_on=1;SobGroup_CustomCommand(c.future)
+            HWA_Log(c,"future_generator_activated","not_in_checkpoint=1")
+        end
+        if t>=(HWA_MODE=="SaveLoadEmpty" and 20 or 30) and not HWA_AUTOLOAD_TRIGGERED then
             HWA_AUTOLOAD_TRIGGERED=1
             HWA_Log({id="suite"},"auto_load_requested","screen=HWMPAutoReload|owned_checkpoint_only=1")
             UI_SetScreenVisible("HWMPAutoReload",1)
