@@ -32,4 +32,4 @@ python tools/install_hwmp24.py --install
 
 [Порядок обновления](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/UPDATE_WORKFLOW.md) · [Устройство патча](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/PATCH_ENGINEERING.md) · [Локализация](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/LOCALIZATION.md) · [Архив полигонов](examples/native-testgrounds/README.ru.md).
 
-Основа → новые расы → Vast Reaches. Сборка основы не обновляет потребителей автоматически. Сохранены благодарности **Players Patch team, Fear/Novaras, участникам Test21 и авторам карт**. В Git входят код и документы; ассеты, BIG, личные журналы и сохранения остаются локально.
+Основа → новые расы → Vast Reaches. Сборка основы не обновляет потребителей автоматически. Авторы: команда Players Patch 2.3; 2.3Test — Fear/Novaras; HWMP 2.4 — AmDDRed, Hix, Twofoxich. [Полные благодарности и авторы карт](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/CREDITS.md). В Git входят код и документы; ассеты, BIG, личные журналы и сохранения остаются локально.

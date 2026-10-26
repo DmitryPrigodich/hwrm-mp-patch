@@ -1,0 +1,12 @@
+{
+  "checked_on": "2026-10-26",
+  "primary_sources": [
+    "https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337",
+    "https://steamcommunity.com/workshop/filedetails/discussion/1190476337/1621724915806537704/",
+    "https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511",
+    "https://github.com/Novaras/2.3-Test#authorscontributors"
+  ],
+  "local_inputs": {
+    "test/readme.md": "cd3ae757c97072aad9300e0cb2f3edb957fb1876852902781ee84bf9a492885c"
+  }
+}

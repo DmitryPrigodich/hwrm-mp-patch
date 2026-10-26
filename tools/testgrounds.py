@@ -5,6 +5,7 @@ No gameplay definition may change, and neither consumers nor normal release move
 """
 
 import argparse
+from project_credits import SHORT_CREDITS
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -262,7 +263,9 @@ def package():
         shutil.copy2(ROOT / name, RELEASE / name)
     shutil.copy2(PROJECT / "docs/TEST_GROUNDS.md", RELEASE / "TEST_GROUNDS.md")
     (RELEASE / "config.txt").write_text(
-        "Title: HWMP 2.4 Test Grounds\n\nTags: Test\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPTestGrounds.big\n\nDescription:\nStandalone diagnostic Extra Missions; not the normal balance release.\n",
+        "Title: HWMP 2.4 Test Grounds\n\nTags: Test\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPTestGrounds.big\n\nDescription:\nStandalone diagnostic Extra Missions; not the normal balance release.\n"
+        + SHORT_CREDITS
+        + "\n",
         encoding="ascii",
     )
     save(

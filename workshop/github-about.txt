@@ -1,0 +1,1 @@
+HWMP Patch 2.4: Homeworld Remastered multiplayer fixes and original-race improvements. Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP 2.4: AmDDRed, Hix, Twofoxich. Code only; game assets excluded.

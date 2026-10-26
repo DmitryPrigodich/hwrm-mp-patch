@@ -4,6 +4,7 @@ Only project-local preparation/package operations. No install, game or launcher.
 """
 
 from __future__ import annotations
+from project_credits import SHORT_CREDITS
 import json
 from pathlib import Path
 import re
@@ -513,7 +514,9 @@ def package():
     for name in RELEASE_RUSSIAN_DOCS:
         shutil.copy2(PROJECT / "docs/ru" / name, RELEASE / name.replace(".md", ".ru.md"))
     (RELEASE / "config.txt").write_text(
-        "Title: HWMP Patch 2.4\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n",
+        "Title: HWMP Patch 2.4\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n"
+        + SHORT_CREDITS
+        + "\n",
         encoding="ascii",
     )
     for name in ("start_hwmp_patch.ps1", "HWMP Patch 2.4.cmd"):

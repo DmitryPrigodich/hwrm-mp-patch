@@ -44,4 +44,4 @@ Use this complete package by itself; do not stack another Players Patch on top. 
 
 Dependency direction: **hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod**. Building this base never updates consumer pins, builds or installations.
 
-Credits: **Players Patch team, Fear/Novaras, Test21 contributors and map authors**. [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337) · [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511) · [upstream code](https://github.com/Novaras/2.3-Test). This repository publishes code and documentation, not models, media, compiled BIGs, caches, personal logs or saves.
+Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP 2.4: AmDDRed, Hix, Twofoxich. [Full credits and map authors](docs/CREDITS.md). [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337) · [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511) · [upstream code](https://github.com/Novaras/2.3-Test). This repository publishes code and documentation, not models, media, compiled BIGs, caches, personal logs or saves.

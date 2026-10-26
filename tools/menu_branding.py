@@ -8,6 +8,7 @@ import shutil
 import struct
 
 from hwrm_common import CACHE, DONOR, GAME, PROJECT, sha
+from project_credits import MENU_CREDITS
 
 MUSIC = "data:sound/music/staging/STAGING_04"  # Inhibitors, HW2 mission4.
 ASSETS = {
@@ -74,6 +75,12 @@ def generate(overrides):
     menu = (DONOR / "ui/newui/main/newmainmenu.lua").read_text(encoding="ascii")
     for name in ("lblBuildNumber", "lblVersion"):
         menu = hide_engine_label(menu, name)
+    credits = (PROJECT / "tools/templates/menu_credits.lua").read_text(encoding="ascii")
+    if credits.count("__HWMP_CREDITS__") != 1 or not menu.rstrip().endswith("\n}"):
+        raise ValueError("Pinned menu/credits template structure changed.")
+    credits = credits.replace("__HWMP_CREDITS__", json.dumps(MENU_CREDITS))
+    closing = menu.rfind("\n}")
+    menu = menu[:closing] + "\n" + credits.rstrip() + menu[closing:]
     write("ui/newui/main/newmainmenu.lua", menu)
     write("playerspatch_buildnumber.lua", 'PlayersPatchBuildNumber = "HWMP 2.4"\n')
     for filename, title in RULE_NAMES.items():

@@ -15,6 +15,8 @@ RELEASE_DOCS = (
     "LOCALIZATION.md",
     "WORKSHOP.md",
     "MENU_BRANDING.md",
+    "CREDITS.md",
+    "MAP_CREDITS.md",
 )
 RELEASE_RUSSIAN_DOCS = (
     "UPDATE_WORKFLOW.md",
@@ -23,6 +25,7 @@ RELEASE_RUSSIAN_DOCS = (
     "LOCALIZATION.md",
     "WORKSHOP.md",
     "MENU_BRANDING.md",
+    "CREDITS.md",
     "CLOSURE_CHECKLIST.md",
 )
 
