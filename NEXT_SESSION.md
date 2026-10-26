@@ -1,147 +1,20 @@
-## Latest scope decision, 25 October: skirmish/MP first; save compatibility last
+# Current handoff —26October2026
 
-The human clarified HWMP's product target: unsaved skirmish (including offline AI) and multiplayer, not a campaign or Extra Missions release. Extra Missions remain useful diagnostic harnesses, not a new product requirement. The observed original-race gravity save/load defect is a recorded optional compatibility issue, not a blocker for this unsaved MP/skirmish scope. Work on it only after all other work in this chat is exhausted. Preserve the negative evidence; do not relabel the failed cases passed or claim resumed games safe. Other save/cold-load/campaign-transition experiments are also outside the active MP queue.
+The base is ready for field acceptance. English primary README/docs, Russian separately. Source/installation review: [CODE_REVIEW_2026-10-26](docs/CODE_REVIEW_2026-10-26.md); next actions: [CLOSURE_CHECKLIST](docs/CLOSURE_CHECKLIST.md). Detailed old session notes are under docs/ru/HISTORICAL_NEXT_SESSION_2026-10-26.md.
 
-Active remaining queue and tester split are in docs/AUTO_TEST_RESULTS.md, section "Что осталось для skirmish и мультиплеера". Prioritize missile-defense target identity/guard return, interrupted transport/salvage, forced Dock stalls, actual research/production effects, repeated economic pressure and combat geometry. Second-client network consistency, visible hull/repair proof, ordinary RU/EN menus and full-match balance require testers. Partial native coverage does not close the whole old Nxx plan. Preserve accepted Assault last-node 1.2 and start 6/6 pending human matches; no campaign readiness gate or automatic downstream build.
+## Prepared / installed
 
-New-race decision refined: baseline hyperspace-only generator; optional advanced research unlocks active strikecraft trapping in skirmish/MP, including offline skirmish, but never in the single-player campaign. Record only here; future implementation belongs to the race layer and must enforce campaign exclusion beyond hiding a button. Read that repository's docs/epics/HYPERSPACE_ONLY_GENERATORS.md. "Trapping" means holding/stunning, not changing ownership. Cost/tier/radius/duration remain for new-race design. The direct CustomCommand research binding is not engine-tested. This supersedes earlier permanent removal of all anti-strike capability from every mode.
+- Main BIG a9b9e2b4f6364e3dc770bd1f82ac5faeab9d95e12a622a6988b4e572fd585367; fix82d260870455873f38bd047306959ef1c128c1fe6583d0dcc1900d920f27ea33;105157948bytes;43overrides/1128files.
+- Main+six language BIGs fully extracted/compared; all source/effect/tooltip fixtures and32override Lua4 parses passed.51Python tools formatted with AST checks; effect code tokens unchanged.73text-only frozen examples verified.
+- Diagnostic5b9cd6e3… passed Recycle/Auto/Cold/Coop2/2each. Older Empty/Pressure and lifecycle proofs retain their own identities. All owned native processes collected/closed; normal game/launcher not launched by installation.
+- Normal HWMPPatch24 folder installed. Actual local launcher slot roundtrip HWMP→VR→HWMP passed and is left on HWMP. Native32-bit config parser accepts HWMP. Original BananaDLC and other mods preserved; previous VR hash-backed outside game.
 
-## 25 October decisions: six collectors and future hyperspace-only new-race generators
+Restore previous launcher selection with `python tools/launcher_slot.py previous --apply`; select HWMP again with `hwmp --apply`, after closing game/launcher. Detailed state/backups remain ignored under local/launcher-slot. No consumer dependency pin or source build advanced.
 
-User approved equal Hgn/Vgr 6/6 starting collectors, pending later human playtest tuning. Implement in ordinary vaygr00 and 2x_vaygr00 only: both had 7; corresponding Hiigaran starts have 6. Carrier/full-fleet presets already have 6; empty presets stay empty. Change no other fleet fields or collector parameters. Pin both source files and verify the exact edit plus actual PersistantData counts and full release extraction. Rebuild standalone base only; no install, launch or consumer pin/build change.
+## Remaining
 
-User chose native hyperspace-only generators for Novokushan/Novotaiidan, recording now for future race-layer work. See that repository's docs/epics/HYPERSPACE_ONLY_GENERATORS.md. Remove anti-strike stun/tumble/ability/speed locks and accuracy aura there, not from original base races. This design bypasses the observed anti-strike state path; native inhibitor/save-load still needs testing. Current HWMP save loads but leaves targets blocked; do not call it proven file corruption or blame unmodified Test21 without its own control. Original-race save/load and other uncovered automated mechanics remain open in the base. It is not yet only human playtesting.
+Field tests: two real clients with identical archives; ordinary/2x starts and native languages; visible squadron repair; paid UI hyperspace/cancel and actual Guard return; full Hgn↔Vgr matches. Keep approved starts6/6 and Assault last1.2 until repeatable match evidence. No new broad balance coefficients.
 
-## 25 October follow-up: accepted Assault, clean economy and four-race save/load
+Workshop loose input is staged at the current ignored local/workshop-latest.json target; English/Russian descriptions in workshop/. Owner-selected final cover from HW Mod Previews is attached as512×512JPEG/119402bytes, also in the local launcher slot. No create/update or publication. Toolkit GUI command-field help/input was verified and closed normally; stdin was the wrong interface. Obtain owner review/approval before upload; preserve assigned WorkshopID thereafter.
 
-Read docs/AUTO_TEST_RESULTS.md and docs/AUTO_TESTS.md; this update supersedes earlier candidates/counts/status below. User accepted the narrow Assault change: final speed node 535/4 -> 535/1.2 on three cannons only. Fix revision 3cfca90f9523d4bd1213acf2544fbe1c47c313580cccdc8ba24b47ea4716c2a5; normal main BIG 24097797de499792f73512b98ae76715021c9cdb420888ad6721676d39023ad5, 105152360 bytes. Prepared, not installed in regular HWMP; no downstream builds/pin changes. Native applied ship verified alongside pinned-Test controls (48 Antistrike and 60 isolated speed measurements). Do not claim universal DPS or full-match balance.
-
-Clean 600s economy covers mothership/5000m, carrier/13000m and controller/7000m: 6/6 total ratios Vgr/Hgn 0.974/0.991/1.014; 6/7 1.132/1.116/1.154. Recommend 6/6, but runtime still 6/7 pending author's choice. Keep other economic/progression numbers until evidence supports a scoped change.
-
-GravityScope passed 8/8 without loading, all four target races. Automatic native LoadGame now works using only an owned checkpoint; original generator types fail both save/load cases, including Hgn and Vgr targets. No Lua errors; generators physically removed per HP+group checks. A private traced run shows Destroy callbacks and stable IDs but ship-VM effect state retaining post-checkpoint mutations. This is still an SP blocker, not an HW1-only defect or a solved serializer problem. Do not reset all abilities/speed blindly. A load-safe state bridge and cold/repeated/level-transition tests remain engineering work. The only test override of a base file is declared UISettings registration; gameplay files remain identical. Native logs/checkpoints/environment stay local. All owned test processes are closed after collection. Second-client MP, visual hull/repair proof and real-match micro evaluation need external/human observation; other uncovered mechanics can be automated further.
-
-User deferred race-layer prefix migration to nksn_/ntdn_ until new-race work; see that repository's docs/epics/TECHNICAL_PREFIX_MIGRATION.md. Never rename original base races or auto-advance consumer pins for this note.
-
-## 25 October: native auto-test results supersede earlier preparation-only status
-
-The human requested native automatic tests and assisted real save/load. Read docs/AUTO_TEST_RESULTS.md and docs/AUTO_TESTS.md. Seven worlds cover 151 cases: 18 passed mechanical/research checks, 131 measurements, and 2 failed gravity save/load checks. Do not mark the whole 22-case/81-variant manual plan passed. Final base fix e0b245912fa9faa80dd2f0f38272425d7d5f2d3739324f3b8ec61f9e578f1497; regular BIG b5f164d3b962159c6632795e66fb2d319001162480dd7a822cd44d0ebe201480 is prepared, not installed in the regular slot. Isolated HWMPAutoTests was installed/tested; all owned automatic processes are now closed. No consumer pins/builds or campaign installation changed.
-
-Fixed Medium missile WF, unsafe Scout speed limiter internal research ID (now ScoutSpeedLimiter), and serialization-compatible internal owner keys. General scripts/save.lua replacement was an ineffective experiment and removed. Native Lua parse errors disappeared after the ID fix, but both races still remain immobile after loading active fields and destroying all generators. This is the first unresolved SP blocker; diagnose custom-code persistence/ownership/callbacks before calling the base campaign-ready. Balance coefficients remain unchanged: Assault final speed node 4 -> 1.2 and economy 6/6 are measured candidates, not adopted changes. Second-client MP and physical hull/video checks remain open. Logs, checkpoint saves, process/environment metadata and experiments stay only in ignored local/auto-tests. Do not publish them.
-
-# HWMP Patch 2.4 — состояние на 23 октября 2026
-
-## Нативный запуск полигонов: текущая поправка
-
-По прямой команде человека диагностический HWMPTestGrounds установлен в собственный каталог и перезапущен. Игра работает; точные PID/хеши/backup — только в local/testgrounds/latest-launch.json и installation.json. Рабочий обычный HWMP, кампания, Banana и потребители сохранены. Запуск подтверждает загрузку основного/Russian BIG, а не выполнение всех тестов.
-
-На первом снимке не было регистрации UCS и обложки коллекции. Они добавлены: locale/localedat.lua с сохранением всех штатных Dictionaries, запись hwmp_testgrounds.dat, registry в data TOC, sibling leveldata/campaign/HWMP24TestGrounds.dds. Choose Text использует штатный3492. Второй снимок показал склейку всех строк в9984000 и отсутствие остальных IDs: причина — LF вместо CRLF. Сейчас UCS UTF16+BOM/CRLF, проверяются17 отдельных записей в обоих языках. Обложка уже подтверждена присланным снимком; правильные отдельные подписи после последней установки ещё ждут проверки человеком. Старые снимки/пакеты/логи сохранены локально.
-
-Стартер теперь включает -luatrace: без него print/ошибки Lua не попадали в ожидаемый журнал. Lua4 для13 файлов, семь fixtures, исходная регрессия HWMP и полная распаковка трёх BIG прошли. Нативные22 сценария/81 вариант не закрыты. Отдельный блокер обнаружен в ракетном опыте: WEAPON FIRE ERROR: Could not load weapon fire Vgr_MediumMissile. В Test есть missile/vgr_mediummissile, но нет scripts/weaponfire/vgr_mediummissile/vgr_mediummissile.wf; исходная пусковая прямо ссылается на Vgr_MediumMissile. Пока не менять коэффициенты урона/наведения; сначала проверить и восстановить эту техническую зависимость по штатному Heavy WF. Этот дефект ещё НЕ исправлен. Показатели ракетного опыта до исправления не использовать как балансные измерения.
-
-Публикация новых сведений окружения была отклонена автопроверкой; сведения оставлены в local/. Исправление кода сохранено локальным коммитом, на GitHub пока прежняя подготовка полигонов. Не публиковать приватный журнал запуска.
-
-## Extra Missions: подготовленные полигоны
-
-По запросу Дмитрия созданы три отдельные Extra Missions: «Гравиполя — перекрытие и освобождение» (кушане/таиидане), «Штурмовой фрегат — отход перехватчиков» (четыре комбинации науки/строя), «Тяжёлые ракеты — потеря цели» (HMF, контроль и принудительная гибель исходной цели). Инструкции RU/EN, клавиши1/2/3, игровые отсчёты в HwRM.log и внешний сборщик наблюдений. Подробности: docs/TEST_GROUNDS.md; код: testgrounds/ и tools/testgrounds.py.
-
-Отдельный полный пакет local/HWMPTestGrounds-release, собственный будущий каталог HWMPTestGrounds, а не обычный HWMPPatch24/слот Banana. Все1121 файла подготовленной основы сохранены побайтно; добавлено только17 ресурсов/17 RU-EN-пар. Основной BIG 7586f3da8b8e4c05e07e3e46efa9ad58508648205c49adfac6c0d7926fcfe464, 105962544байт; revision8c5c84e64c918bed6e796b25fe3b01f02fcb299b1b70b47a14d62d8653f84c99. Три BIG полностью распакованы и сверены.12 диагностических файлов прошли настоящий парсер Lua4.0.1; семь fixtures в Lua5.1 и сборщик синтетического журнала прошли; обычные verify_hwmp24 регрессии также прошли. Семь защищённых обычных/установленных архивов сохранили SHA.
-
-Полигоны НЕ установлены и НЕ запущены, нативное меню/оружие/способности/наука/сохранения остаются not_run. Гравиполя включаются человеком штатной кнопкой; автоматического вызова GW_MEM нет. Остановка фрегатов/атаки целей и выдача скорости в боевых опытах — явные диагностические вмешательства, не численный баланс. Missile-counter не доказывает тип/идентичность; перенаведение подтверждать видео. При ранней естественной гибели цели контроль помечается control_invalid. Сборщик не выставляет passed и не меняет22 сценария/81 подвариант. Потребители и обычный подготовленный/установленный HWMP не обновлялись. Следующий шаг — отдельная явная установка и запрос на нативный запуск.
-
-Читайте README.md, docs/ANTISTRIKE_AUDIT.md, docs/MISSILE_AUDIT.md, docs/PROGRESSION_AUDIT.md, docs/ECONOMY_AUDIT.md и docs/DATA_AUDIT.md. Здесь общие исправления и оригинальные расы; новые расы и кампания принадлежат следующим двум проектам.
-
-## Утверждённый порядок: 1 → 4 → 3 → 2 → 5
-
-1. Экономика Hgn↔Vgr — статический проход завершён, docs/ECONOMY_AUDIT.md. Новых доказанных ошибок данных не найдено; числовые кандидаты оставлены для сравнения в движке на этапе 5.
-2. Прогрессия Hgn↔Vgr — статический проход завершён, docs/PROGRESSION_AUDIT.md. 464 входа закреплены хешами; 128 контрольных маршрутов проверены по предпосылкам/очередям модели. Это не оптимальные или измеренные открытия. Рабочие числа сохранены.
-3. Ракеты вэйгров — статический проход завершён, docs/MISSILE_AUDIT.md, audit_missiles.py, 553 закреплённых входа. Подготовлены две правки: правая пусковая платформы6000→5500, удаление раннего дубликата SuperUtilityArmour0.8 с сохранением0.85 у корвета. Компенсация0.01/0.1 и перенаведение не изменены.
-4. Assault/Flak и платформы — статический проход завершён, docs/ANTISTRIKE_AUDIT.md, 287 закреплённых входов. Новых рабочих чисел не внесено. Кандидаты: оставшаяся скоростная кривая Assault, возврат accuracy falloff отдельными A/B, преследование и роль мобильных платформ. Три исходных варианта/8 overlays подготовлены отдельно, не упакованы и не установлены.
-5. Нативные проверки всей основы — следующий этап: docs/NATIVE_TESTS.md, 22 сценария/81 подвариант пока not_run; к ним добавлены экономические измерения в ECONOMY_AUDIT. Игру запускать только по прямому запросу человека. Подготовка/установка таким запросом не являются.
-
-Это последний порядок Дмитрия; прежний план начинать с нативного прохода им заменён. Не уравнивать четыре оригинальные расы как самостоятельную цель. Оригинальный баланс HW1 остаётся из Test; его технические механики проверяются здесь. Новокушане/Новотаиидане — второй проект.
-
-## Выводы по экономике
-
-- Обычный старт 6 Hgn / 7 Vgr унаследован от штатного HWRM; в Classic было 6/6. PP уже вернул Vgr груз 208→200 и скорость 280→276; Test это сохраняет. Harvest=8 RU/с у обеих рас. Модели/анимационные входы сборщиков и принимающих кораблей Test побайтно совпали со штатными. Полный цикл сдачи и историческая задержка не измерены.
-- Контроллеры: 800→1000 RU; Vgr 40→45 с, Hgn остаётся 45. Общий Resource 26→24 при Collector22/Controller4: 22+2 либо 20+4 по этому ограничению. Предел конфигурации не равен оптимальному составу.
-- Все шесть приёмников: отключение 40→60 с, regentime150→180, здоровье после пробуждения 10→5% по описанию автора PR34. Прежнее слово «порог» уточнено; нельзя объявлять 5% ускорением восстановления или складывать два таймера без нативной проверки.
-- Защита экономики через науку ослаблена и замедлена: в Test номинально множитель HP1.5; у Hgn две отдельные покупки суммарно1400RU/170 базовых секунд, Vgr Utility1400/130. Самостоятельное исследование ремонта дешевле, чем в HWRM. AI-ускорения Harvest не являются покупками человека.
-- Решение: игровые числа пока сохранять. Основные будущие A/B — цена контроллера 1000↔800, отдельно длительность отключения 60↔40 и отдельно возврат с 5↔10% HP. Это кандидаты, а не применённые настройки.
-
-Воспроизведение: tools/prepare_inputs.py --economy, затем tools/audit_economy.py. Входы/разрешение наследования закреплены baseline/economy-inputs.json; локальный полный результат local/economy-audit/audit.json. Classic читает пассивный lua4_data.py; исходный байткод не исполняется. Текущий аудит не изменяет runtime и не требует переустановки.
-
-## Выводы по прогрессии
-
-Каркас Classic сохраняется: Hgn Research1500/75 + Advanced2250/150, Vgr Research500/30 и отдельные CorvetteTech500/40, FrigateTech1800/120. У авианосца Hgn3 производственных слота, Vgr1; нельзя переносить специализацию авианосца на флагман. Все эффекты/цены сравнивать с областью действия: индивидуальные Hgn и семейные Vgr модернизации, глобальное исследование ускорения производителя.
-
-Кандидаты: Hgn MS Capital Facility75→85с, DestroyerTech90→105; Vgr DestroyerGuns140→155. Строгие контрольные планы дают Hgn330→355с, Vgr375→390, но смешанный RequiredSubSystems и реальный момент начала науки ещё требуют проверки. Убирать цену AdvancedResearch ради одного Flak нельзя считать малой правкой: набор Flak/Ion/Marine в модели6850RU против7000 у Vgr HeavyMissile/Assault/Infiltrator. BC требует верфь по BuildFamily; расписания с дополнительной фабрикой на флагмане и без неё дают разную картину, оба варианта сохранены.
-
-BuildSpeed-модуль1800RU/65с присутствует в определениях/допустимых креплениях, но не в четырёх действующих таблицах строительства. Не считать его покупаемой альтернативой технологии. Обычный PP уже поднял CarrierBUILDSPEED1500→2250Hgn/2500Vgr; Test это наследует. PR35 относится к показу времени в HUD, не самостоятельной переделке всех игровых таймеров.
-
-Воспроизведение: tools/audit_progression.py --write-tables. Авторский разбор PROGRESSION_AUDIT.md, генерируемое сравнение PROGRESSION_ROUTES.md, pin baseline/progression-inputs.json и локальный JSON local/progression-audit/audit.json. Сильные условия &/| проверяются при двух трактовках приоритета; нулевая InstaAdvancedFrigateTech в модели мгновенна. Нативные очереди/ускорения/нулевые эффекты остаются этапом5. Игровые файлы не менялись и не переустанавливались.
-
-## Выводы по ракетам и подготовленный выпуск
-
-PR22 задаёт номинальные HMF/DD27/270 и BC50/500 против Unarmoured/LightArmour, а не уменьшение всего прежнего урона вдвое. HMF LightArmour0.1 уже было в Classic, отсутствовало в HWRM/PP. Прямые допустимые цели, попадание и поиск новой цели — разные вопросы. Компенсация сохранена; у платформ её нет. Нельзя автоматически перенести её или вернуть старый урон.
-
-Test HMF использует MediumMissile40HP, DD/BC/платформы HeavyMissile90HP; раньше общий Heavy имел50HP в HWRM/PP. Оба Test-снаряда имеют weaponName=Vgr_HeavyFusionMissileLauncher. Как движок связывает урон исходной пусковой и эту ссылку при перенаведении, ещё неизвестно. Скорость227.7, lifeTime30/detectionDistance1000 не менялись по смыслу наведения. Снижение detectionDistance до0 — только будущий изолированный опыт, не внедрённое исправление.
-
-Две доказанные несогласованности исправлены в исходнике/подготовленном пакете: (1) PR23 обещает5500 обеим тяжёлым платформам, но у правой Vgr осталось6000; (2) корвет имел два коэффициента0.8/0.85, PR20 явно выбирает0.85. Остальные вызовы этих двух .wepn проверяются на неизменность. У платформы правая950/15с и левая1000/11с унаследованы от PP; автоматически их не уравнивать.
-
-Воспроизведение: tools/audit_missiles.py --write-tables; docs/MISSILE_TABLES.md, baseline/missile-inputs.json, local/missile-audit/audit.json. Проверки/точные SHA нового подготовленного выпуска — local/missile-audit/verification.json и local/hwmp-patch-2.4/release.json. Предыдущий подготовленный выпуск сохранён в local/missile-audit/previous-release. Подготовлен основной BIG86d1cb16…/105151646байт, fix revision275e371e…; полная распаковка трёх BIG и регрессии прошли, изменены ровно два runtime-файла. В игру новый пакет НЕ установлен, installed BIG7851e47b… и оба языка остались прежними. Не смешивать новый manifest/fixes.json с прежней installation.json. N70–N73 подготовлены, все not_run. Игра/лаунчер не запускались.
-
-## Assault/Flak/платформы: итог аналитики
-
-Flak сохраняет площадную механику: Hit и Miss создают Burst60; нельзя выводить DPS из0.13 или max_effects10. Assault и обе орудийные платформы имеют setBallistics(1,0) и удалённый accuracy falloff, но скоростные кривые сохранены; у Assault сохранён и damage falloff. Прежняя общая формулировка о постоянном DPS на любой дальности/скорости не является доказанным поведением.
-
-Главный новый кандидат — узел скоростной кривой Assault535→4. Перехватчики обеих рас348×1.4×1.1 дают номинальные535.92 в Evasive; это только арифметика, не измеренная скорость/итоговая вероятность. Подготовлен отдельный исходный вариант с пятью множителями1, без смены порогов/override и остальных данных. Два других варианта возвращают только PP accuracy falloff Assault/платформам. Они не входят в рабочий BIG; генератор/семантическая проверка — audit_antistrike.py --prepare-experiments.
-
-Фрегаты:20000HP/210скорость/40с, цены700Hgn/650Vgr; разные стили преследования унаследованы. Орудийные платформы275RU/17с/5250HP/200скорость/3200дальность; тяжёлые325/21/5000/125/5500 после предыдущей ракетной правки. Platform cap21 общий, Frigate22 общий. Vgr HP платформ×1.75 против отдельных Hgn×1.5 унаследовано от HWRM; противовес бомбардировщиками Test усилен. Ничего из этого не уравнивать автоматически без опыта.
-
-Воспроизведение: tools/audit_antistrike.py --write-tables --prepare-experiments; перед первым запуском нужны локальные входы prepare_inputs.py --economy. Источники — baseline/antistrike-inputs.json и antistrike-references.json; отчёт local/antistrike-audit/audit.json. Источники и таблицы Classic читаются пассивно; часть Classic AI-стилей с функциями закреплена только как источник. N80–N84 добавлены, все not_run. Подготовленные три BIG и установленная игра остаются прежними; обновлены только внешние документы выпуска/журнал, SHA архива этим проходом не меняется. Четыре аналитические темы завершены; следующий шаг — нативные измерения, начиная с короткого N00, по прямой команде человека.
-
-## Исправления и установленная сборка
-
-Исправлены владение блокировками гравиполей/перевозки/захвата, защитный истребитель, Dock/SobGroup, безопасные RU/EN-подсказки. 183 проекта/187 записей получают генерируемые базовые времена; у Asteroid0–4 восстановлены UCS-ссылки. 151 исходное время было верно. Числа Asteroid0=11 RU/maxVelocity1000 не тронуты: прямые вызовы только в отладочном M03 HW1, восемь динамических вызовов ещё не разобраны. Сценарии, сохранения и сеть не подтверждены движком.
-
-Установлен собственный HomeworldRM/DataWorkshopMODs/HWMPPatch24, основной BIG SHA7851e47b1fa1303f58b0aed2141c5de98599dea8cc8f23e5a3bb38a56a9c4cd3 /105151649 байт; fix revision2d0d1d0ecbf305d1663f931e491ce32af5f6d44b88974182cf9d7afd776987ee. Runtime совпал с завершённым аудитом данных. Основной/English/Russian BIG полностью распакованы и сверены; эффектные/интерфейсные mocks прошли. Экономический проход ничего из этого не пересобирал и не устанавливал.
-
-Дмитрий выбрал CMD сейчас, публикацию Workshop после завершения патча. Слот BananaMothership/Vast Reaches сохраняется. Установка только явной командой tools/install_hwmp24.py --install: собственная метка, хеши, backup вне игры и отказ при работающей игре/лаунчере. CMD RU/EN проверен только через -PrintOnly. local/installation.json подтверждает установку и сохранение Vast Reaches e67bd447…, BananaDLC и Test. Игра не запускалась этим чатом.
-
-## Зависимости и публикация
-
-Потребители закреплены на a3973a7/c29f96a2…; автоматически не продвигать их. Действующая цепочка: hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod. Последние две рабочие копии остаются без изменений. Все три репозитория публичные по просьбе Дмитрия; публикуются только код и документация, без ассетов, BIG/ZIP и local/.
-
-Prepared six-collector release: fix b7e7e753a237f11c7e68825674f15abbac6a28bbc7a35132ffa9a41d4bf1e05d; main BIG d748e600291016a9148b2f1fbc234555a5c073f3166aa0f061c57ed15d7f8c56, 105152835 bytes, 27 overrides/1123 source files. Source regression and full extraction of all three archives passed. Previous prepared release preserved in local/six-collector-start/previous-release. No native launch/install, downstream builds or pin updates.
-
-
-## 25 октября: продолжение автоматической очереди
-
-[Отдельный разбор защиты от ракет и перевозки](docs/NATIVE_FOLLOWUP_2026-10-25.md). Фильтры ракет и узкая замена целей с raw/cache=2 подтверждены native traces с отрицательным Test21 control. Непрерывная охрана не покидала Guard; автоматический возврат из Attack этим не закрыт. Три боевые пары Medium/Heavy остаются измерениями, без новой правки оружия.
-
-У перевозки найдено настоящее зависание без saves: поздний redock удерживал видимость/команды, а после гибели перевозчика живые пассажиры оставались off-map. Кандидат 94efcc8e… даёт 6/6 native passed в scripted off-map/exit, включая гибель обоих типов перевозчика. Не путать с UI-отменой оплаченной зарядки: native Stop этот scripted переход не отменил. Нормальный BIG ещё прежний b7e7e753…/d748e600… до явной упаковки; установлен только отдельный диагностический пакет. Зависимости потребителей не обновлялись.
-
-## Native queue checkpoint, 25 October: transport/salvage/Dock fixed
-
-Read docs/NATIVE_FOLLOWUP_2026-10-25.md. Candidate source c71b74ee… has39 overrides/1124 files; no further numeric rebalance. Transport6/6, Salvage6/6 with baseline1 and6/6 with baseline0; Dock10 raw measurements plus10 derived native invariants passed under real fire. Timer now keys by hull ID, forwarded by exactly11 otherwise unchanged callbacks. Scuttle uses prior idle permission by ID, not CanDoAbility's temporary Dock zero. Capture preserves shipID even when named group membership changes. Unknown cold-tow baseline is not guessed; cross-VM cooperation/save-load remain unproven.
-
-ResearchEffects4/4: old/new stock Hgn/Vgr interceptors really gain1.4 speed, scouts retain1.0; Hgn individual frigate and Vgr frigate-family HP scope confirmed. Grants/spawns are explicit; this is not paid production validation. Source-only numerical policies remain accepted Assault last1.2 and starts6/6. Prior regular prepared package was b7e7e753…/d748e600…; packaging checkpoint now prepares c71b74ee… separately and preserves that previous release. Regular installation and all consumer pins/builds are unchanged.
-
-Further diagnostic worlds prepared: HW1Damage (paid family tiers with private constant weapon and foreign-race controls), GravityToggle (fresh sources each cycle), GravityExpiry (natural end, marker/range checks), EconomyRaids (three scripted subsystem knockouts, alternate-controller control). Inspect latest native records before claiming completion. Extra Missions are a harness; product remains unsaved skirmish/MP. Gravity save/load stays last optional task.
-
-## Latest 26 October: automatic queue collected, human release checks remain
-
-Read docs/CLOSURE_CHECKLIST.md for the short current remainder and docs/NATIVE_FOLLOWUP_2026-10-25.md for methods/negative controls. Three technical fixes are in prepared normal b46f71f4… / fix c71b74ee… (39 overrides/1124 source files): transport return, ID-based salvage baseline, ID-based Dock stall timers. Source regressions and full 3-archive payload comparison passed; normal installed package and consumer pins/builds remain unchanged.
-
-Final native queue: HW1Damage18 measurements +18 derived invariants passed (e2e1bae6…); EconomyRecovery6 measurements, real shots recover on both races, no automatic harvest-order rewrite; Mines8 measurements with successful sweeper/Assault controls (ddc6cf35…); CombatGeometry36 measurements +36 source-motion fixture invariants passed (870986fa…). Earlier geometry ddc6cf35… allowed attack-style source motion despite AB_Move0 and is not a fixed-source control. The clean repeat adds SetSpeed0 only for stationary CombatGeometry cells. Two invalid pilots (private HW1 transform and 4-argument native mine filter) remain rejected, not hidden or promoted to passes.
-
-PaidProduction4/4, GravityToggle8/8, GravityExpiry8/8 and prior technical fix runs are documented. All owned test processes are collected/closed; latest diagnostic install870986fa… only. No new combat/economy coefficients beyond accepted Assault1.2/starts6/6. Human checklist: 2-client MP, standard/2x RU/EN starts, physical squadron repair, UI paid jump/cancel and actual guard return, full Hgn/Vgr matches. Computer Use capture still times out after fresh monitor/window binding, so no blind menu clicks. Save/load remains the last optional task, not a current MP gate. Do not auto-build or advance downstream.
-
-
-## Последнее состояние, 26 октября: гравиполя save/load исправлены
-
-Прочитать docs/GRAVITY_SAVELOAD_FIX.md и docs/CLOSURE_CHECKLIST.md. По прямому запросу автора выполнена последняя дополнительная задача. Журнал baseline/владельцев хранится в native SobGroup membership, таблицы — кеш. Новый обычный fix d2376f7b… / BIG4bfa8213…,105157768байт,39overrides/1124файла; full3archive payload checks и source/rollback/codec mocks пройдены. Унаследованный без игровой подмены native run a4e54a0c…: SaveLoadAuto/Cold/Empty/Coop,JournalRecycle,JournalPressure по2/2. Предыдущий кандидат дополнительно подтвердил Transport6/6,Salvage6/6+6/6; старые GravityToggle/Expiry8/8 сохранены как отдельные результаты.
-
-Не называть старые failed saves исправленными: старые активные checkpoints без нового baseline-журнала не гарантируются. Не утверждать blanket campaign/level-transition/transport-save или MP сертификацию. Полный 64-bit прототип был слишком медленным и отвергнут; компактный адресный вариант дал21,328с против20,093с контроля в одном stress wall-time образце (~6%,неFPS). Исходный дефект затрагивал также Hgn/Vgr цели, а не только HW1; файл загружался и не объявляется повреждённым.
-
-Обычный слот не заменялся. Последний установленный пакет — отдельный HWMPAutoTests a4e54a0c…; все его завершённые процессы собраны/закрыты. Предыдущий обычный b46f71f4… сохранён в local/gravity-save-fix/previous-release. Боевые числа,6/6 и Assault1,2 прежние. Потребители/pins/сборки/установки и Workshop не обновлены. Основной остаток: два клиента MP, стандартные/2x RU/EN меню, корпуса/ремонт, UI-прыжок/отмена и полноценные матчи. Не запускать их без запроса автора.
+New checkpoints passed gravity save/load; old active saves without baseline data are not guaranteed. All campaigns/transitions remain separate acceptance. The former campaign ban for future new-race holding is reopened by the author; implement/design/test only in that layer. Computer Use capture still reports FrameArrived timeout; do not claim a generated cover is a game screenshot or do blind UI clicks.

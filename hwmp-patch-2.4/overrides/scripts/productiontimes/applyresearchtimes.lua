@@ -12,7 +12,7 @@ if GetProductionTimeSetting() == 2 then
                 if percent > 0 then sign = "+" end
                 value = "\n<b>" .. HWMP_TooltipValue() .. ":</b> " .. sign .. percent .. "% "
             end
-            research[i].Description = description .. "  \n" .. value .. "\n<b>" .. HWMP_TooltipBaseTime() .. ":</b> " .. item.Time .. "s"
+            research[i].Description = description .. "  \n" .. value .. "\n<b>" .. HWMP_TooltipBaseTime() .. ":</b> " .. item.Time .. HWMP_TooltipSecondsLabel
         end
     end
 end

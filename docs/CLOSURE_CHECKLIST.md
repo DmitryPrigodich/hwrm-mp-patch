@@ -1,35 +1,21 @@
-# HWMP 2.4: что осталось до закрытия базового этапа
+# Field acceptance checklist
 
-Актуально на 26 октября 2026. Цель — оригинальные расы в skirmish/MP без загрузки сохранений. Новорасы и кампания живут в потребителях. Этот список заменяет ранние «всё not_run» и промежуточные списки автоочереди; подробные ограничения остаются в [результатах](AUTO_TEST_RESULTS.md) и [нативном разборе](NATIVE_FOLLOWUP_2026-10-25.md).
+[Русский](ru/CLOSURE_CHECKLIST.md)
 
-## Сделано
+The automatic queue is complete for the stated scenarios. The current product is original-race skirmish/multiplayer; Extra Missions are diagnostic harnesses. The optional known active-gravity save/load defect has been repaired and tested separately. This is a field candidate, not a certification of all matches or campaigns.
 
-- Приняты и сохранены Assault: последний узел 535/4 → 535/1,2, и Hgn/Vgr старт 6/6. Остальные численные изменения не добавляются из небольших лабораторных выборок.
-- Подготовленный пакет включает три проверенных исправления: освобождение перевозимого груза; восстановление исходного Scuttle после буксировки/захвата; независимые Dock-таймеры по hull ID.
-- Закрыты узкие native инварианты перевозки, захвата с исходными Scuttle=0/1, вынужденного Dock под огнём, замены ракет при прежнем счётчике, повторных/естественно завершающихся гравиполей без загрузки.
-- Измерены реальные HW2 HP/скорости старых и новых кораблей, оплаченная стройка на старом/новом авианосце, обе оплаченные HW1 ступени урона с контролями. Геометрия: 36 измерений + 36 проверок движения постановки; мины: 8 наблюдений, положительный контроль работает.
-- Настоящий обстрел ресурсных модулей не подтвердил универсальное зависание дохода. Автоматический Stop/Resource helper и новые экономические числа не вводятся.
-
-## Остаётся тестерам
-
-| Приоритет | Проверка | Зачем / критерий |
+| Priority | Test | Acceptance evidence |
 |---|---|---|
-| 1 | Два реальных MP-клиента с одинаковыми архивами | Нет desync/crash; оба наблюдают одинаковое освобождение полей/груза, захват, Dock и попадания ракет. Однопроцессный SCAR этого не доказывает. |
-| 1 | Обычный и 2x skirmish из штатного меню, RU и EN | Стартовые наборы действительно дают 6/6, корректны меню, стройка и наука. Source PersistantData проверен, native Extra Mission не заменяет обычный старт. |
-| 2 | Физические корпуса и ремонт/восполнение отряда | Визуальное число, потери и восстановление после Dock; SobGroup_Count не считается доказательством числа корпусов. |
-| 2 | Обычный оплаченный гиперпрыжок с пассажирами и отменой зарядки; защита от ракет | Scripted off-map/exit и сохранение Guard уже измерялись, но отмена UI-зарядки и автоматический возврат после реального ухода из Guard остались неисполненными ветками. Нужны штатные команды/видео. |
-| 2 | Серия полных Hgn ↔ Vgr матчей на разных картах | Ранние рейды/повторное повреждение приёмников, прогрессия, лимиты, поздний флот, Assault/Flak на высоте и краю дальности, MoveAttack и разминирование. Принимать численные изменения по устойчивому воспроизводимому перекосу, а не одному результату. |
+| 1 | Two real MP clients, identical archives | No desync/crash; both peers observe consistent well/cargo release, capture, Dock and missile interception. Keep both hashes and relevant logs/video. |
+| 1 | Ordinary and2x starts from the normal menu | Hgn/Vgr6/6 collectors; correct fleets, build/research screens and progression. Cover English/Russian; review the four added language overlays too. |
+| 2 | Squadron losses, repair and replenishment | Observe physical hulls before/after losses and Dock. SobGroup_Count counts entries and cannot replace visible proof. |
+| 2 | UI hyperspace/cancel and actual Guard return | Paid charging with passengers, UI cancellation, interception followed by a real return to Guard. Scripted off-map/exit and a Guard order that never changed do not cover these branches. |
+| 2 | Complete Hgn↔Vgr games | Swap sides and maps; cover early raids, interrupted receiver income, research/production pace, caps, late fleets, Assault/Flak range/height and micro. Change numbers only for repeatable evidence. |
 
-Снять UI-пункты автоматически пока не удалось: захват изображения Homeworld даёт FrameArrived timeout и после перепривязки к новому окну/монитору; доступность показывает рамку, не игровое меню. Слепые координатные клики не выполнялись. Native журналы от этого ограничения независимы.
+Keep starts6/6 and Assault last1.2 pending this feedback. Current data does not justify new Flak/platform/sweeper/economy coefficients.
 
-## Решения и отложенное
+For each report include version/fix and all archive hashes, game version, map/mode, sides, actions, expected/observed result and reproduction frequency. Video is particularly useful for visible hulls, repair and paid UI commands. Never publish personal process/profile metadata with public reports.
 
-По текущим данным рекомендовано оставить Flak и роли платформ/тральщика без новых коэффициентов. Специального выбора автора для продолжения исправлений сейчас не требуется; новая роль платформы как тральщика была бы отдельным дизайнерским решением.
+The gravity fix passed new warm/cold/empty/cooperative checkpoints, range exit, extinction/recreation and stress tests. Old active-field saves without journal metadata remain uncertain. All campaign transitions and saved transport/capture/missile states are outside that claim; see GRAVITY_SAVELOAD_FIX.md.
 
-Последняя дополнительная задача — save/load активного оригинального гравиполя — **исправлена и прошла адресные native проверки**, включая новый процесс, выход из радиуса и сохранение запрета сценария. [Методика, нагрузка и ограничения](GRAVITY_SAVELOAD_FIX.md). Старые активные saves без журнала, все прочие saves и переходы уровней не сертифицированы. Новорасам уже отдельно записан hyperspace-only baseline и исследуемый захват strikecraft только вне кампании; здесь это не реализуется.
-
-## Артефакт и следующий шаг
-
-Подготовлен обычный HWMPPatch24 BIG 4bfa821379762964cbf637294783c79428c1b9a4bc181df1b7ec18951cb2d091, fix d2376f7b5526bbc0ae57255e1feabc2ecfdcd0137dcb328f7d51a963982a54d5, 39 overrides/1124 файла. Он не установлен в обычный слот; изменялся только собственный диагностический HWMPAutoTests. Прогоны собраны, принадлежащие стенду процессы закрыты. BIG/логи/сохранения/ассеты не попадают в Git.
-
-Следующий содержательный этап — тестовая приёмка обычного пакета и реальные матчи по таблице. Потребительские submodule pins, их сборки/установки и Workshop обновляются отдельно; эта автоочередь их не запускает.
+The campaign restriction on future new-race holding was reopened by the author on26October after this repair. Race-layer design/native campaign tests remain separate work. No consumer pin/build/installation is automatically advanced by this checklist.

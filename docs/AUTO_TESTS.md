@@ -1,66 +1,39 @@
-# Нативные автотесты HWMP 2.4
+# Native automatic test grounds
 
-Диагностический пакет — отдельная коллекция Extra Missions **HWMP 2.4 — автоматические испытания**. Он содержит полную подготовленную основу и частные стендовые типы; боевые файлы основы проверяются побайтно. Единственное объявленное исключение — диагностическая регистрация неактивного экрана HWMPAutoReload в ui/newui/uisettings.lua; исходный текст сохранён, до/после SHA и назначение входят в diagnostic_overrides. Экран действует только при явном вызове автоматического save/load. Обычный выпуск этого UI не содержит. Обычный установленный HWMP, расовый слой, кампания и их закреплённые зависимости не обновляются.
+[Русский — detailed original notes](ru/AUTO_TESTS.md)
+
+HWMPAutoTests is an isolated Extra Missions package built from the complete prepared base. Normal gameplay files must match that base byte-for-byte. Its only declared base exception is UISettings registration for an otherwise inactive owned auto-load screen. The ordinary mod does not contain that screen.
 
 ```powershell
 python tools/auto_testgrounds.py
 python tools/auto_testgrounds.py --install
-python tools/run_auto_tests.py --launch Mechanics
-python tools/run_auto_tests.py
-python tools/run_auto_tests.py --collect --close
+python tools/run_auto_queue.py JournalRecycle SaveLoadEmpty SaveLoadAuto SaveLoadCold SaveLoadCoop
+python tools/run_auto_pressure.py
 python tools/analyze_auto_tests.py
 ```
 
-Первая команда готовит и проверяет три BIG, вторая отдельно устанавливает только принадлежащую стенду папку HWMPAutoTests. Установка и запуск требуют запроса человека. Они отказываются работать при уже открытой игре/лаунчере. `--collect --close` сохраняет полный нативный журнал и закрывает только процесс этого запуска после окончания сценария либо диагностированной ошибки. Чужую игру инструмент не останавливает.
+Installation/launch needs an explicit human request. Never rebuild/reinstall during a queue with future launches. Each native process is identified by its own PID, executable and HWMPAutoTests command. Terminal runs are collected/closed by the runner; a healthy timeout stays open. No unrelated game is stopped. Invalid pilots remain preserved as invalid rather than being relabeled passed.
 
-| Полигон | Автоматическая постановка |
-|---|---|
-| Mechanics | Два перекрывающихся поля обеих HW1 рас, оба порядка уничтожения; исходный запрет атаки и скорость 0,75; обычная стыковка повреждённых отрядов Hgn/Vgr; HP четырёх платформ; ракетная платформа на 5300/5800 м; HMF/DD/BC по двум броням и с потерей цели. |
-| Antistrike | Исходный Test21 Assault, нейтральная кривая, обычный Assault принятой основы и Flak; обычные отряды Hgn/Vgr без/с улучшением скорости, Neutral/Evasive; по три повторения. Источник неподвижен, цель проходит поперёк сектора. |
-| SpeedCurve | Одинаковая высокопрочная одиночная диагностическая цель со скоростями 348/487,2/535,92; Assault исходный, с нейтральной кривой и с единственным изменением последнего узла 4→1,2, плюс обычный Assault принятой основы; по пять повторений. Остальное оружие сохраняется. |
-| Economy6 / Economy7 | Три пространственно разнесённые пары Hgn/Vgr, 6/6 или 6/7 сборщиков, одинаково построенные поля ресурсов и материнские корабли. Покупок, AI и бонусов нет. Окно 350 с; на 160-й секунде HP приёмника устанавливается в ноль; кошелёк и HP записываются раз в секунду. |
-| Progression | По три игрока Hgn/Vgr: частичные/полные наборы лабораторий и фабрик, одна/две лаборатории у двух производителей. После начала списания за первое исследование заказывается второе. Проверяются доступность, итоговая цена и соответствие длительности последовательной очереди при измеренном темпе первого проекта. Модули и 10000 RU выдаются сценарием и не служат измерением развития экономики. |
-| SaveLoad | Два активных поля каждой HW1 расы, собственный autosave без программной паузы; после настоящей загрузки — уничтожение первого/последнего генератора, проверка фактической гибели и восстановления прежних команд/скорости. Один вызов сохранения без загрузки не считается успехом. |
-| GravityScope | Пары перекрывающихся генераторов обеих HW1 рас против перехватчиков всех четырёх рас; исходная скорость 0,75/Attack=0; проверка без save/load. |
-| EconomyMatrix6 / EconomyMatrix7 | Чистые 600 с, шесть игроков/три пары: материнский/5000 м, авианосец/13000 м со сменой стороны, контроллер/7000 м. Ни одного повреждения/покупки; записи раз в секунду, прогрев 180 с, последнее окно 300 с и линейный тренд после прогрева. |
-| SaveLoadAuto | Штатные генераторы; собственный checkpoint при активных полях, уничтожение в старом мире и мутация маркера, автоматическая загрузка, повторная проверка HW1/Hgn/Vgr-целей после первого/последнего уничтожения. |
-| SaveLoadTrace | Та же загрузка, но частные копии генераторов вызывают исходные callbacks через трассирующие обёртки. Наблюдает корабельный реестр и ID; это диагностическая постановка, не исправление основы. |
+## Reusable worlds
 
-`run` — SHA256 инвентаря диагностического источника, а не номер коммита. Для каждого запуска сохраняются три хеша архивов, снимок постановки, полный HwRM.log, разобранные события и отдельные результаты. Эти данные находятся только в игнорируемом `local/auto-tests`; в Git не добавляются журналы и сведения окружения. Анализатор отвергает незавершённые прогоны, ошибки, несовпадающие идентификаторы/наборы случаев. Он не превращает `measured` в `passed` и не закрывает целиком старые Nxx по частичному покрытию.
+- Mechanics/GravityScope/GravityToggle/GravityExpiry: baseline permissions, overlaps, four target races, repeated sources and natural completion.
+- SaveLoadAuto/Trace: save under real fields, mutate the future world, load the owned checkpoint, confirm rollback and release. Cold starts a fresh process; Empty saves before activation and before a future generator exists; Coop changes allowed baseline from SCAR while ship VM owns the lock.
+- JournalRecycle: destroy every old anchor, create a fresh source/target and check another cycle. JournalPressure:200 configured target entries under6sources, with mixed flags/speed and physical movement after release.
+- Transport/Salvage/SalvageBaselines/DockStall: native off-map cargo/return/source destruction, capture interruptions, original Scuttle0/1 and forced stall under real fire with order controls.
+- Defense/DefenseIdentity/DefenseOrders/DefenseIntercept: native missile filters/target replacement, explicit orders and actual guarded targets. An explicit order is not an automatic Guard-return test.
+- Progression/ResearchEffects/HW1Damage/PaidProduction: prerequisites/queue, actual HP/speed, paid HW1 damage tiers with foreign-race controls and paid old/new carrier builds.
+- Economy6/7/Matrix/Raids/Recovery: clean income and scripted/real receiver pressure. Mines/CombatGeometry/Antistrike/SpeedCurve: scoped combat measurements with explicit setup controls.
 
-Сборка проверяется настоящим парсером Lua 4.0.1 и полной распаковкой всех BIG. Lua 5.1 mocks не являются свидетельством нативного результата. В сценарии записываются именованные константы NeutralStance/EvasiveStance и фактический SobGroup_GetStance; числовые индексы не используются как подписи режима.
+Private diagnostic ship/weapon transformations and hashes are recorded in local source metadata. Normal definitions are not overwritten by those private types. Geometry with Attack can move a ship even if AB_Move=0; stationary fixtures additionally set speed0. Missile target loss disables new fire and uses separate destruction-damage controls.
 
-`verify_save_compat.py` входит в сборку автополигонов: все найденные ID исследований должны давать допустимые Lua-константы, изменение ScoutSpeedLimiter ограничено одним полем Name, состояние перекрывающихся блокировок проходит штатный saveVar и парсер Lua4. Коллектор отдельно проверяет в gzip-потоке собственного checkpoint реальный безопасный экспорт ScoutSpeedLimiter. Гипотеза замены общего scripts/save.lua отвергнута нативным повтором и не входит в пакет.
+## Evidence rules
 
-`Player_HasQueuedResearch` охватывает ожидающую очередь; два значения 1 не доказывают два одновременно работающих проекта. Проверка очереди требует начала расхода на первый заказ, более позднего завершения второго и соответствующих длительностей. Базовые item.Time не используются как ожидаемые фактические секунды: число исследовательских источников влияет на темп. Первая версия такого ожидания и попытка считать HasQueuedResearch флагом активного проекта сохранены как отвергнутые пилоты.
+The loader stages only `player:Campaign/HWMPAUTOTESTS/HWMPAutoCheckpoint.sav`, owned by the current run. It checks a fresh save label/hash and allowed internal research IDs; prior owned copies are preserved. A request to LoadGame alone is not success: require time/marker rollback and OnStartOrLoad. Cold must load the same run's checkpoint in a new process.
 
-Ракетный стенд сохраняет оригинальные HOD и все коэффициенты урона/точности/пробития. В частной пусковой отключены другие орудия, вторичные цели/соседние пуски; интервал 9999 исключает повторный залп. Штатные slave-узлы дают HMF два, DD четыре, BC одну тяжёлую ракету. Проверяется одна однородная когорта; другие ракеты поблизости делают опыт недействительным. При потере цели новый огонь запрещается, отдельный контроль измеряет урон от гибели пустой цели. Это доказывает поведение исходного залпа, но не индивидуальную идентичность каждой ракеты и не работу перехватчика при равном счётчике.
+Gravity results require remaining-owner lock, correct range-exit release, original flags/speed, real generator removal and meaningful movement. Source mocks and Lua4 parsing complement these tests; neither is a native pass. SobGroup_Count is never reported as a physical hull count.
 
-Измерения ограничены заданной геометрией. Общий урон Assault включает его сохранённое дополнительное оружие; Flak стреляет по другой штатной расе. Эти результаты не являются универсальным DPS или готовым межрасовым рейтингом. SobGroup_Count обозначает записи отрядов; физическое число корпусов этим API не доказывается. Обычная стыковка не закрывает принудительный застой под огнём, а одиночная загрузка не заменяет мультиплеер.
+The pressure instrument filters run/mode and the preceding log SHA. It measures an external monotonic wall-time interval, not FPS or pure CPU. Do not mix repeated samples, game time and process launch delay. A stale previous suite:end invalidates the timing sample even if the native mechanics later pass.
 
-Итоги и оставшиеся решения: [AUTO_TEST_RESULTS.md](AUTO_TEST_RESULTS.md).
+Raw logs, checkpoints, process commands and environment metadata stay in ignored local/auto-tests. Public records contain methods, result summaries and log hashes only. [Results](AUTO_TEST_RESULTS.md), [gravity repair](GRAVITY_SAVELOAD_FIX.md), [field remainder](CLOSURE_CHECKLIST.md).
 
-Автозагрузка использует native GameScreens/onShow/LoadGame и только путь player:Campaign/HWMPAUTOTESTS/HWMPAutoCheckpoint.sav. После SaveGame внешний runner находит собственное сохранение по точной метке, сохраняет его SHA и копию, проверяет допустимый ID исследований, затем готовит только принадлежащий стенду checkpoint. Предыдущая собственная копия сохраняется; неизвестный владелец запрещает замену. Журналы различают запрос загрузки и подтверждённые откат времени/маркер/OnStartOrLoad. Никакой загрузки чужих campaign saves или ручного объявления passed. UI VM не имеет getn: индекс регистрации вычисляет Python из закреплённого исходника. Первый UI-пилот с getn отвергнут.
-
-Пилот экономики с восемью игроками вышел до OnInit и не дал метрик; пригодная серия использует подтверждённый шестиигровой мир. Это не установленный предел движка. Коллектор отличает такой выход от ожидания загрузки; ошибка проверки PID означает unknown, а не автоматическое объявление process_exited.
-
-Повтор того же пакета защищён от старых результатов: runner отличает предшествующий журнал, ждёт обновления исходного save и до запуска сохраняет/убирает только ранее принадлежащий стенду готовый checkpoint. Если новое сохранение не подготовлено, старый файл не может подменить его при автозагрузке. Повторный нативный запуск того же run подтвердил подготовку свежего checkpoint и реальную загрузку.
-
-
-Дополнительные миры: Defense (фильтры/измерения), DefenseIdentity (полная замена двух ракет с прежним cache=2 после Stop→Guard), DefenseOrders (явный приказ игрока, не проверка автоматического возврата), DefenseIntercept (настоящая охраняемая цель и штатный истребитель), Transport (native DockAndStay/off-map/exit/гибель), Salvage (native CaptureSobGroup и прерывания), DockStall (застой под native огнём и контроли приказа). Подробности и границы — [дополнение к отчёту](NATIVE_FOLLOWUP_2026-10-25.md).
-
-Неверный pilot разрешается досрочно сохранить/закрыть только через --collect --close --abort-invalid-fixture при уже записанном blocked; его статус aborted_invalid_fixture не попадёт в пригодную сводку. Здоровый незавершённый прогон закрывать таким способом нельзя. Прежние журналы не переписываются новой интерпретацией.
-
-
-26 октября: добавлены изолированные GravityToggle/GravityExpiry, HW1Damage, EconomyRaids/EconomyRecovery, PaidProduction, Mines и CombatGeometry. Частные типы имеют явные преобразования и хеши; обязательные structural families не могут исчезнуть при трансформации. Полная проверка трёх архивов + Lua4 проходит до установки. `tools/run_auto_queue.py MODE ... --wall-timeout 1200` запускает разрешённые миры последовательно, собирает и закрывает только точно принадлежащий им процесс после terminal status. При ошибке очередь останавливается; здоровый незавершённый timeout остаётся открытым. Перед использованием требуется явное разрешение человека на native тесты. Не пересобирать/переустанавливать пакет посреди очереди.
-
-
-## Журнал эффектов и реальные загрузки, 26 октября
-
-SaveLoadAuto и Trace создают checkpoint, дают миру уйти вперёд и загружают его через owned UI adapter. SaveLoadCold загружает checkpoint того же run в новом процессе, не создавая новых полей до LoadGame. SaveLoadEmpty сохраняет до активации, затем создаёт будущий генератор, отсутствующий в checkpoint. SaveLoadCoop меняет через HWMP API разрешённые Move/speed из SCAR во время поля и проверяет их после загрузки. Очередь сама stage-ит свежий checkpoint до загрузки; сохранение и run/hash проверяются, чужие saves не трогаются.
-
-После загрузки Hgn цель сразу уводится за радиус до первого Do; другие остаются под пересечением. После поочерёдного удаления обеих gravwell проверяются исходные флаги/скорость, HP/пустые группы генераторов и действительное перемещение. JournalPressure —200 заданных записей целей/6генераторов, не физический подсчёт корпусов. JournalRecycle уничтожает все старые anchors, создаёт новые генератор/отряд и проверяет следующий цикл. Native журналы и границы: GRAVITY_SAVELOAD_FIX.md.
-
-Эти миры наследуют обычный игровой код без экспериментальной подмены effects/gravwells. Единственное gameplay-independent исключение основы — UISettings для принадлежащей тесту автозагрузки. Lua5.1 rollback/codec tests выполняются через verify_effect_journal.py и не маркируются native passed.
-
-Для внешнего wall-time образца: `python tools/run_auto_pressure.py`. Он запускает только JournalPressure, фильтрует run/mode и прежний SHA журнала, собирает терминальный результат и сохраняет performance.json в игнорируемой папке прогона. Не запускать параллельно с другой очередью; требуется тот же запрос человека на native тест.
+Frozen examples are preserved under examples/native-testgrounds. That directory is not a runtime source or automatic build input.

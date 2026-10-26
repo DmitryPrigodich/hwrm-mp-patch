@@ -1,0 +1,32 @@
+{
+  "English": {
+    "base_time": "Base time",
+    "value": "Value",
+    "seconds": "s"
+  },
+  "French": {
+    "base_time": "Durée de base",
+    "value": "Valeur",
+    "seconds": "s"
+  },
+  "German": {
+    "base_time": "Basisdauer",
+    "value": "Wert",
+    "seconds": "s"
+  },
+  "Italian": {
+    "base_time": "Tempo base",
+    "value": "Valore",
+    "seconds": "s"
+  },
+  "Spanish": {
+    "base_time": "Tiempo base",
+    "value": "Valor",
+    "seconds": "s"
+  },
+  "Russian": {
+    "base_time": "Базовое время",
+    "value": "Значение",
+    "seconds": "с"
+  }
+}

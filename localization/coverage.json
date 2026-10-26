@@ -1,0 +1,92 @@
+{
+  "English": {
+    "dictionary_entries": 1356,
+    "native_entries": 1354,
+    "intentionally_empty_ids": [
+      "$1808",
+      "$1809"
+    ],
+    "english_fallback_ids": [],
+    "new_labels": {
+      "base_time": "Base time",
+      "value": "Value",
+      "seconds": "s"
+    },
+    "native_visual_test": "not_run"
+  },
+  "French": {
+    "dictionary_entries": 1356,
+    "native_entries": 1354,
+    "intentionally_empty_ids": [
+      "$1808",
+      "$1809"
+    ],
+    "english_fallback_ids": [],
+    "new_labels": {
+      "base_time": "Durée de base",
+      "value": "Valeur",
+      "seconds": "s"
+    },
+    "native_visual_test": "not_run"
+  },
+  "German": {
+    "dictionary_entries": 1356,
+    "native_entries": 1354,
+    "intentionally_empty_ids": [
+      "$1808",
+      "$1809"
+    ],
+    "english_fallback_ids": [],
+    "new_labels": {
+      "base_time": "Basisdauer",
+      "value": "Wert",
+      "seconds": "s"
+    },
+    "native_visual_test": "not_run"
+  },
+  "Italian": {
+    "dictionary_entries": 1356,
+    "native_entries": 1354,
+    "intentionally_empty_ids": [
+      "$1808",
+      "$1809"
+    ],
+    "english_fallback_ids": [],
+    "new_labels": {
+      "base_time": "Tempo base",
+      "value": "Valore",
+      "seconds": "s"
+    },
+    "native_visual_test": "not_run"
+  },
+  "Spanish": {
+    "dictionary_entries": 1356,
+    "native_entries": 1354,
+    "intentionally_empty_ids": [
+      "$1808",
+      "$1809"
+    ],
+    "english_fallback_ids": [],
+    "new_labels": {
+      "base_time": "Tiempo base",
+      "value": "Valor",
+      "seconds": "s"
+    },
+    "native_visual_test": "not_run"
+  },
+  "Russian": {
+    "dictionary_entries": 1356,
+    "native_entries": 1354,
+    "intentionally_empty_ids": [
+      "$1808",
+      "$1809"
+    ],
+    "english_fallback_ids": [],
+    "new_labels": {
+      "base_time": "Базовое время",
+      "value": "Значение",
+      "seconds": "с"
+    },
+    "native_visual_test": "not_run"
+  }
+}

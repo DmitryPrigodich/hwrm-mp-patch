@@ -1,13 +1,15 @@
 """World rollback regressions. Lua 5.1 mocks do not prove native save/load."""
+
 import json
 
 
 def verify(vm_factory=None):
     if vm_factory is None:
         from verify_hwmp24 import vm_for
-        vm_factory=vm_for
-    vm,_=vm_factory()
-    vm.execute('''
+
+        vm_factory = vm_for
+    vm, _ = vm_factory()
+    vm.execute("""
 function copy_native(value)
  if type(value)~='table' then return value end
  local out={};for k,v in pairs(value) do out[k]=copy_native(v) end;return out
@@ -64,11 +66,14 @@ ships={};unit('new',1,1,1,0.9);groups.new={'new'}
 HWMP_BlockGroup('new','gravwell:700',{AB_Move},1)
 HWMP_ReleaseOwner('gravwell:700')
 assert(ships.new.a[AB_Move]==1 and ships.new.speed==0.9)
-''')
-    return {'status':'passed','world_mock':'warm/cold/overlap/mixed baselines/cooperation/sparse cache/extinction',
-            'codec_mock':'31 abilities, arbitrary owner, integer/fixed/full-width speed roundtrip',
-            'engine_tested':False}
+""")
+    return {
+        "status": "passed",
+        "world_mock": "warm/cold/overlap/mixed baselines/cooperation/sparse cache/extinction",
+        "codec_mock": "31 abilities, arbitrary owner, integer/fixed/full-width speed roundtrip",
+        "engine_tested": False,
+    }
 
 
-if __name__=='__main__':
+if __name__ == "__main__":
     print(json.dumps(verify()))

@@ -1,6 +1,6 @@
 param(
     [string]$GameRoot='C:\Program Files (x86)\Steam\steamapps\common\Homeworld',
-    [ValidateSet('Russian','English')][string]$Language='Russian',
+    [ValidateSet('English','French','German','Italian','Spanish','Russian')][string]$Language='English',
     [switch]$PrintOnly
 )
 $ErrorActionPreference='Stop'

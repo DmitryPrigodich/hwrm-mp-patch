@@ -7,7 +7,7 @@ if GetProductionTimeSetting() == 2 then
         local seconds = buildtimes[item.ThingToBuild]
         local description = HWMP_TooltipText(item.Description)
         if seconds ~= nil and description ~= nil and description ~= "" then
-            build[i].Description = description .. "  \n\n<b>" .. HWMP_TooltipBaseTime() .. ":</b>  " .. seconds .. "s"
+            build[i].Description = description .. "  \n\n<b>" .. HWMP_TooltipBaseTime() .. ":</b>  " .. seconds .. HWMP_TooltipSecondsLabel
         end
     end
 end

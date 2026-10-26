@@ -1,0 +1,13 @@
+{
+  "kind": "owner-selected illustrative cover",
+  "source": "Final image selected by owner in HW Mod Previews; based on supplied ship/emblem references",
+  "master_sha256": "19d73ee098915a9b3b7352b3fd7e63e2ef267626d7be7619b1619687734e06f2",
+  "preview_sha256": "3596b83983098e057c4e750d15608b00ab0a636ad8d8648d8cf8c8add92310c4",
+  "preview_dimensions": [
+    512,
+    512
+  ],
+  "preview_bytes": 119402,
+  "images_tracked_in_git": false,
+  "published": false
+}

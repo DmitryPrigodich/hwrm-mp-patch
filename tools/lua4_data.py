@@ -4,6 +4,7 @@ Supports only straight-line table construction, numeric expressions and passive
 API call records. Unknown opcodes, control flow and executable closures fail.
 Format references: https://www.lua.org/source/4.0/lundump.c.html and lopcodes.h.html.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -35,7 +36,7 @@ class Chunk:
 
     def string(self):
         size = self.integer()
-        value = self.data[self.pos:self.pos + size - 1].decode("cp1252") if size else None
+        value = self.data[self.pos : self.pos + size - 1].decode("cp1252") if size else None
         if size:
             assert self.data[self.pos + size - 1] == 0
         self.pos += size
@@ -49,7 +50,9 @@ class Chunk:
         self.pos += 1
         self.integer()  # maximum stack
         for _ in range(self.integer()):
-            self.string(); self.integer(); self.integer()
+            self.string()
+            self.integer()
+            self.integer()
         line_count = self.integer()
         self.pos += line_count * 4  # debug line map
         strings = [self.string() for _ in range(self.integer())]
@@ -62,8 +65,15 @@ class Chunk:
         code = struct.unpack_from("<" + "I" * count, self.data, self.pos)
         self.pos += count * 4
         assert code and code[-1] == 0
-        return dict(source=source, strings=strings, numbers=numbers, code=code,
-                    children=children, params=params, vararg=vararg)
+        return dict(
+            source=source,
+            strings=strings,
+            numbers=numbers,
+            code=code,
+            children=children,
+            params=params,
+            vararg=vararg,
+        )
 
 
 @dataclass(frozen=True)
@@ -84,28 +94,37 @@ def tables(path: Path):
         if op == "END":
             assert not stack, (path, "nonempty final stack", stack)
             break
-        if op == "PUSHINT": stack.append(signed)
-        elif op == "PUSHSTRING": stack.append(p["strings"][u])
+        if op == "PUSHINT":
+            stack.append(signed)
+        elif op == "PUSHSTRING":
+            stack.append(p["strings"][u])
         elif op in ("PUSHNUM", "PUSHNEGNUM"):
             stack.append(p["numbers"][u] * (-1 if op == "PUSHNEGNUM" else 1))
-        elif op == "PUSHNIL": stack.extend([None] * u)
-        elif op == "POP": del stack[-u:]
+        elif op == "PUSHNIL":
+            stack.extend([None] * u)
+        elif op == "POP":
+            del stack[-u:]
         elif op == "GETGLOBAL":
             key = p["strings"][u]
             stack.append(globals_.get(key, GlobalName(key)))
-        elif op == "SETGLOBAL": globals_[p["strings"][u]] = stack.pop()
-        elif op == "CREATETABLE": stack.append({})
-        elif op == "GETDOTTED": stack[-1] = stack[-1][p["strings"][u]]
+        elif op == "SETGLOBAL":
+            globals_[p["strings"][u]] = stack.pop()
+        elif op == "CREATETABLE":
+            stack.append({})
+        elif op == "GETDOTTED":
+            stack[-1] = stack[-1][p["strings"][u]]
         elif op == "GETTABLE":
-            key = stack.pop(); stack[-1] = stack[-1][key]
+            key = stack.pop()
+            stack[-1] = stack[-1][key]
         elif op == "SETTABLE":
             stack[-aa][stack[-aa + 1]] = stack[-1]
-            if bb: del stack[-bb:]
+            if bb:
+                del stack[-bb:]
         elif op == "SETMAP":
-            items = stack[-2 * u:]
+            items = stack[-2 * u :]
             target = stack[-2 * u - 1]
             target.update(zip(items[::2], items[1::2]))
-            del stack[-2 * u:]
+            del stack[-2 * u :]
         elif op == "SETLIST":
             target = stack[-bb - 1]
             for number, value in enumerate(stack[-bb:], aa * 64 + 1):
@@ -114,13 +133,21 @@ def tables(path: Path):
         elif op in ("ADD", "SUB", "MULT", "DIV", "POW"):
             right, left = stack.pop(), stack.pop()
             assert isinstance(left, (int, float)) and isinstance(right, (int, float))
-            stack.append({"ADD": lambda: left + right, "SUB": lambda: left - right,
-                          "MULT": lambda: left * right, "DIV": lambda: left / right,
-                          "POW": lambda: left ** right}[op]())
-        elif op == "ADDI": stack[-1] += signed
-        elif op == "MINUS": stack[-1] = -stack[-1]
+            stack.append(
+                {
+                    "ADD": lambda: left + right,
+                    "SUB": lambda: left - right,
+                    "MULT": lambda: left * right,
+                    "DIV": lambda: left / right,
+                    "POW": lambda: left**right,
+                }[op]()
+            )
+        elif op == "ADDI":
+            stack[-1] += signed
+        elif op == "MINUS":
+            stack[-1] = -stack[-1]
         elif op == "CALL":
-            fn, args = stack[aa], stack[aa + 1:]
+            fn, args = stack[aa], stack[aa + 1 :]
             assert isinstance(fn, GlobalName), (path, pc, fn)
             assert bb in (0, 1), (path, pc, bb)
             # Nothing dispatches to Lua, OS functions or a game API.

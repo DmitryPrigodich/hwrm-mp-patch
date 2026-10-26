@@ -1,38 +1,46 @@
-# HWMP Patch 2.4 dev1
+# HWMP Patch 2.4
 
-Полная основа Players Patch 2.3Test build21 с общими техническими исправлениями и узкими изменениями баланса. Область выпуска — **skirmish и multiplayer без сохранений**. Новые расы и кампания разрабатываются в следующих репозиториях и автоматически не обновляются.
+[Русский](README.ru.md)
 
-Принятые изменения Hgn↔Vgr: только последний скоростной множитель трёх пушек Assault **535/4 → 535/1,2**; стандартные и 2x стандартные старты — **6/6 сборщиков**. Другие коэффициенты оружия/экономики сохраняются, кроме двух ранее разобранных ракетных исправлений: правая пусковая платформы 6000→5500 и удаление конфликтующего раннего SuperUtilityArmour0,8 с сохранением 0,85. Общий баланс четырёх исходных рас не является самостоятельной целью проекта.
+A standalone Homeworld Remastered patch built on **Players Patch 2.3Test build21**. It preserves the original four races and their HW2-style progression while fixing shared mechanics. **Field-test candidate:** automated engine checks cover specific cases; real multiplayer acceptance is still required.
 
-Технические изменения:
+## Changes
 
-- временные ограничения разделены по владельцам эффектов; исправлены разбиение групп и обновление списка активных кораблей;
-- защитный истребитель обновляет выбор ракет при замене целей с прежним счётчиком; фильтры владельца и радиуса сохраняются;
-- перевозка не держит пассажиров скрытыми до завершения повторного Dock; выжившие после гибели перевозчика возвращаются в реальное пространство;
-- захват сохраняет предшествующее разрешение Scuttle по ID корабля, отдельно от native запрета во время буксировки; освобождение одного корабля не снимает ограничения другого;
-- таймер обхода зависшего Dock хранится по ID корабля. Одиннадцать исходных callbacks передают ID; пороги 3/5 с сохранены;
-- восстановлен отсутствовавший Medium missile weaponfire; внутренний ID ScoutSpeedLimiter допустим для native сериализатора;
-- RU/EN подписи и базовые времена строительства получены из действующих определений. У пяти ресурсных типов исправлены только подписи.
+- Original Kushan/Taiidan gravity wells release overlapping locks correctly, including tested save/load cases. Previous ability restrictions and speed are preserved.
+- Support-frigate transports return surviving passengers; salvage preserves each ship's original self-destruct permission; stalled docking uses independent ship-ID timers.
+- Taiidan defense fighters refresh missile selections when targets change without changing their count. The missing Vaygr Medium missile weapon-fire binding is restored.
+- Narrow accepted balance changes: **6 Hiigaran / 6 Vaygr starting collectors**, and the Assault Frigate's last speed-accuracy node **4 → 1.2** on its three cannons. Two inherited missile inconsistencies are corrected; no broad rebalance is claimed.
+- Build/research tooltips use effective base times and the selected native language. English is the documentation/default starter language; French, German, Italian, Spanish and Russian tooltip overlays are included.
 
-Нативные автоматические стенды подтвердили отдельные механики, а не весь баланс/план Nxx. Перевозка проверяется scripted off-map/exit, не оплаченной UI-зарядкой. Стыковка — при искусственной остановке под настоящим огнём. Старые/новые корабли в проверке HP/скорости создаются сценарием; это отдельный опыт от платной очереди. Платная очередь Interceptor на старом/новом авианосце дополнительно проверена у Hgn/Vgr: 450 RU за партию, около 35 с до и 27 с после улучшения, с контрольными игроками без науки. Подробности, отрицательные контроли и оставшиеся вопросы — в AUTO_TEST_RESULTS.md и AUTO_TESTS.md готового пакета; полный разбор — docs/NATIVE_FOLLOWUP_2026-10-25.md репозитория.
+## Field tests still needed
 
-Загрузка активных исходных гравиполей исправлена сохраняемым журналом baseline/владельцев. Проверены обычная и холодная загрузка, откат до активации, запрет сценария и новые поля после гибели старых целей. Подробности — GRAVITY_SAVELOAD_FIX.md готового пакета. Старые saves с активными полями, созданные до журнала, не гарантируются; все кампании и сетевые случаи этим не сертифицированы. Два реальных сетевых клиента, визуальные корпуса/ремонт, обычные меню и полноценные матчи требуют дальнейшего тестирования.
+1. Two real multiplayer clients using identical release archives: synchronization, overlapping wells, transport, capture, docking and missile defense.
+2. Normal and 2x starts from the standard UI; six collectors per side; build/research screens in each supported language.
+3. Visible squadron losses and repair/replenishment. A script entry count is not a physical hull count.
+4. Paid UI hyperspace, charging cancellation and actual return to Guard after missile interception.
+5. Full Hiigaran ↔ Vaygr matches on varied maps, with side swaps, raids and late fleets.
 
-## Сборка и запуск
+Record the archive hashes and reproduction steps. [Acceptance checklist](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/CLOSURE_CHECKLIST.md) · [Engine results](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/AUTO_TEST_RESULTS.md).
+
+## Build and use
+
+Requires your own game, Toolkit and the pinned Test21 input; no game assets are stored here.
 
 ```powershell
+python -m pip install -r requirements.txt
+python tools/prepare_inputs.py
 python tools/hwmp24.py --package
-python tools/verify_hwmp24.py
+python tools/install_hwmp24.py --install
 ```
 
-Готовый пакет — local/HWMPPatch24-release. Установка отдельно: tools/install_hwmp24.py --install; запуск — через HWMP Patch 2.4.cmd. Сборка сама не устанавливает и не запускает игру. Собственная папка HWMPPatch24 сохраняет занятый слот Vast Reaches/Banana. Workshop планируется после завершения работы по решению автора.
+Output: `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/LOCAL_INSTALLATION.md). Workshop publication is prepared separately and requires approval; the patch is not yet advertised as published.
 
-Проверки исходников, Lua5.1 mocks, Lua4 и полная распаковка всех трёх BIG дополняют нативные журналы. Они не доказывают отсутствие всех сетевых ошибок. Обычная установка и закреплённые зависимости потребителей обновляются отдельно.
+Use this complete package by itself; do not stack another Players Patch on top. Old active-well saves made before the new journal are not guaranteed to resume correctly. New checkpoint tests do not certify every campaign or level transition.
 
-При изменении временных разрешений доступны HWMP_SetAbilityAllowed / HWMP_SetSpeedAllowed. Взаимодействие SCAR с ship VM через журнал проверено отдельным нативным save/load сценарием; прямые внешние изменения engine-флагов автоматически не отслеживаются. Дополнительные типы целей регистрируются через HWMP_RegisterGravityTarget. Для захвата без предшествующего idle-наблюдения исходное разрешение не угадывается.
+## Development
 
-## Происхождение
+[Architecture and changes](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/PATCH_ENGINEERING.md) · [Update/release procedure](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/UPDATE_WORKFLOW.md) · [Localization](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/LOCALIZATION.md) · [Workshop preparation](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/WORKSHOP.md) · [Frozen test examples](examples/native-testgrounds/README.md).
 
-2.3Test.big SHA256: f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41. Сохранены ресурсы, карты и авторские сведения. Благодарности: **Players Patch team, Fear/Novaras, участники 2.3Test и авторы карт**.
+Dependency direction: **hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod**. Building this base never updates consumer pins, builds or installations.
 
-[Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337), [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511), [исходники Test](https://github.com/Novaras/2.3-Test). Публикуется код; игровые модели, медиа, BIG, кеш и личные журналы не входят в Git.
+Credits: **Players Patch team, Fear/Novaras, Test21 contributors and map authors**. [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337) · [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511) · [upstream code](https://github.com/Novaras/2.3-Test). This repository publishes code and documentation, not models, media, compiled BIGs, caches, personal logs or saves.

@@ -1,26 +1,46 @@
-# hwrm-mp-patch
+# HWMP Patch 2.4
 
-**HWMP Patch 2.4 dev1** — общие исправления HWRM и оригинальные четыре расы на полном Players Patch 2.3Test build21. Слои проекта: **hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod**. Новые расы и кампания принадлежат потребителям; сборка основы их не обновляет.
+[Русский](README.ru.md)
 
-Вход Test закреплён SHA256 `f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41` и inventory в `baseline/`. Собственные исправления лежат в `hwmp-patch-2.4/overrides/`. Сохраняются карты, авторские сведения и благодарности Players Patch team, Fear/Novaras и участникам Test.
+A standalone Homeworld Remastered patch built on **Players Patch 2.3Test build21**. It preserves the original four races and their HW2-style progression while fixing shared mechanics. **Field-test candidate:** automated engine checks cover specific cases; real multiplayer acceptance is still required.
+
+## Changes
+
+- Original Kushan/Taiidan gravity wells release overlapping locks correctly, including tested save/load cases. Previous ability restrictions and speed are preserved.
+- Support-frigate transports return surviving passengers; salvage preserves each ship's original self-destruct permission; stalled docking uses independent ship-ID timers.
+- Taiidan defense fighters refresh missile selections when targets change without changing their count. The missing Vaygr Medium missile weapon-fire binding is restored.
+- Narrow accepted balance changes: **6 Hiigaran / 6 Vaygr starting collectors**, and the Assault Frigate's last speed-accuracy node **4 → 1.2** on its three cannons. Two inherited missile inconsistencies are corrected; no broad rebalance is claimed.
+- Build/research tooltips use effective base times and the selected native language. English is the documentation/default starter language; French, German, Italian, Spanish and Russian tooltip overlays are included.
+
+## Field tests still needed
+
+1. Two real multiplayer clients using identical release archives: synchronization, overlapping wells, transport, capture, docking and missile defense.
+2. Normal and 2x starts from the standard UI; six collectors per side; build/research screens in each supported language.
+3. Visible squadron losses and repair/replenishment. A script entry count is not a physical hull count.
+4. Paid UI hyperspace, charging cancellation and actual return to Guard after missile interception.
+5. Full Hiigaran ↔ Vaygr matches on varied maps, with side swaps, raids and late fleets.
+
+Record the archive hashes and reproduction steps. [Acceptance checklist](docs/CLOSURE_CHECKLIST.md) · [Engine results](docs/AUTO_TEST_RESULTS.md).
+
+## Build and use
+
+Requires your own game, Toolkit and the pinned Test21 input; no game assets are stored here.
 
 ```powershell
 python -m pip install -r requirements.txt
 python tools/prepare_inputs.py
 python tools/hwmp24.py --package
-python tools/verify_hwmp24.py
+python tools/install_hwmp24.py --install
 ```
 
-`local/settings.json` или `HWRM_ASSET_CACHE` указывает на локальный кэш игры; пример — `settings.example.json`. Репозиторий содержит код и документы, без моделей, изображений, звука, BIG, кэша и личных журналов. Обычный выпуск — `local/HWMPPatch24-release`. Установка отдельно: `tools/install_hwmp24.py --install`; без флага выводится план. Сборка сама игру не запускает.
+Output: `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Workshop publication is prepared separately and requires approval; the patch is not yet advertised as published.
 
-Аналитические проходы: [данные и локализация](docs/DATA_AUDIT.md), [экономика](docs/ECONOMY_AUDIT.md), [прогрессия](docs/PROGRESSION_AUDIT.md), [ракеты](docs/MISSILE_AUDIT.md), [Assault/Flak/платформы](docs/ANTISTRIKE_AUDIT.md).
+Use this complete package by itself; do not stack another Players Patch on top. Old active-well saves made before the new journal are not guaranteed to resume correctly. New checkpoint tests do not certify every campaign or level transition.
 
-**25 октября: нативная серия и принятая правка Assault.** Последний скоростной множитель трёх пушек 4→1,2 включён в подготовленную основу и проверен обычным кораблём. По чистым 10-минутным прогонам Дмитрий принял старт 6/6; он включён в подготовленную основу. **Область проекта — skirmish/MP без сохранений.** Дополнительная задача загрузки активных гравиполей теперь исправлена и проверена отдельно; [разбор и границы](docs/GRAVITY_SAVELOAD_FIX.md). Старые saves без журнала не гарантируются. Автозагрузка checkpoint работает; участие человека для очередного такого повтора не требуется. [Результаты, ограничения и рекомендации](docs/AUTO_TEST_RESULTS.md), [методика](docs/AUTO_TESTS.md). Это частичное нативное покрытие; оставшиеся автоматические и сетевые проверки перечислены в отчёте.
+## Development
 
-**26 октября:** нативные прогоны выявили и проверили три дополнительных технических исправления: освобождение перевозимых кораблей, восстановление исходного разрешения Scuttle после захвата и независимый Dock-таймер по shipID. [Подробные результаты и ограничения](docs/NATIVE_FOLLOWUP_2026-10-25.md). Они включены в подготовленный пакет; обычная установка и потребители пока прежние.
+[Architecture and changes](docs/PATCH_ENGINEERING.md) · [Update/release procedure](docs/UPDATE_WORKFLOW.md) · [Localization](docs/LOCALIZATION.md) · [Workshop preparation](docs/WORKSHOP.md) · [Frozen test examples](examples/native-testgrounds/README.md).
 
-Отдельный `HWMPAutoTests` содержит автоматические Extra Missions; `HWMPTestGrounds` — [ручные полигоны](docs/TEST_GROUNDS.md). Обычный установленный HWMP, моды потребителей и их submodule pins этой серией не обновляются. Подробный [ручной план](docs/NATIVE_TESTS.md) сохраняется для непокрытых веток, визуальных проверок и двухклиентского MP. Скриптовые fixtures и CRC дополняют нативные журналы, но не заменяют их.
+Dependency direction: **hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod**. Building this base never updates consumer pins, builds or installations.
 
-[Установка и CMD](docs/LOCAL_INSTALLATION.md), [следующий шаг](NEXT_SESSION.md). Занятый слот Vast Reaches/Banana сохранён. Workshop — после завершения патча по решению автора; публикация Workshop не выполнялась.
-
-Короткий актуальный [список оставшихся проверок](docs/CLOSURE_CHECKLIST.md).
+Credits: **Players Patch team, Fear/Novaras, Test21 contributors and map authors**. [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337) · [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511) · [upstream code](https://github.com/Novaras/2.3-Test). This repository publishes code and documentation, not models, media, compiled BIGs, caches, personal logs or saves.

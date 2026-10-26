@@ -1,20 +1,22 @@
 -- HWMP Patch 2.4: reversible, owner-scoped temporary ship effects.
 -- Group indexes identify squadron entries, never a physical hull count.
-if HWMP_EffectRecords == nil then HWMP_EffectRecords = {} end
-if HWMP_EffectSerial == nil then HWMP_EffectSerial = 0 end
-
+if HWMP_EffectRecords == nil then
+    HWMP_EffectRecords = { }
+end
+if HWMP_EffectSerial == nil then
+    HWMP_EffectSerial = 0
+end
 -- Stock save.lua emits string table keys as .key, without bracket quoting.
 -- Encode every byte so owner labels remain collision-free Lua identifiers.
 function HWMP_OwnerKey(owner)
     local result = "owner"
     for i = 1, strlen(owner) do
-        result = result .. "_" .. strbyte(owner, i)
+        result = result .."_" ..strbyte(owner, i)
     end
     return result
 end
-
 function HWMP_Keys(values)
-    local result = {}
+    local result = { }
     local key = next(values, nil)
     while key ~= nil do
         result[getn(result) + 1] = key
@@ -22,9 +24,8 @@ function HWMP_Keys(values)
     end
     return result
 end
-
 function HWMP_FindEffectRecord(group, create)
-    for i = getn(HWMP_EffectRecords), 1, -1 do
+    for i = getn(HWMP_EffectRecords), 1, - 1 do
         local record = HWMP_EffectRecords[i]
         if SobGroup_Empty(record.group) == 1 and next(record.abilities, nil) == nil and record.speed == nil then
             tremove(HWMP_EffectRecords, i)
@@ -32,24 +33,25 @@ function HWMP_FindEffectRecord(group, create)
             return record
         end
     end
-    if create ~= 1 then return nil end
+    if create ~= 1 then
+        return nil
+    end
     HWMP_EffectSerial = HWMP_EffectSerial + 1
-    local name = "HWMP_EffectTarget_" .. HWMP_EffectSerial
+    local name = "HWMP_EffectTarget_" ..HWMP_EffectSerial
     SobGroup_CreateIfNotExist(name)
     SobGroup_Clear(name)
     SobGroup_SobGroupAdd(name, group)
-    local record = { group = name, abilities = {} }
+    local record = { group = name, abilities = { } }
     HWMP_EffectRecords[getn(HWMP_EffectRecords) + 1] = record
     return record
 end
-
 function HWMP_BlockRecord(record, owner, abilities, stop_speed)
     owner = HWMP_OwnerKey(owner)
     for i = 1, getn(abilities) do
         local ability = abilities[i]
         local state = record.abilities[ability]
         if state == nil then
-            state = { baseline = SobGroup_CanDoAbility(record.group, ability), owners = {} }
+            state = { baseline = SobGroup_CanDoAbility(record.group, ability), owners = { } }
             record.abilities[ability] = state
         end
         state.owners[owner] = 1
@@ -57,13 +59,12 @@ function HWMP_BlockRecord(record, owner, abilities, stop_speed)
     end
     if stop_speed == 1 then
         if record.speed == nil then
-            record.speed = { baseline = SobGroup_GetSpeed(record.group), owners = {} }
+            record.speed = { baseline = SobGroup_GetSpeed(record.group), owners = { } }
         end
         record.speed.owners[owner] = 1
         SobGroup_SetSpeed(record.group, 0)
     end
 end
-
 function HWMP_ReleaseRecord(record, owner)
     owner = HWMP_OwnerKey(owner)
     local keys = HWMP_Keys(record.abilities)
@@ -86,7 +87,6 @@ function HWMP_ReleaseRecord(record, owner)
         end
     end
 end
-
 function HWMP_BlockGroup(group, owner, abilities, stop_speed)
     local probe = "HWMP_EffectProbe"
     SobGroup_CreateIfNotExist(probe)
@@ -98,9 +98,10 @@ function HWMP_BlockGroup(group, owner, abilities, stop_speed)
         end
     end
 end
-
 function HWMP_UnblockGroup(group, owner)
-    if getn(HWMP_EffectRecords) == 0 then return end
+    if getn(HWMP_EffectRecords) == 0 then
+        return
+    end
     local probe = "HWMP_EffectProbe"
     SobGroup_CreateIfNotExist(probe)
     for i = 0, SobGroup_Count(group) - 1 do
@@ -108,17 +109,17 @@ function HWMP_UnblockGroup(group, owner)
         SobGroup_FillShipsByIndexRange(probe, group, i, 1)
         if SobGroup_Empty(probe) == 0 then
             local record = HWMP_FindEffectRecord(probe, 0)
-            if record ~= nil then HWMP_ReleaseRecord(record, owner) end
+            if record ~= nil then
+                HWMP_ReleaseRecord(record, owner)
+            end
         end
     end
 end
-
 function HWMP_ReleaseOwner(owner)
     for i = 1, getn(HWMP_EffectRecords) do
         HWMP_ReleaseRecord(HWMP_EffectRecords[i], owner)
     end
 end
-
 function HWMP_ReleaseAbility(group, owner, ability)
     owner = HWMP_OwnerKey(owner)
     local probe = "HWMP_EffectProbe"
@@ -141,7 +142,6 @@ function HWMP_ReleaseAbility(group, owner, ability)
         end
     end
 end
-
 function HWMP_HasOtherOwner(record, owner)
     owner = HWMP_OwnerKey(owner)
     local prefix = HWMP_OwnerKey("gravwell:")
@@ -149,12 +149,13 @@ function HWMP_HasOtherOwner(record, owner)
     for i = 1, getn(keys) do
         local owners = HWMP_Keys(record.abilities[keys[i]].owners)
         for j = 1, getn(owners) do
-            if owners[j] ~= owner and strsub(owners[j], 1, strlen(prefix)) == prefix then return 1 end
+            if owners[j] ~= owner and strsub(owners[j], 1, strlen(prefix)) == prefix then
+                return 1
+            end
         end
     end
     return 0
 end
-
 function HWMP_ClearReleasedTumble(group, owner)
     local probe = "HWMP_EffectProbe"
     SobGroup_CreateIfNotExist(probe)
@@ -169,7 +170,6 @@ function HWMP_ClearReleasedTumble(group, owner)
         end
     end
 end
-
 -- Missions may change their baseline while a temporary effect is active.
 -- This is explicit cooperation; the engine API is never globally monkey-patched.
 function HWMP_SetAbilityAllowed(group, ability, allowed)
@@ -193,9 +193,11 @@ function HWMP_SetAbilityAllowed(group, ability, allowed)
         end
     end
 end
-
 function HWMP_SetSpeedAllowed(group, speed)
-    if getn(HWMP_EffectRecords) == 0 then SobGroup_SetSpeed(group, speed); return end
+    if getn(HWMP_EffectRecords) == 0 then
+        SobGroup_SetSpeed(group, speed);
+        return
+    end
     local probe = "HWMP_EffectProbe"
     SobGroup_CreateIfNotExist(probe)
     for i = 0, SobGroup_Count(group) - 1 do
@@ -206,11 +208,14 @@ function HWMP_SetSpeedAllowed(group, speed)
             if record ~= nil and record.speed ~= nil then
                 record.speed.baseline = speed
                 SobGroup_SetSpeed(probe, 0)
-            else SobGroup_SetSpeed(probe, speed) end
+            else
+                SobGroup_SetSpeed(probe, speed)
+            end
         end
     end
 end
-
 function HWMP_Log(message)
-    if HWMP_Debug == 1 then print(message) end
+    if HWMP_Debug == 1 then
+        print(message)
+    end
 end

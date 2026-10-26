@@ -1,75 +1,56 @@
-# Гравиполя: исправление загрузки, 26 октября 2026
+# Gravity well save/load repair
 
-Дефект воспроизведён и исправлен для исходных кушанского и таииданского генераторов. Это дополнительная совместимость HWMP: его основная область остаётся skirmish/MP. Сохранения из прежних отрицательных опытов не объявляются исправленными задним числом.
+[Русский](ru/GRAVITY_SAVELOAD_FIX.md)
 
-## Причина и исправление
+The known active-well defect was reproduced and repaired for original Kushan/Taiidan generators. This is additional compatibility of the skirmish/MP base, not a certification of every campaign save. Negative historical runs remain negative.
 
-Воспроизведение: сохранить два пересекающихся активных поля, уничтожить генераторы, загрузить checkpoint и снова уничтожить их. Раньше цели оставались с Move=0/скоростью 0, хотя оба генератора физически исчезли и Destroy callbacks выполнялись. Это затрагивало также хиигарские и вэйгрские цели, а не только HW1 корабли. Сам файл загружался; доказательств порчи файла нет.
+## Root cause
 
-Нативные прогоны показали рассогласование: мир и членство SobGroup возвращаются к checkpoint, а таблицы библиотеки ship custom-code могут сохранять последующие изменения. После загрузки исходный baseline уже утрачен, и текущее заблокированное состояние ошибочно принимается за исходное. Исправление только ScoutSpeedLimiter устранило отдельную ошибку сериализации, но не это рассогласование.
+Save two overlapping active fields, destroy the sources, load the checkpoint and destroy them again. The old base left targets at Move0/speed0 even though both generators physically disappeared and Destroy callbacks ran. Hiigaran/Vaygr targets were affected too. The file loaded; file corruption was not demonstrated.
 
-Новый журнал хранит baseline способностей/скорости и владельцев ограничений в сохраняемом членстве служебных SobGroup. Lua-таблицы — кеш, а не единственный источник истины. Он не создаёт корабли, не занимает ScriptFlags и не включает способности всем подряд. Освобождение одного поля сохраняет ограничения другого; исходные Move=0, Attack=0 и изменённая сценарием допустимая скорость восстанавливаются точно. Для меж-VM изменений сценарий должен пользоваться HWMP_SetAbilityAllowed/HWMP_SetSpeedAllowed: прямые чужие изменения engine-флагов не перехватываются.
+Native traces showed world/SobGroup membership rewinding while ship custom-code effect tables could retain future mutations. A later callback resnapshotted an already-blocked state as its original baseline. Fixing the unrelated ScoutSpeedLimiter serialization ID removed Lua errors but did not repair this state mismatch.
 
-При восстановлении генератор сохраняет checkpoint-набор previously_stunned: иначе цель, ушедшая за радиус до первого callback, оставалась бы заблокирована. Пустая метка погибшего корабля не используется как запись нового. Отдельно проверено повторное создание полей после гибели старых носителей журнала.
+The new journal stores original ability permissions/speed and owners in native SobGroup membership. Lua tables are caches. It creates no helper ships, uses no ScriptFlags and never globally enables movement. The loaded generator preserves its checkpoint previous-target group so a target leaving range before the first callback is still released. Empty/dead record markers cannot be decoded for a new target generation.
 
-Код генерируется `tools/effect_journal.py` из `tools/templates/effects_base.lua` и `effect_journal.lua`; `hwmp24.py` применяет его при каждой обычной сборке. Упакованный effects.lua самодостаточен. Отдельная Lua wrapper-подмена в другом file scope нативно не сработала; эксперимент замены Volume-метаданных дал несогласованное чтение/assert и отвергнут. Глобальный scripts/save.lua не поставляется.
+SCAR can change an allowed baseline through HWMP_SetAbilityAllowed/HWMP_SetSpeedAllowed while ship code owns a temporary lock. Direct external engine flag changes are not intercepted. The generated effects.lua is self-contained: an earlier cross-file wrapper experiment did not intercept the native calls. A Volume-based metadata replacement returned stale state/asserted and was rejected. No replacement scripts/save.lua is shipped.
 
-## Нативные доказательства
+## Exact native evidence before the release review
 
-Отрицательный контроль прежней основы: run b8deead4d1abb85f0d82c3e8ae7312516584039ef75ebda295e8f442d86296a2, SaveLoadTrace — 2 failed после подтверждённой загрузки; SHA256 журнала 50f43107508ee4e9b8683d0a0fd7ad63e1df0f7c8e670736abeab640e85ee24c.
+Negative old-base run: b8deead4d1abb85f0d82c3e8ae7312516584039ef75ebda295e8f442d86296a2, SaveLoadTrace2failed. Journal SHA256:50f43107508ee4e9b8683d0a0fd7ad63e1df0f7c8e670736abeab640e85ee24c.
 
-Компактный кандидат с адресным освобождением: run 433a98267d5199e657af2417ebca045a5fad88f915887f27cbed0c9e70227b90. Все перечисленные проверки — отдельные native случаи, не реальные матчи:
+Ordinary-code diagnostic run a4e54a0c0fb395be982caa530dd1faca03a831bb31c339836ab6dedada6a1065 inherited base fix d2376f7b… byte-for-byte, with only the declared diagnostic UI registration:
 
-| Мир | Результат | Что действительно проверено |
+| World | Result | Native log SHA256 |
 |---|---|---|
-| SaveLoadAuto | 2/2 passed | Реальная загрузка; пересечение; поочерёдное удаление; выход Hgn за радиус; исходные флаги/скорость; движение освобождённых целей |
-| SaveLoadCold | 2/2 passed | Загрузка того же принадлежащего run checkpoint в новом процессе, без старого кеша ship VM |
-| SaveLoadEmpty | 2/2 passed | Откат до активации и до появления будущего генератора; повторное включение/удаление сохранённого поля без призрачного владельца |
-| SaveLoadCoop | 2/2 passed | Сценарий из SCAR меняет допустимые Move=0/speed=0,625 во время поля; запрет переживает загрузку и удаление поля; Hgn/Vgr контроли двигаются |
-| JournalPressure | 2/2 passed | 200 заданных записей целей, шесть генераторов, пересечения, исходные Attack=0/1 и скорость 0,75/1, последующее реальное движение |
-| Transport | 6/6 passed | Прежние scripted Dock/off-map/return/destruction ветки не регрессировали; UI-прыжок и saves транспорта этим не закрыты |
-| Salvage / SalvageBaselines | 6/6 + 6/6 passed | Сохранены исходные разрешения Scuttle=1 и Scuttle=0 в проверенных сценариях захвата |
+| JournalPressure |2passed|3fdfb6b381e989188eaad39ee5cca4291c75c29219d3a8b97f86f7fef18042bb|
+| JournalRecycle |2passed|2e5003cf4ffc7175153a227f015304214fb576852b354e39e2883897e106552d|
+| SaveLoadAuto |2passed|e6c473826ea37901578e1a9bd468e9497f57867640b127acd5de35ffee9636a9|
+| SaveLoadCold |2passed|15609fc741b9483a09198fdae17741f7dc2a68b061eee405a8629f9e017825d0|
+| SaveLoadCoop |2passed|e41e817924eaba9dcfa106f002b66d45fe2bfb8200b7e6fd8ec7eca601f7b9bb|
+| SaveLoadEmpty |2passed|b4485d74c41b7a6053fe1fdd289c0117cab70dd847f84db4abbe1d73b7a0f059|
 
-В Auto/Cold/Empty минимальное наблюдаемое перемещение после освобождения около 1783 м. Проверяется движение, а не один permission flag. Обе исходные расы генераторов проверяются с HW1 и Hgn/Vgr целями. В более ранней успешной серии дополнительно GravityToggle8/8 и GravityExpiry8/8 без загрузки; эти случаи не пересчитываются как новые матчи.
+Auto/Cold confirm actual rollback, overlapping locks, Hgn range exit, sequential source destruction and real post-release movement around1783m. Cold uses a new process without a prior ship cache. Empty rolls back before activation and a future-only source, then tests a new activation. Coop preserves a scenario's Move0/speed0.625 while released Hgn/Vgr controls move. Recycle destroys all old anchors, spawns a fresh source/target and verifies another lock/release cycle.
 
-Итоговый обычный код отличается от кандидата удалением экспериментальной диагностики и проверкой живого носителя записи. Его отдельный контроль приведён ниже.
+The compact targeted candidate433a9826… additionally passed Transport6/6 and Salvage6/6+6/6 with original Scuttle1/0. Earlier GravityToggle/Expiry8/8 remain separate no-load results. New release-review checks are recorded in CODE_REVIEW_2026-10-26.md rather than being silently attributed to these old hashes.
 
-### Проверка обычного выпуска
+## Performance
 
-Диагностический run a4e54a0c0fb395be982caa530dd1faca03a831bb31c339836ab6dedada6a1065 наследует все игровые файлы обычного fix d2376f7b… побайтно. Исключение — только диагностическая регистрация UI автозагрузки. Ни effects.lua, ни gravwells.lua не подменены. Полная проверка трёх архивов прошла. Отдельно Lua4 compiler разобрал обычные effects.lua/gravwells.lua.
+Same pressure setup:200configured target entries,6generators, roughly game t6→26.25. These are individual external monotonic wall-time samples, not FPS or pure CPU.
 
-| Мир | Итог | SHA256 нативного журнала |
-|---|---|---|
-| JournalPressure | 2 passed | 3fdfb6b381e989188eaad39ee5cca4291c75c29219d3a8b97f86f7fef18042bb |
-| JournalRecycle | 2 passed | 2e5003cf4ffc7175153a227f015304214fb576852b354e39e2883897e106552d |
-| SaveLoadAuto | 2 passed | e6c473826ea37901578e1a9bd468e9497f57867640b127acd5de35ffee9636a9 |
-| SaveLoadCold | 2 passed | 15609fc741b9483a09198fdae17741f7dc2a68b061eee405a8629f9e017825d0 |
-| SaveLoadCoop | 2 passed | e41e817924eaba9dcfa106f002b66d45fe2bfb8200b7e6fd8ec7eca601f7b9bb |
-| SaveLoadEmpty | 2 passed | b4485d74c41b7a6053fe1fdd289c0117cab70dd847f84db4abbe1d73b7a0f059 |
-
-JournalRecycle подтверждает оба этапа: блокировку старого/нового отряда, фактическую гибель всех старых носителей, затем восстановление Move=1, Attack=0, speed=0,75 после удаления нового генератора. Все процессы стенда собраны и закрыты его runner. Это завершает адресную проверку известного дефекта; следующий UI/сетевой этап остаётся у тестеров.
-
-
-## Цена исправления
-
-Сравнение одинакового JournalPressure: от игрового t≈6 до t≈26,25, измеренное внешним monotonic clock время. Это по одному лабораторному образцу, не FPS, не чистое CPU-время и не общий прогноз всех карт.
-
-| Вариант | Wall time | Относительно контроля |
+| Variant | Wall seconds | Relative to old control |
 |---|---:|---:|
-| Прежняя основа без журнала, c7f1485b… | 20,093 с | 1,00× |
-| Первый успешный журнал с фиксированными 64 битами, 83ec3239… | 59,860 с | 2,98× — отвергнут для выпуска |
-| Компактные числа и общий список владельцев, 3f5ff221… | 22,500 с | 1,12× |
-| Дополнительно адресное освобождение по метке владельца, 433a9826… | 21,328 с | 1,06× |
-| Обычный код с проверкой живой метки, a4e54a0c… | 21,938 с | 1,09× |
+| Old base without journal, c7f1485b… |20.093|1.00×|
+| Functional fixed64-bit prototype,83ec3239… |59.860|2.98×, rejected|
+| Compact owners/numbers,3f5ff221… |22.500|1.12×|
+| Targeted owner release,433a9826… |21.328|1.06×|
+| Ordinary code with live-marker check,a4e54a0c… |21.938|1.09×|
 
-Начальные 0→6 игровых секунд: 6,641 с без журнала, 7,047 с у кандидата и 6,250 с у обычного кода. Разброс отдельных выборок не позволяет приписывать всю разницу последней проверке метки. Большая регрессия устранена; накладные расходы остаются и подлежат проверке в реальном MP. SHA журнала финального замера — 3fdfb6b381e989188eaad39ee5cca4291c75c29219d3a8b97f86f7fef18042bb. Первый финальный pressure дал2passed, но внешний измеритель увидел предыдущий suite:end; его временные метки отвергнуты. Повтор фильтрует mode и SHA предшествующего журнала.
+Initial t0→6 samples were6.641/7.047/6.250s for old/candidate/ordinary code. The variability does not establish the exact cost of one final safety check. The first ordinary pressure mechanics passed, but its external timer read a preceding suite:end and was rejected; the repeat filters mode and preceding-log SHA.
 
-## Границы и артефакт
+## Compatibility and handoff
 
-Новые checkpoints содержат необходимый журнал. Старое сохранение с уже активными полями, сделанное до исправления, может не иметь исходных baseline; гарантировать его восстановление нельзя. Нет blanket-сертификации всех кампаний, переходов уровней, сохранений буксировки/перевозки/ракет или двухклиентской синхронизации. Общие изменения транспортной библиотеки прошли перечисленные регрессии без сохранений.
+New checkpoints contain the journal. Old active-well saves made before it may lack original baseline data and cannot be guaranteed. Saved capture/transport/missile states and all campaign transitions are not certified by these worlds.
 
-Обычный подготовленный выпуск: fix d2376f7b5526bbc0ae57255e1feabc2ecfdcd0137dcb328f7d51a963982a54d5; HWMPPatch24.big 4bfa821379762964cbf637294783c79428c1b9a4bc181df1b7ec18951cb2d091, 105157768 байт; English.big 3da0c54ea2fbe1dd5d34ed88dab1cf26e5a078a6765dd33efeec5dcadb1e2c34; Russian.big 64830a734266b525d96eafcb743e7bdbcca05728aeb6fc38cc5956d520bd5ee6. 39 overrides/1124 исходных файла. Полная распаковка трёх BIG совпала с источниками; Lua5.1 mocks и Lua4 parsing дополняют, а не заменяют native результаты.
+The repaired pre-review ordinary archive was4bfa821379762964cbf637294783c79428c1b9a4bc181df1b7ec18951cb2d091,105157768bytes,fix d2376f7b5526bbc0ae57255e1feabc2ecfdcd0137dcb328f7d51a963982a54d5,39overrides/1124sourcefiles. The later publication review adds six-language overlays, packaging/readability improvements and a new release identity; see its report. It does not change approved combat/economy numbers.
 
-Против предыдущего c71b74ee…/b46f71f4… изменены только effects.lua и gravwells.lua. Коэффициенты боя, цены, исследования, старт 6/6 и Assault1,2 неизменны. Предыдущий пакет сохранён локально; обычный игровой слот не заменялся. Устанавливался только отдельный HWMPAutoTests. Потребители, их pins/сборки/установки и Workshop не изменены. Сырые журналы/checkpoints/процессы остаются в игнорируемом local; в Git идут только код и этот разбор.
-
-Остаток приёмки — [CLOSURE_CHECKLIST.md](CLOSURE_CHECKLIST.md): два клиента MP, обычные RU/EN старты, физические корпуса/ремонт и полноценные матчи.
+Consumer pins/builds remain separate. The author reopened single-player use of future new-race holding on26October; it now needs its own design/integration tests rather than a categorical campaign ban. [Field acceptance](CLOSURE_CHECKLIST.md).
