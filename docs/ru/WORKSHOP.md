@@ -2,6 +2,9 @@
 
 [English](../WORKSHOP.md)
 
+
+Текущий предмет **3827773780** уже опубликован и проверен по скачанным файлам. [Отчёт](WORKSHOP_RELEASE_2026-10-26.md). Генератор сохраняет ID из workshop/item.json; дальнейшие загрузки выполняются через update после соответствующего запроса владельца.
+
 Установленный Toolkit содержит WorkshopTool, Archive, ReadMe и config-template. Его вход — loose data, не готовый BIG; инструмент сам пакует основной и языковые архивы. Нужны config.txt (Title≤128, Description≤8000, GameType HomeworldRM, ModType MOD, имя BIG без пробелов, теги через пробел), preview512×512 JPG/PNG<1MiB и WorkshopID0для первого предмета.
 
 `python tools/prepare_workshop.py --preview <утверждённая512картинка>` готовит local/Workshop-upload без отправки в Steam. Английское описание основное, русское отдельно. Без --preview можно подготовить данные заранее; tools/attach_workshop_preview.py добавляет выбранную квадратную картинку в512×512JPEG без обрезки композиции. Исходники/полигоны/логи/сейвы/настройки в upload не копируются. Благодарности исходным авторам сохраняются.

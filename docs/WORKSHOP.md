@@ -2,6 +2,9 @@
 
 [Русский](ru/WORKSHOP.md)
 
+
+Current item **3827773780** is public and verified against the Steam download. [Release report](WORKSHOP_RELEASE_2026-10-26.md). Staging preserves the ID from workshop/item.json; later uploads use update when authorized.
+
 The installed **Homeworld Remastered Toolkit** includes WorkshopTool.exe, Archive.exe, ReadMe.txt and a commented config.txt. Its ReadMe/config are the primary local references; the [developer's upload guide](https://steamcommunity.com/sharedfiles/filedetails/?id=398897438) describes the same loose-file workflow.
 
 ## What must be prepared
@@ -17,7 +20,7 @@ The installed **Homeworld Remastered Toolkit** includes WorkshopTool.exe, Archiv
 
 Prepare/verify files, inspect the installed tool/help, stage a native screenshot scene, create clearly labeled illustrative artwork if capture is unavailable, show drafts, and later run an approved Toolkit create/update command using the existing Steam session. It cannot enter passwords/Steam Guard codes or accept author/legal obligations on the user's behalf. If Steam authorization or an agreement is required, the owner handles that step.
 
-**Preparation is not publication approval.** Do not run create/update yet. Show description/preview first and wait for the owner's decision. Do not silently publish a private placeholder either. After first publication preserve the WorkshopID written by the tool; do not use0for an update or overwrite another author's item.
+**Preparation is not publication approval.** The first upload was authorized and completed on 26 October 2026; preparation alone does not authorize a later create/update. Show description/preview first and wait for the owner's decision. Do not silently publish a private placeholder either. After first publication preserve the WorkshopID written by the tool; do not use0for an update or overwrite another author's item.
 
 Once approved, launch the installed Toolkit in its documented working directory and use `create <absolute staged folder>` for the first item or `update <folder>` for its assigned ID. Live command-field help/input has been verified in the installed GUI; actual upload is intentionally unattempted until approved. The owner may need to confirm the Workshop agreement in Steam.
 

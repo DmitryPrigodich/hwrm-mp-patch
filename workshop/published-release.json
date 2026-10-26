@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "workshop_id": "3827773780",
+  "consumer_app_id": 244160,
+  "creator_app_id": 347380,
+  "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780",
+  "title": "HWMP Patch 2.4 - Field Test",
+  "status": "public",
+  "published_at_utc": "2026-10-26T16:23:21+00:00",
+  "source_commit": "139f361e8f61d74ca2f6fa3ad9f3a657df737cd7",
+  "source_fix_revision": "b9ef33908806ad049bb135ba72220e94454db870aed16ed6a00cfba24850e846",
+  "local_main_sha256": "0e306ebe298f9bd183d5eeca3b9aa783017c7cd096e63013a9000b4c6e9ccb82",
+  "steam_manifest_id": "2584013199517664159",
+  "anonymous_api_visibility_verified": true,
+  "authenticated_page_verified": true,
+  "anonymous_http_page_check": "rate_limited_429",
+  "steam_download_verification": {
+    "workshop_id": "3827773780",
+    "manifest_id": "2584013199517664159",
+    "downloaded_from_steam": true,
+    "status": "passed",
+    "full_extract_hash_comparison": true,
+    "archives": [
+      {
+        "filename": "HWMPPatch24.big",
+        "bytes": 109785596,
+        "sha256": "6733149b5ec78f9cefeaf3dce771e2d1e968bb6fabc49b8bced866ced94523ab",
+        "files": 1130,
+        "aliases": [
+          "data"
+        ]
+      },
+      {
+        "filename": "english.big",
+        "bytes": 15221,
+        "sha256": "b002a415e0f62305b53c178b805f91f4b5980c3db3eae0c264a2cb215c81fc92",
+        "files": 1,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "french.big",
+        "bytes": 16362,
+        "sha256": "ef5abd17404d3d245eef66151a8f53650495de6d2954ff240b2feaeea8783128",
+        "files": 1,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "german.big",
+        "bytes": 16068,
+        "sha256": "c966ff14275d00f893b9355a6379c0eeed707f70a863fd2804097ec7ddd2274c",
+        "files": 1,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "italian.big",
+        "bytes": 16187,
+        "sha256": "4e1cf6479f5e1b0d0aa8032686dc4828cc06b59e5fd29134912480de627433e2",
+        "files": 1,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "spanish.big",
+        "bytes": 16450,
+        "sha256": "d1075ba1c5691a46dd63ad149a7d1fc45772de9be272b638995199b015b1865f",
+        "files": 1,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "russian.big",
+        "bytes": 26749,
+        "sha256": "a79633c448337c2cd6eafacc7dcabf9643b98b2bbb4e1befa7ff47a370dac6c6",
+        "files": 1,
+        "aliases": [
+          "locale"
+        ]
+      }
+    ],
+    "source_files": 1136,
+    "preview_sha256": "3596b83983098e057c4e750d15608b00ab0a636ad8d8648d8cf8c8add92310c4",
+    "engine_launched": false,
+    "total_download_bytes": 110014186
+  }
+}

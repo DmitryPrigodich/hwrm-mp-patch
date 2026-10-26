@@ -10,6 +10,18 @@ from hwmp24 import SOURCE, WORK
 from install_hwmp24 import release_files
 
 
+def workshop_item_id():
+    """Retain the first publication identity across subsequent source revisions."""
+    path = PROJECT / "workshop/item.json"
+    if not path.exists():
+        return "0"
+    item = json.loads(path.read_text(encoding="utf8"))
+    identifier = str(item["workshop_id"])
+    if not identifier.isdecimal() or int(identifier) < 1 or item["consumer_app_id"] != 244160:
+        raise ValueError("Invalid pinned Homeworld Workshop identity.")
+    return identifier
+
+
 def prepare(preview=None):
     from PIL import Image
 
@@ -36,6 +48,7 @@ def prepare(preview=None):
         )
     description = (PROJECT / "workshop/description.en.bbcode").read_text(encoding="utf8").strip()
     title = "HWMP Patch 2.4 - Field Test"
+    workshop_id = workshop_item_id()
     if len(title) > 128 or len(description) > 8000:
         raise ValueError("Toolkit title/description limit exceeded.")
     shutil.copytree(SOURCE, content)
@@ -48,7 +61,11 @@ def prepare(preview=None):
         "Title: "
         + title
         + "\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\n"
-        "BigFilename: HWMPPatch24.big\nWorkshopID: 0\nDescription:\n" + description + "\n"
+        "BigFilename: HWMPPatch24.big\nWorkshopID: "
+        + workshop_id
+        + "\nDescription:\n"
+        + description
+        + "\n"
     )
     (content / "config.txt").write_text(config, encoding="utf8", newline="\r\n")
     shutil.copy2(PROJECT / "workshop/description.ru.bbcode", root / "description.ru.bbcode")
@@ -63,6 +80,8 @@ def prepare(preview=None):
             "description_characters": len(description),
             "content": str(content),
             "published": False,
+            "workshop_id": workshop_id,
+            "expected_operation": "create" if workshop_id == "0" else "update",
             "approval_required": "Show owner the exact description and preview before any create/update.",
         },
     )
@@ -72,6 +91,8 @@ def prepare(preview=None):
     )
     return {
         "staged": str(content),
+        "workshop_id": workshop_id,
+        "expected_operation": "create" if workshop_id == "0" else "update",
         "runtime_files": len(manifest["files"]),
         "title": title,
         "description_characters": len(description),
