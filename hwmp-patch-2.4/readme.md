@@ -12,6 +12,8 @@ A standalone Homeworld Remastered patch built on **Players Patch 2.3Test build21
 - Narrow accepted balance changes: **6 Hiigaran / 6 Vaygr starting collectors**, and the Assault Frigate's last speed-accuracy node **4 → 1.2** on its three cannons. Two inherited missile inconsistencies are corrected; no broad rebalance is claimed.
 - Build/research tooltips use effective base times and the selected native language. English is the documentation/default starter language; French, German, Italian, Spanish and Russian tooltip overlays are included.
 
+- Front-end identity: native HW2 planetary backdrop, Taiidan emblem, HWMP2.4 footer and the requested **Inhibitors** menu track. [Details](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/MENU_BRANDING.md).
+
 ## Field tests still needed
 
 1. Two real multiplayer clients using identical release archives: synchronization, overlapping wells, transport, capture, docking and missile defense.

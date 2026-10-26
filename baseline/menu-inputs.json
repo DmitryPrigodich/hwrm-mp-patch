@@ -1,0 +1,18 @@
+{
+  "files": {
+    "test/ui/newui/main/newmainmenu.lua": "95c23404b5f7a1ee5962c5c29b95568875b669121363240589c9e11427239639",
+    "rm-base/ui/newui/main/background.lua": "90d257b01f326435f15b203621af497e3e9b686a63b0f53e3bdedd49b99d61c5",
+    "rm-base/ui/newui/background/logo.tga": "744fb65bbb5034c8de8ef8980301f40857c5cd75baa52398f90ad327d7bbf831",
+    "rm-base/badges/taiidan_white.tga": "5edf5daea00e880503bf8e2a0414e782315b3b47054d453f89a51da0e9cb0d1b",
+    "rm-base/soundscripts/soundconfig.lua": "2d324281cd79628cbe8d5631591a084adffca358c7744879053b1e69204c2226",
+    "rm-campaign-hw2/ui/newui/background/main_bg.tga": "e099b403627b7c3bbd19184b187dd5e1093cf1779847414068b2d53010791b60",
+    "rm-campaign-hw2/leveldata/campaign/ascension/m04_outergeh/m04_outergeh.lua": "e585f2ab27500302ed2188643aea77e7beb0121a705a69add5fed6d0717de610"
+  },
+  "shared_music_metadata_sha256": "9349eced9be8f08bbd59fb58d1885052edb0f0c45d0e04e5aa6c1979847690eb",
+  "music_title": "Inhibitors",
+  "music_resource": "data:sound/music/staging/STAGING_04",
+  "native_wordmark_visible_rows": [
+    0,
+    192
+  ]
+}

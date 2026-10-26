@@ -195,6 +195,9 @@ def locale_tables():
 def make_overrides():
     out = ROOT / "overrides"
     from effect_journal import generate_effects, patch_gravity
+    from menu_branding import generate as generate_menu
+
+    generate_menu(out)
 
     write(out, "scripts/hwmp24/effects.lua", generate_effects())
     # Approved 25 October after native clean-income tests: equal six-collector starts.
