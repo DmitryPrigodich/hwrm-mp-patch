@@ -1,31 +1,33 @@
 {
   "schema_version": 1,
+  "version": "2.4.1",
   "workshop_id": "3827773780",
   "consumer_app_id": 244160,
   "creator_app_id": 347380,
   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780",
-  "title": "HWMP Patch 2.4 - Field Test",
+  "title": "HWMP Patch 2.4.1 - Field Test",
   "status": "public",
-  "published_at_utc": "2026-10-26T16:23:21+00:00",
-  "source_commit": "139f361e8f61d74ca2f6fa3ad9f3a657df737cd7",
-  "source_fix_revision": "b9ef33908806ad049bb135ba72220e94454db870aed16ed6a00cfba24850e846",
-  "local_main_sha256": "0e306ebe298f9bd183d5eeca3b9aa783017c7cd096e63013a9000b4c6e9ccb82",
-  "steam_manifest_id": "2584013199517664159",
+  "updated_at_utc": "2026-10-26T21:16:37+00:00",
+  "source_commit": "9ed197239490d36db1e4eaf9dd92e759abd23c48",
+  "source_fix_revision": "918818ee91a81a3c46bfa61b8a301649716ec16868f0a9b4da7ac2e8bb5970b7",
+  "content_revision": "9fe4ce118585d5ab96154d6995d3405650187a6f132765ed0f23c14d5214638f",
+  "local_main_sha256": "722521185ac8125dedbbd5efded4981bb6ff7ed04ee1660af80cb7326e2c5d9b",
+  "local_main_bytes": 81519866,
+  "steam_manifest_id": "2695969873528017586",
   "anonymous_api_visibility_verified": true,
-  "authenticated_page_verified": true,
-  "anonymous_http_page_check": "rate_limited_429",
+  "page_ui_review": "not repeated after maintenance upload",
   "steam_download_verification": {
     "workshop_id": "3827773780",
-    "manifest_id": "2584013199517664159",
+    "manifest_id": "2695969873528017586",
     "downloaded_from_steam": true,
     "status": "passed",
     "full_extract_hash_comparison": true,
     "archives": [
       {
         "filename": "HWMPPatch24.big",
-        "bytes": 109785596,
-        "sha256": "6733149b5ec78f9cefeaf3dce771e2d1e968bb6fabc49b8bced866ced94523ab",
-        "files": 1130,
+        "bytes": 81973633,
+        "sha256": "b3b591c18d84ca2077e22b4a4fca3de0b387bb65b7d0d3203a84a7dae1fa6b6f",
+        "files": 1128,
         "aliases": [
           "data"
         ]
@@ -33,7 +35,7 @@
       {
         "filename": "english.big",
         "bytes": 15221,
-        "sha256": "b002a415e0f62305b53c178b805f91f4b5980c3db3eae0c264a2cb215c81fc92",
+        "sha256": "90a23e2d47f7f876e08933e65d398e20af079f30463da2c95b0a552d6be23ec4",
         "files": 1,
         "aliases": [
           "locale"
@@ -42,7 +44,7 @@
       {
         "filename": "french.big",
         "bytes": 16362,
-        "sha256": "ef5abd17404d3d245eef66151a8f53650495de6d2954ff240b2feaeea8783128",
+        "sha256": "9b67164af38aedeb4ae116655743d6152df21340147b92236b8dc595d7834707",
         "files": 1,
         "aliases": [
           "locale"
@@ -51,7 +53,7 @@
       {
         "filename": "german.big",
         "bytes": 16068,
-        "sha256": "c966ff14275d00f893b9355a6379c0eeed707f70a863fd2804097ec7ddd2274c",
+        "sha256": "cc343294cfb07ad67cf31a57d053d4ad9df07f5076c5a88337f9d0bdf604a7b0",
         "files": 1,
         "aliases": [
           "locale"
@@ -60,7 +62,7 @@
       {
         "filename": "italian.big",
         "bytes": 16187,
-        "sha256": "4e1cf6479f5e1b0d0aa8032686dc4828cc06b59e5fd29134912480de627433e2",
+        "sha256": "0f531b1eaaa98212e415ed307180b97c4b7322b0a9eba6599127e68262136c0d",
         "files": 1,
         "aliases": [
           "locale"
@@ -69,7 +71,7 @@
       {
         "filename": "spanish.big",
         "bytes": 16450,
-        "sha256": "d1075ba1c5691a46dd63ad149a7d1fc45772de9be272b638995199b015b1865f",
+        "sha256": "779fc82bf62fabdfeb4412e1a3ba224de783f81881e6ede2b92f37829acb0a88",
         "files": 1,
         "aliases": [
           "locale"
@@ -78,16 +80,16 @@
       {
         "filename": "russian.big",
         "bytes": 26749,
-        "sha256": "a79633c448337c2cd6eafacc7dcabf9643b98b2bbb4e1befa7ff47a370dac6c6",
+        "sha256": "e853421b374bea85350bae25e7541c118b1c8c3862f00e335f309393425caab3",
         "files": 1,
         "aliases": [
           "locale"
         ]
       }
     ],
-    "source_files": 1136,
+    "source_files": 1134,
     "preview_sha256": "3596b83983098e057c4e750d15608b00ab0a636ad8d8648d8cf8c8add92310c4",
     "engine_launched": false,
-    "total_download_bytes": 110014186
+    "total_download_bytes": 82202657
   }
 }

@@ -28,7 +28,7 @@ python tools/hwmp24.py --package
 python tools/install_hwmp24.py --install
 ```
 
-Готовый пакет: `local/HWMPPatch24-release`. Для русского CMD-запуска: `HWMP Patch 2.4.cmd -Language Russian`. [Штатный лаунчер и обратимый переключатель слота](docs/ru/LOCAL_INSTALLATION.md). Опубликовано в [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) как **HWMP Patch 2.4 - Field Test**. Для сетевых испытаний всем участникам нужна одна версия Workshop: хеши архивов Toolkit отличаются от локальной сборки разработчика.
+Готовый пакет: `local/HWMPPatch24-release`. Для русского CMD-запуска: `HWMP Patch 2.4.cmd -Language Russian`. [Штатный лаунчер и обратимый переключатель слота](docs/ru/LOCAL_INSTALLATION.md). Опубликовано в [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) как **HWMP Patch 2.4.1 - Field Test**. Для сетевых испытаний всем участникам нужна одна версия Workshop: хеши архивов Toolkit отличаются от локальной сборки разработчика.
 
 Поверх полного пакета не нужен второй Players Patch. Совместимость старых сохранений с уже активными полями не гарантируется. Новые проверки загрузки не означают приёмку всех кампаний и переходов уровней.
 

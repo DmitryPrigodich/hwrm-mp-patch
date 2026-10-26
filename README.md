@@ -36,7 +36,7 @@ python tools/hwmp24.py --package
 python tools/install_hwmp24.py --install
 ```
 
-Output: `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4 - Field Test**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
+Output: `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4.1 - Field Test**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
 
 Use this complete package by itself; do not stack another Players Patch on top. Old active-well saves made before the new journal are not guaranteed to resume correctly. New checkpoint tests do not certify every campaign or level transition.
 
