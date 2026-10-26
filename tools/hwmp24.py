@@ -5,6 +5,7 @@ Only project-local preparation/package operations. No install, game or launcher.
 
 from __future__ import annotations
 from project_credits import SHORT_CREDITS
+from project_version import TITLE, VERSION
 import json
 from pathlib import Path
 import re
@@ -402,7 +403,11 @@ def prepare():
     assert {
         name: sha(path) for name, path in index(DONOR).items()
     } == expected, "Donor extraction changed."
+    from stock_assets import validate_inputs, generate_aliases, content_revision
+
+    stock_assets = validate_inputs()
     make_overrides()
+    generate_aliases(ROOT / "overrides", stock_assets)
     SOURCE.mkdir(parents=True, exist_ok=True)
     marker = SOURCE / "hwmp24-id.txt"
     if any(SOURCE.iterdir()):
@@ -411,7 +416,8 @@ def prepare():
         shutil.rmtree(SOURCE)
         SOURCE.mkdir()
     write(SOURCE, "hwmp24-id.txt", IDENTITY + "\n")
-    names = copy_layer(DONOR, SOURCE, donor_runtime)
+    omitted = {row["path"] for row in stock_assets["assets"]}
+    names = copy_layer(DONOR, SOURCE, lambda name: donor_runtime(name) and name not in omitted)
     for name, path in index(SOURCE).items():
         if path.stat().st_size == 0 and path.suffix == ".lua":
             write(SOURCE, name, "-- Intentionally empty upstream Lua file.\n")
@@ -428,6 +434,9 @@ def prepare():
         "base_runtime_files": names,
         "overrides": fix_hashes,
         "fix_revision": revision,
+        "content_revision": content_revision(files),
+        "stock_asset_fallbacks": stock_assets,
+        "version": VERSION,
         "files": files,
         "engine_tested": False,
         "installed": False,
@@ -439,6 +448,9 @@ def prepare():
             "identity": IDENTITY,
             "base_sha256": DONOR_SHA,
             "fix_revision": revision,
+            "content_revision": report["content_revision"],
+            "stock_asset_fallbacks": stock_assets,
+            "version": VERSION,
             "overrides": fix_hashes,
         },
     )
@@ -473,7 +485,7 @@ def package():
         if not name.startswith("locale/")
     ]
     lines = [
-        'Archive name="HWMP Patch 2.4"',
+        f'Archive name="{TITLE}"',
         'TOCStart name="HWMP24Data" alias="data" relativeroot=""',
         'FileSettingsStart defcompression="2"',
         "FileSettingsEnd",
@@ -492,7 +504,7 @@ def package():
         manifest.write_text(
             "\r\n".join(
                 [
-                    'Archive name="HWMP Patch 2.4 ' + language + '"',
+                    'Archive name="' + TITLE + " " + language + '"',
                     *builder.locale_toc(language, "HWMP24" + language, short),
                     "",
                 ]
@@ -514,7 +526,7 @@ def package():
     for name in RELEASE_RUSSIAN_DOCS:
         shutil.copy2(PROJECT / "docs/ru" / name, RELEASE / name.replace(".md", ".ru.md"))
     (RELEASE / "config.txt").write_text(
-        "Title: HWMP Patch 2.4\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n"
+        f"Title: {TITLE}\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n"
         + SHORT_CREDITS
         + "\n",
         encoding="ascii",
@@ -536,6 +548,7 @@ def package():
         "main_sha256": sha(output),
         "main_bytes": output.stat().st_size,
         "fix_revision": report["fix_revision"],
+        "content_revision": report["content_revision"],
         "installed": False,
         "engine_tested": False,
     }

@@ -54,6 +54,7 @@ MODES = (
     "JournalPressure",
     "SaveLoadCoop",
     "JournalRecycle",
+    "SharedModels",
 )
 
 
@@ -416,6 +417,37 @@ end
         "scripts/hwmp24/autotests/transport.lua",
         (ROOT / "transport.lua").read_text(encoding="ascii"),
     )
+    from auto_shared_models import prepare as prepare_shared, cases as shared_cases
+
+    prepare_shared(put, clone_ship, native)
+    # Diagnostic-only execution traces: retain every original event table field.
+    from stock_assets import policy as stock_asset_policy
+
+    event_paths = {
+        "missile/vgr_corvetteantifightermissile/vgr_corvetteantifightermissile.events",
+        "missile/vgr_corvettesmallmissile/vgr_corvettesmallmissile.events",
+        "missile/vgr_smallmissile/vgr_smallmissile.events",
+    }
+    for row in stock_asset_policy()["assets"]:
+        if row["method"] == "shared_model":
+            event_paths.update(
+                (
+                    row["path"].replace(".hod", ".events"),
+                    row["stock_path"].replace(".hod", ".events"),
+                )
+            )
+    for name in sorted(event_paths):
+        original = native[name].read_text(encoding="ascii")
+        traced = original + '\nif print then print("HWMP_MODEL_EVENTS|asset=' + name + '") end\n'
+        put(name, traced)
+        diagnostic_overrides[name] = {
+            "original_sha256": sha(native[name]),
+            "purpose": "event-file execution trace only; event table unchanged",
+        }
+    put(
+        "scripts/hwmp24/autotests/shared_models.lua",
+        (ROOT / "shared_models.lua").read_text(encoding="ascii"),
+    )
     plans = {}
     fixtures = {}
     generated = []
@@ -432,6 +464,8 @@ end
         if not mode.startswith("EconomyMatrix") and mode not in ("EconomyRaids", "EconomyRecovery"):
             add("HWA_MotherH", "hgn_mothership", [-80000, 0, -80000], 0)
             add("HWA_MotherV", "vgr_mothership", [80000, 0, -80000], 1)
+        if mode == "SharedModels":
+            cases = shared_cases(add)
         if mode == "Transport":
             cases = transport_cases(add, volumes)
         if mode in ("Salvage", "SalvageBaselines"):
@@ -976,6 +1010,7 @@ end
         strings[9985010 + i] = [
             {
                 "JournalRecycle": "Гравиполя: гибель старых целей и новые генераторы",
+                "SharedModels": "Ракетные модели: штатные HOD, запуск и попадание",
                 "Mechanics": "Механика: гравиполя, ракеты и наука",
                 "Antistrike": "Противоистребительная стрельба: сравнение вариантов",
                 "Economy6": "Экономика: шесть сборщиков каждой расы",
@@ -1047,6 +1082,7 @@ end
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(thumb, dst)
     put(f"leveldata/campaign/{CAMPAIGN}.campaign", "\n".join(campaign))
+    assert not {row["path"] for row in stock_asset_policy()["assets"]}.intersection(index(SOURCE))
     inventory = {n: sha(p) for n, p in index(SOURCE).items()}
     assert all(inventory[n] == h or n in diagnostic_overrides for n, h in base_hashes.items())
     run = hashlib.sha256(json.dumps(inventory, sort_keys=True).encode()).hexdigest()

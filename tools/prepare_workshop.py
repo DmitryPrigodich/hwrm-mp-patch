@@ -7,6 +7,7 @@ import shutil
 
 from hwrm_common import PROJECT, index, save, sha
 from hwmp24 import SOURCE, WORK
+from project_version import TITLE
 from install_hwmp24 import release_files
 
 
@@ -40,14 +41,15 @@ def prepare(preview=None):
             if image.size != (512, 512):
                 raise ValueError("This Toolkit expects a 512 by 512 preview.")
             image.verify()
-    root = PROJECT / "local/Workshop-upload" / manifest["fix_revision"][:12]
+    revision = manifest.get("content_revision", manifest["fix_revision"])
+    root = PROJECT / "local/Workshop-upload" / revision[:12]
     content = root / "content"
     if content.exists():
         raise ValueError(
             "Staging already exists; preserve its WorkshopID and choose/review an update instead of resetting it."
         )
     description = (PROJECT / "workshop/description.en.bbcode").read_text(encoding="utf8").strip()
-    title = "HWMP Patch 2.4 - Field Test"
+    title = TITLE + " - Field Test"
     workshop_id = workshop_item_id()
     if len(title) > 128 or len(description) > 8000:
         raise ValueError("Toolkit title/description limit exceeded.")
@@ -74,6 +76,7 @@ def prepare(preview=None):
         {
             "identity": "HWMP-workshop-preparation-v1",
             "fix_revision": manifest["fix_revision"],
+            "content_revision": revision,
             "source_inventory": manifest["files"],
             "preview_sha256": sha(preview) if preview else None,
             "artwork_kind": "owner_review_pending",

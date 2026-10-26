@@ -9,6 +9,7 @@ import struct
 
 from hwrm_common import CACHE, DONOR, GAME, PROJECT, sha
 from project_credits import MENU_CREDITS
+from project_version import VERSION
 
 MUSIC = "data:sound/music/staging/STAGING_04"  # Inhibitors, HW2 mission4.
 ASSETS = {
@@ -20,9 +21,9 @@ ASSETS = {
 }
 
 RULE_NAMES = {
-    "deathmatch.lua": "Homeworld RM - HWMP 2.4",
-    "deathmatchhw1.lua": "Homeworld 1 RM - HWMP 2.4",
-    "deathmatchhw2.lua": "Homeworld 2 RM - HWMP 2.4",
+    "deathmatch.lua": f"Homeworld RM - HWMP {VERSION}",
+    "deathmatchhw1.lua": f"Homeworld 1 RM - HWMP {VERSION}",
+    "deathmatchhw2.lua": f"Homeworld 2 RM - HWMP {VERSION}",
 }
 
 
@@ -82,7 +83,7 @@ def generate(overrides):
     closing = menu.rfind("\n}")
     menu = menu[:closing] + "\n" + credits.rstrip() + menu[closing:]
     write("ui/newui/main/newmainmenu.lua", menu)
-    write("playerspatch_buildnumber.lua", 'PlayersPatchBuildNumber = "HWMP 2.4"\n')
+    write("playerspatch_buildnumber.lua", f'PlayersPatchBuildNumber = "HWMP {VERSION}"\n')
     for filename, title in RULE_NAMES.items():
         relative = "scripts/rules/" + filename
         rules = (DONOR / relative).read_text(encoding="ascii")
@@ -97,7 +98,9 @@ def generate(overrides):
         write(relative, rules)
     write(
         "ui/newui/background/logo.lua",
-        (PROJECT / "tools/templates/menu_logo.lua").read_text(encoding="ascii"),
+        (PROJECT / "tools/templates/menu_logo.lua")
+        .read_text(encoding="ascii")
+        .replace("__HWMP_VERSION__", VERSION),
     )
     background = (CACHE / "players-patch-audit/rm-base/ui/newui/main/background.lua").read_text(
         encoding="ascii"

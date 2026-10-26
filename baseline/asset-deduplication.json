@@ -1,0 +1,64 @@
+{
+  "version": "2.4.1",
+  "status": "native_smoke_passed",
+  "fix_revision": "918818ee91a81a3c46bfa61b8a301649716ec16868f0a9b4da7ac2e8bb5970b7",
+  "content_revision": "9fe4ce118585d5ab96154d6995d3405650187a6f132765ed0f23c14d5214638f",
+  "source_files": 1134,
+  "removed": [
+    "missile/vgr_mediummissile/vgr_mediummissile.hod",
+    "ship/hgn_mothership/hgn_mothership.hod"
+  ],
+  "changed": [
+    "missile/vgr_mediummissile/vgr_mediummissile.miss",
+    "playerspatch_buildnumber.lua",
+    "scripts/rules/deathmatch.lua",
+    "scripts/rules/deathmatchhw1.lua",
+    "scripts/rules/deathmatchhw2.lua",
+    "ui/newui/background/logo.lua",
+    "ui/newui/main/newmainmenu.lua"
+  ],
+  "local_primary_sha256": "722521185ac8125dedbbd5efded4981bb6ff7ed04ee1660af80cb7326e2c5d9b",
+  "local_primary_bytes": 81519866,
+  "previous_local_primary_bytes": 109331829,
+  "bytes_saved": 27811963,
+  "native_gameplay_coefficients_changed": false,
+  "rejected_shared_small_model_reason": "LoadSharedModel loads shared .events, replacing distinct corvette impact sounds",
+  "native": {
+    "run": "d3f26c9ca29c9ba45ca006fae1a19d9ee4c42cdd792423fb3c244ab5e7a21c82",
+    "log_sha256": "fda021ebbbaa00e9b6691eb2ed987651a3e909731d1ec8db7c1b8b3d4b9b94f8",
+    "passed": 4,
+    "errors": [],
+    "event_files_executed": [
+      "missile/vgr_corvetteantifightermissile/vgr_corvetteantifightermissile.events",
+      "missile/vgr_corvettesmallmissile/vgr_corvettesmallmissile.events",
+      "missile/vgr_heavymissile/vgr_heavymissile.events"
+    ],
+    "base_inventory_matches_final_release": true,
+    "cases": [
+      {
+        "case": "stock_mothership",
+        "status": "passed"
+      },
+      {
+        "case": "shared_antifighter",
+        "status": "passed",
+        "peak_missiles": "2",
+        "damage": "90"
+      },
+      {
+        "case": "shared_small",
+        "status": "passed",
+        "peak_missiles": "2",
+        "damage": "75.59375"
+      },
+      {
+        "case": "shared_medium",
+        "status": "passed",
+        "peak_missiles": "2",
+        "damage": "3240"
+      }
+    ],
+    "visual_audio_quality_acceptance": false,
+    "network_acceptance": false
+  }
+}

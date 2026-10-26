@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "target": "Homeworld Remastered 2.303 native assets",
+  "archives": {
+    "HW2Ships.big": {
+      "folder": "rm-hw2",
+      "sha256": "66981cc97c95a080018a0f8ecf062fe51de18fc1d227daf0d041945bb43bd9c9"
+    },
+    "Homeworld2.big": {
+      "folder": "rm-base",
+      "sha256": "fe9d592636f80d00e863481c6cae95e2efb5ef6eb0d0a89f714325d445d79f5c"
+    }
+  },
+  "assets": [
+    {
+      "path": "ship/hgn_mothership/hgn_mothership.hod",
+      "archive": "HW2Ships.big",
+      "stock_path": "ship/hgn_mothership/hgn_mothership.hod",
+      "sha256": "f955e65506f87a7e5a06361d397a8a0bae6c2330848c8f71e99708d7fcae433a",
+      "method": "same_path"
+    },
+    {
+      "path": "missile/vgr_mediummissile/vgr_mediummissile.hod",
+      "archive": "Homeworld2.big",
+      "stock_path": "missile/vgr_heavymissile/vgr_heavymissile.hod",
+      "sha256": "ca514757d5012edb99ac31f96cc7637af127dc4f087150273ee0698fa09e9e7b",
+      "method": "shared_model",
+      "definition": "missile/vgr_mediummissile/vgr_mediummissile.miss",
+      "model": "vgr_heavymissile",
+      "events_text_sha256": "c8a18397feca76b55d09429f98d639ea34047e29904aecc3ba4d44f291bd2901"
+    }
+  ]
+}

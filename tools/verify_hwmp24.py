@@ -357,6 +357,24 @@ def verify_source():
     files = index(SOURCE)
     upstream = index(DONOR)
     overrides = index(ROOT / "overrides")
+    from stock_assets import verify_composition
+
+    missile_aliases = verify_composition(SOURCE, manifest, upstream, overrides)
+    from project_version import VERSION
+    from menu_branding import RULE_NAMES
+
+    assert manifest["version"] == VERSION
+    assert (
+        files["playerspatch_buildnumber.lua"].read_text(encoding="ascii")
+        == f'PlayersPatchBuildNumber = "HWMP {VERSION}"\n'
+    )
+    assert f"Multiplayer Patch {VERSION}" in files["ui/newui/background/logo.lua"].read_text(
+        encoding="ascii"
+    )
+    for name, title in RULE_NAMES.items():
+        assert f'GameRulesName = "{title}"' in files["scripts/rules/" + name].read_text(
+            encoding="ascii"
+        )
     dock_callbacks = []
     for name, path in upstream.items():
         if name.startswith("ship/") and name.endswith(".lua"):
@@ -425,6 +443,7 @@ def verify_source():
         )
         assault_weapons.add(name)
     expected_weapons.update(assault_weapons)
+    expected_weapons.update(missile_aliases)
     assert {
         n for n, p in overrides.items() if p.suffix in (".ship", ".wepn", ".subs", ".miss")
     } == expected_weapons
@@ -435,7 +454,7 @@ def verify_source():
     )
     assert all(
         ("missile/vgr_mediummissile/vgr_mediummissile" + ext) in files
-        for ext in (".miss", ".hod", ".events")
+        for ext in (".miss", ".events")
     )
     default = "scripts/races/vaygr/scripts/research/default.lua"
     expected, n = re.subn(
@@ -464,6 +483,8 @@ def verify_source():
         },
         "upstream_combat_definitions": "two missile corrections, restored Medium weaponfire and approved Assault final speed node; other combat coefficients unchanged",
         "weapon_fixes": weapon_fixes,
+        "shared_missile_models": sorted(missile_aliases),
+        "native_model_loading": "see release-specific native evidence",
         "assault_fix": {
             "last_speed_node": [535, 1.2],
             "weapons": sorted(assault_weapons),

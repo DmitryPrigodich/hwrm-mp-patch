@@ -15,3 +15,5 @@ Largest categories before archive compression:
 The Hiigaran mothership HOD alone is 29,495,305 bytes. The five native menu textures total 9,175,260 source bytes; the menu/branding work added about 4.2 MB to the compressed local archive. Inhibitors uses the game's shared Music.big. Most weight comes from the complete inherited Test21 payload. Lower-resolution map previews are a potential size optimization, requiring separate visual review; no preview/model assets were removed or recompressed for this release.
 
 [Model/icon reasons and stock comparison](ASSET_PROVENANCE.md).
+
+[Prepared2.4.1 primary: 81519866 bytes; 27811963 bytes saved versus local2.4. The figures above describe the first published2.4. See cleanup decisions and acceptance](ASSET_DEDUPLICATION_2_4_1.md).

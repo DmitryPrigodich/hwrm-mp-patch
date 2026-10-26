@@ -19,3 +19,5 @@ The official [Players Patch full changelog](https://github.com/HW-PlayersPatch/F
 HOD includes rig/docking data as well as model resources. Re-exported POOL/normal/metadata bytes may differ too; such differences alone do not establish a redesigned hull. The full asset must be included even when the intended change is a rig, docking, material or display fix. Exact donor file sizes/hashes and equal/changed classification are in baseline/test-inventory.json.
 
 The strongest immediate redundancy finding is the exact-path stock-identical Hiigaran mothership. The copied missile models use different resource paths and cannot simply be omitted on that evidence alone. Any cleanup belongs to a later release with dependency/loading checks; the already published release remains unchanged.
+
+[Follow-up2.4.1: two HOD copies omitted; both corvette copies retained after the shared loader replaced their impact events. Full method, input pins and native evidence](ASSET_DEDUPLICATION_2_4_1.md).

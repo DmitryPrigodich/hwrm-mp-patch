@@ -1,9 +1,44 @@
 {
   "identity": "HWMP-Patch-2.4-dev1",
   "base_sha256": "f12e17bf9c6849599afaefa4d8281c266d637cdfc992a117ec3165891cd58f41",
-  "fix_revision": "b9ef33908806ad049bb135ba72220e94454db870aed16ed6a00cfba24850e846",
+  "fix_revision": "918818ee91a81a3c46bfa61b8a301649716ec16868f0a9b4da7ac2e8bb5970b7",
+  "content_revision": "9fe4ce118585d5ab96154d6995d3405650187a6f132765ed0f23c14d5214638f",
+  "stock_asset_fallbacks": {
+    "schema": 1,
+    "target": "Homeworld Remastered 2.303 native assets",
+    "archives": {
+      "HW2Ships.big": {
+        "folder": "rm-hw2",
+        "sha256": "66981cc97c95a080018a0f8ecf062fe51de18fc1d227daf0d041945bb43bd9c9"
+      },
+      "Homeworld2.big": {
+        "folder": "rm-base",
+        "sha256": "fe9d592636f80d00e863481c6cae95e2efb5ef6eb0d0a89f714325d445d79f5c"
+      }
+    },
+    "assets": [
+      {
+        "path": "ship/hgn_mothership/hgn_mothership.hod",
+        "archive": "HW2Ships.big",
+        "stock_path": "ship/hgn_mothership/hgn_mothership.hod",
+        "sha256": "f955e65506f87a7e5a06361d397a8a0bae6c2330848c8f71e99708d7fcae433a",
+        "method": "same_path"
+      },
+      {
+        "path": "missile/vgr_mediummissile/vgr_mediummissile.hod",
+        "archive": "Homeworld2.big",
+        "stock_path": "missile/vgr_heavymissile/vgr_heavymissile.hod",
+        "sha256": "ca514757d5012edb99ac31f96cc7637af127dc4f087150273ee0698fa09e9e7b",
+        "method": "shared_model",
+        "definition": "missile/vgr_mediummissile/vgr_mediummissile.miss",
+        "model": "vgr_heavymissile",
+        "events_text_sha256": "c8a18397feca76b55d09429f98d639ea34047e29904aecc3ba4d44f291bd2901"
+      }
+    ]
+  },
+  "version": "2.4.1",
   "overrides": {
-    "playerspatch_buildnumber.lua": "6eca3a532e067b06b1e353597ef592b7b8b03d93056e9aa19bf3063ca2b20f58",
+    "playerspatch_buildnumber.lua": "56a50dd23e3dbcd7a1997a70a94fb3a11abe5926fe41ce148bbbb372ac8c5e62",
     "soundscripts/soundconfig.lua": "0afb71655f61c1d11c86859c9551d64580e94957a618c7407e1813a746d4ee00",
     "locale/english/hwmp24_tooltips.lua": "1ebe189e4bb41c6e8d66fd617af11a091d39c77f2e114906183488be6eca637c",
     "locale/french/hwmp24_tooltips.lua": "294484f993f263110cc70ddbdb571d3c9de396f00da9c28cd8d38811b7f47cb7",
@@ -11,6 +46,7 @@
     "locale/italian/hwmp24_tooltips.lua": "04a18701a66d311dbfc59a8dd153ef3c8d067652a887486c554af0d8167dfa9c",
     "locale/russian/hwmp24_tooltips.lua": "cc10ed0a7f1444db1e8a514b2a4f616b9f689c96a909c0bfb70f96d68aea098e",
     "locale/spanish/hwmp24_tooltips.lua": "4a9280c458ea0f3399fa7fcb53a86d8aa2bc4418cb84dcc6b10757677869af27",
+    "missile/vgr_mediummissile/vgr_mediummissile.miss": "ff94c6e6a4b40e90ced5d9249a8fc6981f39f43fd45dd31db080469e6b9a4ec2",
     "resource/asteroid/asteroid0/asteroid0.resource": "896db66f7c7b10d3c9e474050fb72f928b2cbf04f5812d279083dae1bbe321dd",
     "resource/asteroid/asteroid1/asteroid1.resource": "0984e3ce498c1deb9a6dfff285d1a70d984b16312a6c52cc19298ea6379d2ba9",
     "resource/asteroid/asteroid2/asteroid2.resource": "5eed89eee5479ab2e87ac0923f2e9078e120cec0e15f0c617662eef0efd73101",
@@ -22,9 +58,9 @@
     "scripts/productiontimes/applybuildtimes.lua": "30c1b7854c662b29453af4441821cf8ac43c194daa91a000ae767614b1d0ebf8",
     "scripts/productiontimes/applyresearchtimes.lua": "68abba345115b3896704d318330c6ac30069cb19b9a9837bda38623ab2ac2537",
     "scripts/productiontimes/buildtimes.lua": "507c825360cab8caa9f2f0a0a2a3a952742bcab36300f5aee837aa1c097ab703",
-    "scripts/rules/deathmatch.lua": "4334a7deb5559e42e6395e0f929e1107b012004e82497fd78e1f9b87cd0b6425",
-    "scripts/rules/deathmatchhw1.lua": "d721cc6c1d0805a61e02a3ba788c05f35eea6ee18c6e71eec4021dffdb902258",
-    "scripts/rules/deathmatchhw2.lua": "127be640dc7b20a354733a54aeba7baa17e12ef51c3b8750973d0c769d68c7d5",
+    "scripts/rules/deathmatch.lua": "5401ae0c59265fbd83c9e4c5ffe4791eaf5b7e45c47f283d432e80809f6c10cf",
+    "scripts/rules/deathmatchhw1.lua": "12c7f1204423a43b7e48ff58e02d2a421293243a2de9cf44c7d5bb9244700e82",
+    "scripts/rules/deathmatchhw2.lua": "43a552c453a7d6ee8f41605c4e1d27166819b10be1cbb6d4cc3dd300c60fb7f4",
     "scripts/startingfleets/2x_vaygr00.lua": "3711ea82d51205be84e94a69d5bcc680622fb7952b8971daddc745fb1850400c",
     "scripts/startingfleets/vaygr00.lua": "3711ea82d51205be84e94a69d5bcc680622fb7952b8971daddc745fb1850400c",
     "scripts/playerspatch/ships_util/core/global.lua": "5691287a313bb37aa950f2d8c422630066a915cf20823e0e796a74182878f313",
@@ -51,9 +87,9 @@
     "ui/newui/background/hwmp24_taiidan.tga": "5edf5daea00e880503bf8e2a0414e782315b3b47054d453f89a51da0e9cb0d1b",
     "ui/newui/background/hwmp24_vaygr.tga": "b3218bfbef88c3bd806abfd0049b7bf99f8f244ac88bbdcfae9e5178998bd123",
     "ui/newui/background/hwmp24_wordmark.tga": "744fb65bbb5034c8de8ef8980301f40857c5cd75baa52398f90ad327d7bbf831",
-    "ui/newui/background/logo.lua": "333a3d52fdf720f21600e05f0f21303c73849446845c45b1aec7ababdac4ce4e",
+    "ui/newui/background/logo.lua": "f294e1f450b1f31e1dbe3227931cbecbca22658f47a7ee67ba1a0f956ab1b8aa",
     "ui/newui/main/background.lua": "b8ab0bd5fc7558ccb5c3d70f546c68314e77398d7a677166e3a423df2e84a5d0",
-    "ui/newui/main/newmainmenu.lua": "5323ca588246cb559973b059e849da5a269426009d2c24b816cd94e3c8832c79",
+    "ui/newui/main/newmainmenu.lua": "e8095800d63281eeb6beaabd62a4fa5442f1d9b4b98f5b2eb280e0dd03f309d9",
     "weapon/vgr_concussionmissilelauncher/vgr_concussionmissilelauncher.wepn": "c8a8f722d23c04928b40b925c32a41f6939b4d6f9662f8ee309936c4eb378abf",
     "weapon/vgr_flechettecannonassaultfrigatebottom/vgr_flechettecannonassaultfrigatebottom.wepn": "4ee04fff0013ee85c0f3e21ce8c1d1893e03e310d120e5349d99b6780efc4895",
     "weapon/vgr_flechettecannonassaultfrigateleft/vgr_flechettecannonassaultfrigateleft.wepn": "936b02594a01a50d38e468549694d41e9f90d86dfe056c7f3ed548bca535d072",

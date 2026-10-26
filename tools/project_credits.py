@@ -44,8 +44,10 @@ WORKSHOP_CREATORS = {
     ),
     "2.3Test": ("Cloaked", "Echo", "CPU8", "Fear"),
 }
+from project_version import VERSION
+
 SHORT_CREDITS = (
-    "Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP 2.4: "
+    f"Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP {VERSION}: "
     + ", ".join(HWMP_CONTRIBUTORS)
     + "."
 )

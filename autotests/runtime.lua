@@ -1,4 +1,5 @@
 -- Lua4 native-only autonomous cases. No mock, no manual result promotion.
+if HWA_MODE=="SharedModels" then dofilepath("data:scripts/hwmp24/autotests/shared_models.lua") end
 dofilepath("data:scripts/SCAR/SCAR_Util.lua")
 dofilepath("data:scripts/hwmp24/autotests/run.lua")
 if (HWA_MODE=="Defense" or HWA_MODE=="DefenseIdentity" or HWA_MODE=="DefenseOrders" or HWA_MODE=="DefenseIntercept") then dofilepath("data:scripts/hwmp24/autotests/defense.lua") end
@@ -76,7 +77,8 @@ end
 
 function HWA_InitCase(c)
     c.last_sample=-1
-    if c.kind=="journal_recycle" then HWY_Init(c)
+    if c.kind=="shared_model" then HWAM_Init(c)
+    elseif c.kind=="journal_recycle" then HWY_Init(c)
     elseif c.kind=="journal_pressure" then HWP_Init(c)
     elseif c.kind=="economy_recovery" then HWV_Init(c)
     elseif c.kind=="mine_attack" then HWM_Init(c)
@@ -304,6 +306,7 @@ function HWA_Tick()
         local c=HWA_CASES[i]
         if not c.done then
             if HWA_MODE=="SaveLoad" or (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace" or HWA_MODE=="SaveLoadEmpty" or HWA_MODE=="SaveLoadCoop") then HWA_SaveCase(c,t)
+            elseif c.kind=="shared_model" then HWAM_Tick(c,t)
             elseif c.kind=="journal_recycle" then HWY_Tick(c,t)
             elseif c.kind=="journal_pressure" then HWP_Tick(c,t)
             elseif c.kind=="economy_recovery" then HWV_Tick(c,t)

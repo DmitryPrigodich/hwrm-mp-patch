@@ -76,7 +76,7 @@ BACKGROUND_LOGO = {
             pivot_XY = { 0.5, 0.5 },
         },
         Text = {
-            text = "Multiplayer Patch 2.4",
+            text = "Multiplayer Patch 2.4.1",
             font = "Heading2Font",
             pixels = 80,
             rel = 2160,

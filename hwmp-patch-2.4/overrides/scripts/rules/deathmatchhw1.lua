@@ -1,5 +1,5 @@
 GUID = { 110,91,157,190,18,23,250,78,144,20,41,246,181,128,214,12 }
-GameRulesName = "Homeworld 1 RM - HWMP 2.4" --$4805 Homeworld 1 Deathmatch
+GameRulesName = "Homeworld 1 RM - HWMP 2.4.1" --$4805 Homeworld 1 Deathmatch
 Description = "$4806"
 SaveGameVersion = 1.0
 SinglePlayer = 0
