@@ -40,15 +40,28 @@ def summarize(runs):
         plans={c['id']:c for c in source['plans'][mode]}
         suite={'directory':str(directory),'run':result['run'],'base_effects_sha256':source['base_files']['scripts/hwmp24/effects.lua'],'counts':dict(Counter(c['status'] for c in result['results'])),'cases':len(result['results'])}
         report['suites'][mode]=suite
+        if mode.startswith('Defense'):
+            from analyze_defense import summarize as defense_summary
+            suite['defense']=defense_summary(plans,result['results'],events)
+        if mode=='CombatGeometry':
+            from analyze_geometry import summarize as geometry_summary
+            suite['geometry']=geometry_summary(plans,result['results'],events)
+        if mode=='HW1Damage':
+            from analyze_hw1_damage import summarize as damage_summary
+            suite['damage_upgrades']=damage_summary(plans,result['results'],events)
+        if mode=='DockStall':
+            from analyze_dock import summarize as dock_summary
+            suite['dock']=dock_summary(plans,result['results'],events)
         groups=defaultdict(list)
         for row in result['results']:
             c=plans[row['case']]
             if mode=='SpeedCurve':
                 tag=row['case'].split('_')[1]
                 groups[(tag,c['shooter'],c['nominal_speed'])].append(row)
+            elif mode=='CombatGeometry':groups[(c['shooter'],c['geometry'])].append(row)
             elif mode=='Antistrike':groups[(c['shooter'],c['upgrade'],c['stance'])].append(row)
             elif mode=='Mechanics' and c['kind']=='missile':groups[(c['launcher'],c['action'],c['armour'])].append(row)
-        if mode in ('SpeedCurve','Antistrike'):
+        if mode in ('SpeedCurve','Antistrike','CombatGeometry'):
             suite['comparisons']=[]
             constants=next((e for e in events if e['event']=='native_constants'),{})
             stance_names={int(constants[k]):label for k,label in (('neutral','Neutral'),('evasive','Evasive'),('aggressive','Aggressive')) if k in constants}
@@ -91,7 +104,7 @@ def summarize(runs):
                     'hgn':h,'vgr':v,'vgr_to_hgn_total':v['income']/h['income'] if h['income'] else None,
                     'vgr_to_hgn_last_300':v['last_300_income']/h['last_300_income'] if h['last_300_income'] else None})
                 suite['pairs'][-1]['vgr_to_hgn_post_warmup_trend']=v['post_warmup_trend_ru_per_second']/h['post_warmup_trend_ru_per_second'] if h['post_warmup_trend_ru_per_second'] else None
-        elif mode.startswith('Economy'):
+        elif mode in ('Economy6','Economy7'):
             suite['income']=[]
             for row in result['results']:
                 case=row['case'];ce=[e for e in events if e['case']==case]
@@ -117,7 +130,7 @@ def summarize(runs):
                     'disabled_at':cutoff,'first_regeneration':first_regen,'first_five_percent':first_five,
                     'zero_hp_samples':len(zero_hp),'first_credit_after_damage':increments[0] if increments else None,
                     'credit_increments_after_damage':increments})
-        if mode in ('SaveLoad','SaveLoadAuto','SaveLoadTrace','Progression','GravityScope'):suite['results']=result['results']
+        if mode in ('SaveLoad','SaveLoadAuto','SaveLoadTrace','Progression','GravityScope','Transport','Salvage','DockStall','SalvageBaselines','ResearchEffects','GravityToggle','GravityExpiry','HW1Damage','EconomyRaids','PaidProduction','EconomyRecovery','Mines','CombatGeometry'):suite['results']=result['results']
     return report
 
 

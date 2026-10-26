@@ -18,7 +18,7 @@ BUILD=build_directory('native-auto-tests',PROJECT)
 SOURCE=BUILD/'source'
 IDENTITY='HWMP-native-auto-tests-v1'
 CAMPAIGN='HWMPAutoTests'
-MODES=('Mechanics','Antistrike','Economy6','Economy7','SaveLoad','SpeedCurve','Progression','EconomyMatrix6','EconomyMatrix7','GravityScope','SaveLoadAuto','SaveLoadTrace')
+MODES=('Mechanics','Antistrike','Economy6','Economy7','SaveLoad','SpeedCurve','Progression','EconomyMatrix6','EconomyMatrix7','GravityScope','SaveLoadAuto','SaveLoadTrace','Defense','DefenseIdentity','DefenseOrders','DefenseIntercept','Transport','Salvage','DockStall','SalvageBaselines','ResearchEffects','GravityToggle','GravityExpiry','HW1Damage','EconomyRaids','PaidProduction','EconomyRecovery','Mines','CombatGeometry')
 
 def lua(v):
     if isinstance(v,str):return json.dumps(v,ensure_ascii=True)
@@ -47,6 +47,10 @@ def prepare():
     diagnostic_overrides={}
     def clone_ship(original,name,transform):
         src=native[f'ship/{original}/{original}.ship'];old=src.read_text(encoding='utf-8-sig');new=transform(old)
+        # A private transform must never silently consume structural ship fields.
+        for field in ('CollisionFamily','BuildFamily','DockFamily','AttackFamily'):
+            if re.search(r'NewShipType\.'+field+r'\s*=',old):
+                assert re.search(r'NewShipType\.'+field+r'\s*=',new),(name,field)
         put(f'ship/{name}/{name}.ship',new)
         for ext in ('.hod','.events'):
             key=f'ship/{original}/{original}{ext}'
@@ -164,13 +168,52 @@ end
     callback="if not HWMPReloadAttempted then HWMPReloadAttempted=1; LoadGame('player:Campaign/HWMPAUTOTESTS/HWMPAutoCheckpoint.sav') end"
     put('ui/newui/hwmpautoreload.lua','HWMPAutoReload={stylesheet="HW2StyleSheet",RootElementSettings={Layout={size_WH={w=1,h=1,wr="scr",hr="scr"}}},giveParentMouseInput=1,eventOpaque=0,pixelUVCoords=1,onShow='+lua(callback)+'}')
     put('scripts/hwmp24/autotests/runtime.lua',(ROOT/'runtime.lua').read_text(encoding='ascii'))
+    from auto_defense import prepare as prepare_defense,cases as defense_cases
+    prepare_defense(put,clone_ship,native,DONOR)
+    put('scripts/hwmp24/autotests/defense.lua',(ROOT/'defense.lua').read_text(encoding='ascii'))
+    from auto_economy_recovery import cases as recovery_cases
+    from auto_mines import prepare as prepare_mines,cases as mine_cases
+    from auto_combat_geometry import prepare as prepare_geometry,cases as geometry_cases
+    prepare_mines(put,clone_ship,native,SOURCE)
+    prepare_geometry(put,clone_ship,native)
+    for module in ('economy_recovery','mines'):
+        put('scripts/hwmp24/autotests/'+module+'.lua',(ROOT/(module+'.lua')).read_text(encoding='ascii'))
+    from auto_production import cases as production_cases
+    put('scripts/hwmp24/autotests/production.lua',(ROOT/'production.lua').read_text(encoding='ascii'))
+    from auto_gravity_lifecycle import cases as lifecycle_cases
+    from auto_hw1_damage import prepare as prepare_hw1_damage,cases as hw1_damage_cases
+    from auto_economy_raids import cases as raids_cases
+    prepare_hw1_damage(put,clone_ship,native)
+    for module in ('gravity_lifecycle','hw1_damage','economy_raids'):
+        put('scripts/hwmp24/autotests/'+module+'.lua',(ROOT/(module+'.lua')).read_text(encoding='ascii'))
+    from auto_effects import cases as effect_cases
+    put('scripts/hwmp24/autotests/research_effects.lua',(ROOT/'research_effects.lua').read_text(encoding='ascii'))
+    from auto_dock import prepare as prepare_dock,cases as dock_cases
+    prepare_dock(put,clone_ship,native)
+    put('scripts/hwmp24/autotests/dock.lua',(ROOT/'dock.lua').read_text(encoding='ascii'))
+    from auto_salvage import prepare as prepare_salvage,cases as salvage_cases
+    prepare_salvage(put,clone_ship,native)
+    put('scripts/hwmp24/autotests/salvage.lua',(ROOT/'salvage.lua').read_text(encoding='ascii'))
+    from auto_transport import cases as transport_cases
+    put('scripts/hwmp24/autotests/transport.lua',(ROOT/'transport.lua').read_text(encoding='ascii'))
     plans={};fixtures={};generated=[]
     for mode in MODES:
         ships=[];volumes=[];asteroids=[];cases=[]
         def add(name,kind,pos,owner,size=1):ships.append([name,kind,list(pos),owner,size]);return name
-        if not mode.startswith('EconomyMatrix'):
+        if not mode.startswith('EconomyMatrix') and mode not in ('EconomyRaids','EconomyRecovery'):
             add('HWA_MotherH','hgn_mothership',[-80000,0,-80000],0)
             add('HWA_MotherV','vgr_mothership',[80000,0,-80000],1)
+        if mode=='Transport':cases=transport_cases(add,volumes)
+        if mode in ('Salvage','SalvageBaselines'):cases=salvage_cases(add,volumes,mode)
+        if mode=='ResearchEffects':cases=effect_cases(add,volumes)
+        if mode in ('GravityToggle','GravityExpiry'):cases=lifecycle_cases(add,volumes,mode)
+        if mode=='HW1Damage':cases=hw1_damage_cases(add,volumes)
+        if mode=='PaidProduction':cases=production_cases(add,volumes)
+        if mode=='EconomyRecovery':cases=recovery_cases(add,volumes,asteroids)
+        if mode=='Mines':cases=mine_cases(add,volumes)
+        if mode=='CombatGeometry':cases=geometry_cases(add,volumes)
+        if mode=='EconomyRaids':cases=raids_cases(add,volumes,asteroids)
+        if mode=='DockStall':cases=dock_cases(add,volumes)
         if mode=='Mechanics':
             for j,race in enumerate(('kus','tai','kus','tai')):
                 x=-70000+j*18000;z=-10000;prefix='gw_'+race
@@ -210,6 +253,7 @@ end
             for j,(ship,owner,tech,mult) in enumerate([('hgn_gunturret',2,'GunTurretHealthUpgrade1',1.5),('hgn_ionturret',2,'IonTurretHealthUpgrade1',1.5),('vgr_weaponplatform_gun',3,'PlatformHealthUpgrade1',1.75),('vgr_weaponplatform_missile',3,'PlatformHealthUpgrade1',1.75)]):
                 g=add('hp_'+str(j),ship,[-60000+j*12000,0,-40000],owner)
                 cases.append({'id':'hp_'+str(j),'kind':'research_hp','target':g,'player':owner,'tech':tech,'expected':mult})
+        if mode in ('Defense','DefenseIdentity','DefenseOrders','DefenseIntercept'):cases=defense_cases(add,mode)
         if mode=='Antistrike':
             k=0
             for rep in range(1,4):
@@ -293,13 +337,16 @@ end
         for kind,pos in asteroids:lines.append(f'addAsteroid({lua(kind)},{lua(pos)},100,0,0,0,0)')
         for c in cases:
             if 'x' in c:lines.append(f'addCamera({lua(c["id"])},{lua([c["x"],0,c["z"]+1000])},{lua([c["x"]+5000,6000,c["z"]-6000])})')
-        races=('Hiigaran','Vaygr')*3 if mode.startswith('Economy') or mode=='Progression' else ('Hiigaran','Vaygr','Hiigaran','Vaygr','Kushan','Taiidan')
+        races=('Hiigaran','Vaygr')*3 if mode.startswith('Economy') or mode in ('Progression','PaidProduction') else ('Hiigaran','Vaygr','Hiigaran','Vaygr','Kushan','Taiidan')
         lines.extend(['addCamera("HWA_Home",{-80000,0,-78000},{-72000,9000,-88000})','setWorldBoundsInner({0,0,0},{250000,100000,250000})','end','function NonDetermChunk()','loadBackground("m01")','setSensorsManagerCameraDistances(100,1000000)','end','maxPlayers='+str(len(races)),'levelDesc="$9985000"','player={}'])
         for p,race in enumerate(races):lines.append(f'player[{p}]={{id={p},name="",resources=0,raceName="{race}",startPos=0}}')
         put(path+'/'+mode+'.level','\n'.join(lines))
         put(path+'/'+mode+'.lua',f'HWA_MODE={lua(mode)}\nHWA_CASES={lua(cases)}\ndofilepath("data:scripts/hwmp24/autotests/runtime.lua")')
+    put('scripts/hwmp24/autotests/salvage_cases.lua','HWS_CASES='+lua(plans['Salvage']+plans['SalvageBaselines']))
+    put('scripts/hwmp24/autotests/dock_cases.lua','HWJ_CASES='+lua(plans['DockStall']))
+    put('scripts/hwmp24/autotests/defense_cases.lua','HWD_CASES='+lua(plans['Defense']+plans['DefenseIdentity']+plans['DefenseOrders']+plans['DefenseIntercept']))
     strings={9985000:['HWMP 2.4 — автоматические испытания','HWMP 2.4 — Automatic Tests'],9985001:['Автоматический прогон. Не выдавайте приказы кораблям; результаты записываются в журнал.','Automatic run. Do not issue ship orders; results are recorded in the log.']}
-    for i,mode in enumerate(MODES):strings[9985010+i]=[{'Mechanics':'Механика: гравиполя, ракеты и наука','Antistrike':'Противоистребительная стрельба: сравнение вариантов','Economy6':'Экономика: шесть сборщиков каждой расы','Economy7':'Экономика: шесть хиигарских и семь вэйгрских сборщиков','SaveLoad':'Гравиполя: сохранение и загрузка','SpeedCurve':'Скоростная кривая: изолированная проверка','Progression':'Наука: условия доступа и общая очередь','EconomyMatrix6':'Экономика 6/6: десять минут, три приёмника/маршрута','EconomyMatrix7':'Экономика 6/7: десять минут, три приёмника/маршрута','GravityScope':'Гравиполя: цели всех четырёх рас','SaveLoadAuto':'Гравиполя: автоматическая загрузка','SaveLoadTrace':'Гравиполя: загрузка с диагностикой callbacks'}[mode],mode+' automatic test']
+    for i,mode in enumerate(MODES):strings[9985010+i]=[{'Mechanics':'Механика: гравиполя, ракеты и наука','Antistrike':'Противоистребительная стрельба: сравнение вариантов','Economy6':'Экономика: шесть сборщиков каждой расы','Economy7':'Экономика: шесть хиигарских и семь вэйгрских сборщиков','SaveLoad':'Гравиполя: сохранение и загрузка','SpeedCurve':'Скоростная кривая: изолированная проверка','Progression':'Наука: условия доступа и общая очередь','EconomyMatrix6':'Экономика 6/6: десять минут, три приёмника/маршрута','EconomyMatrix7':'Экономика 6/7: десять минут, три приёмника/маршрута','GravityScope':'Гравиполя: цели всех четырёх рас','SaveLoadAuto':'Гравиполя: автоматическая загрузка','SaveLoadTrace':'Гравиполя: загрузка с диагностикой callbacks','Defense':'Защитный истребитель: ракеты и охрана','DefenseIdentity':'Защитный истребитель: новые ракеты при том же счётчике','DefenseOrders':'Защитный истребитель: приказ атаки по ракетам','DefenseIntercept':'Защитный истребитель: реальная охрана корабля','SalvageBaselines':'Захват: сохранение исходного запрета самоуничтожения','GravityToggle':'Гравиполя: выключение и три пересекающихся источника','GravityExpiry':'Гравиполя: естественное завершение без сохранений','EconomyRecovery':'Добыча: настоящее повреждение модуля и восстановление приказа','Mines':'Мины: принудительная атака и штатный тральщик','CombatGeometry':'Бой: дистанция, высота, преследование и разворот','PaidProduction':'Стройка: настоящая платная очередь и старые/новые авианосцы','HW1Damage':'Наука HW1: оплаченные ступени урона истребителей','EconomyRaids':'Экономика: три отключения приёмников и запасной контроллер','ResearchEffects':'Наука: HP и скорость старых и новых кораблей','DockStall':'Стыковка: остановка под огнём и повтор приказа','Salvage':'Захват: доставка и прерывания буксировки','Transport':'Перевозка: стыковка, гиперпереход и освобождение'}[mode],mode+' automatic test']
     reg=(CACHE/'players-patch-audit/rm-base/locale/localedat.lua').read_text(encoding='ascii');put('locale/localedat.lua',reg[:reg.rfind('}')]+'{name="hwmp_autotests.dat"},\n}')
     for col,lang in enumerate(('Russian','English')):
         p=SOURCE/f'locale/{lang}/hwmp_autotests.ucs';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(''.join(str(n)+'\t'+v[col]+'\n' for n,v in sorted(strings.items())),encoding='utf-16',newline='\r\n')

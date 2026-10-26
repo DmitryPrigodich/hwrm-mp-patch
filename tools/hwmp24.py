@@ -56,25 +56,66 @@ SPLIT='''function SobGroup_Split(group, granularity)
     return result
 end'''
 
-SCUTTLE='''function SobGroup_NoSalvageScuttle(group)
-    local owner = "salvage:" .. group
-    if SobGroup_IsDoingAbility(group, AB_Dock) == 1 then
+SCUTTLE='''-- Native capture disables Scuttle before the first towing callback.
+HWMP_SalvageStates = HWMP_SalvageStates or {}
+function SobGroup_NoSalvageScuttle(group, player_index, ship_id)
+    local owner = "salvage:" .. (ship_id or group)
+    if SobGroup_Empty(group) == 1 then
+        HWMP_ReleaseOwner(owner)
+        if ship_id ~= nil then HWMP_SalvageStates[ship_id] = nil end
+        return
+    end
+    local docking = SobGroup_IsDoingAbility(group, AB_Dock)
+    -- Legacy callers without a stable hull ID retain the immediate contract.
+    if ship_id == nil then
+        if docking == 1 then HWMP_BlockGroup(group, owner, { AB_Scuttle }, 0)
+        else HWMP_ReleaseOwner(owner) end
+        return
+    end
+    local state = HWMP_SalvageStates[ship_id]
+    if state == nil then state = {}; HWMP_SalvageStates[ship_id] = state end
+    local record = HWMP_FindEffectRecord(group, 0)
+    local saved = nil
+    if record and record.abilities[AB_Scuttle] then saved = record.abilities[AB_Scuttle].baseline end
+    if docking == 1 then
+        local baseline = saved or state.allowed
         HWMP_BlockGroup(group, owner, { AB_Scuttle }, 0)
-    else HWMP_ReleaseOwner(owner) end
+        if state.active ~= 1 and baseline ~= nil then
+            -- CanDoAbility also includes native Dock eligibility. Set the baseline
+            -- after the effect record exists; enabling alone cannot bypass that gate.
+            HWMP_SetAbilityAllowed(group, AB_Scuttle, baseline)
+        end
+        record = HWMP_FindEffectRecord(group, 0)
+        state.allowed = record.abilities[AB_Scuttle].baseline
+        state.active = 1
+    else
+        if state.active == 1 then
+            -- Cooperative baseline changes take precedence over the earlier snapshot.
+            if saved ~= nil then state.allowed = saved end
+            HWMP_ReleaseOwner(owner)
+            -- Capture can remove old group membership while preserving native shipID.
+            if state.allowed ~= nil then HWMP_SetAbilityAllowed(group, AB_Scuttle, state.allowed) end
+            state.active = nil
+        end
+        record = HWMP_FindEffectRecord(group, 0)
+        if record and record.abilities[AB_Scuttle] then state.allowed = record.abilities[AB_Scuttle].baseline
+        else state.allowed = SobGroup_CanDoAbility(group, AB_Scuttle) end
+    end
 end'''
 
 DOCK='''HWMP_DockStalls = HWMP_DockStalls or {}
-function SobGroup_UnderAttackReissueDock(group)
+function SobGroup_UnderAttackReissueDock(group, ship_id)
+    local key = ship_id or group
     if SobGroup_GetCurrentOrder(group) ~= COMMAND_Dock or SobGroup_IsDocked(group) == 1 or
        SobGroup_UnderAttack(group) ~= 1 or SobGroup_CanDoAbility(group, AB_Dock) ~= 1 or
        SobGroup_CanDoAbility(group, AB_Move) ~= 1 then
-        HWMP_DockStalls[group] = nil
+        HWMP_DockStalls[key] = nil
         return
     end
     local now = Universe_GameTime()
-    if SobGroup_GetActualSpeed(group) >= 1 then HWMP_DockStalls[group] = nil; return end
-    local state = HWMP_DockStalls[group]
-    if state == nil then state = { since = now, retry = -100 }; HWMP_DockStalls[group] = state end
+    if SobGroup_GetActualSpeed(group) >= 1 then HWMP_DockStalls[key] = nil; return end
+    local state = HWMP_DockStalls[key]
+    if state == nil then state = { since = now, retry = -100 }; HWMP_DockStalls[key] = state end
     if now - state.since >= 3 and now - state.retry >= 5 then
         SobGroup_DockSobGroupWithAny(group)
         state.retry = now
@@ -160,6 +201,14 @@ def make_overrides():
     core=replace_function(core,'SobGroup_Split',SPLIT)
     core=replace_function(core,'SobGroup_NoSalvageScuttle',SCUTTLE)
     core=replace_function(core,'SobGroup_UnderAttackReissueDock',DOCK)
+    dock_ships=('hgn_assaultcorvette','hgn_attackbomber','hgn_pulsarcorvette','hgn_interceptor','hgn_scout','vgr_bomber','vgr_lancefighter','vgr_missilecorvette','vgr_scout','vgr_interceptor','vgr_lasercorvette')
+    for ship in dock_ships:
+        name=f'ship/{ship}/{ship}.lua'
+        text=(DONOR/name).read_text()
+        old='SobGroup_UnderAttackReissueDock(CustomGroup)'
+        assert text.count(old)==1,name
+        write(out,name,text.replace(old,'SobGroup_UnderAttackReissueDock(CustomGroup, shipID)'))
+
     core=core.replace('SobGroup_CreateIfNotExist(all_ships)\n','SobGroup_CreateIfNotExist(all_ships)\n\tSobGroup_Clear(all_ships)\n',1)
     core=core.replace('if (Player_IsAlive(i)) then','if (Player_IsAlive(i) == 1) then',1)
     write(out,'scripts/playerspatch/ships_util/core/global.lua',core)
@@ -191,18 +240,15 @@ end
     write(out,name,text)
     name='scripts/playerspatch/ships_util/lib/frigates.lua'
     text=(DONOR/name).read_text()
-    text=text.replace('function SupportFrigate_HyperspaceDock(CustomGroup, shipID)','function SupportFrigate_HyperspaceDock(CustomGroup, shipID)\n    local owner = "transport:" .. shipID',1)
-    text=re.sub(r'SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Dock, 1\)', 'HWMP_ReleaseAbility("LatchDockTempGroup"..shipID, owner, AB_Dock)',text,count=1)
-    ones=r'SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Dock, 1\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Scuttle, 1\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Attack, 1\)'
-    text,n=re.subn(ones,'HWMP_ReleaseOwner(owner)',text);assert n==1
-    zeros=r'SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Dock, 0\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Scuttle, 0\)\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_Attack, 0\)'
-    text,n=re.subn(zeros,'HWMP_BlockGroup("LatchDockTempGroup"..shipID, owner, { AB_Dock, AB_Scuttle, AB_Attack }, 0)',text);assert n==1
+    text=replace_function(text,'SupportFrigate_HyperspaceDock','dofilepath("data:scripts/hwmp24/transport.lua")')
     write(out,name,text)
-    for prefix in ('kus','tai'):
+    for prefix,label in (('kus','Kus'),('tai','Tai')):
         name=f'ship/{prefix}_supportfrigate/{prefix}_supportfrigate.lua'
         text=(DONOR/name).read_text()
-        text,n=re.subn(r'(function Destroy_[^\n]+\n)',lambda m:m[1]+'    HWMP_ReleaseOwner("transport:" .. shipID)\n',text,count=1);assert n==1
-        text,n=re.subn(r'^\s*SobGroup_AbilityActivate\("LatchDockTempGroup"\.\.shipID, AB_(?:Dock|Scuttle|Attack), 1\)\s*$', '',text,flags=re.M);assert n==3
+        create=f'function Create_{label}_SupportFrigate(CustomGroup, playerIndex, shipID)'
+        assert text.count(create)==1
+        text=text.replace(create,create+'\n    HWMP_TransportRemember(CustomGroup, shipID)',1)
+        text=replace_function(text,f'Destroy_{label}_SupportFrigate',f'function Destroy_{label}_SupportFrigate(CustomGroup, playerIndex, shipID)\n    HWMP_TransportDestroy(CustomGroup, shipID)\nend')
         write(out,name,text)
     name='ship/tai_defensefighter/tai_defensefighter.lua'
     text=(DONOR/name).read_text()
@@ -324,7 +370,7 @@ def package():
     for path in RELEASE.glob('*.log'):
         shutil.move(str(path),str(WORK/path.name))
     shutil.copy2(ROOT/'README.md',RELEASE/'README.md')
-    for name in ('NATIVE_TESTS.md','AUTO_TESTS.md','AUTO_TEST_RESULTS.md'):
+    for name in ('NATIVE_TESTS.md','AUTO_TESTS.md','AUTO_TEST_RESULTS.md','NATIVE_FOLLOWUP_2026-10-25.md','CLOSURE_CHECKLIST.md'):
         shutil.copy2(PROJECT/'docs'/name,RELEASE/name)
     (RELEASE/'config.txt').write_text('Title: HWMP Patch 2.4\n\nTags: Balance, Fixes\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n',encoding='ascii')
     for name in ('start_hwmp_patch.ps1','HWMP Patch 2.4.cmd'):

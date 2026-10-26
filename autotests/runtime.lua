@@ -1,6 +1,24 @@
 -- Lua4 native-only autonomous cases. No mock, no manual result promotion.
 dofilepath("data:scripts/SCAR/SCAR_Util.lua")
 dofilepath("data:scripts/hwmp24/autotests/run.lua")
+if (HWA_MODE=="Defense" or HWA_MODE=="DefenseIdentity" or HWA_MODE=="DefenseOrders" or HWA_MODE=="DefenseIntercept") then dofilepath("data:scripts/hwmp24/autotests/defense.lua") end
+
+if HWA_MODE=="Transport" then dofilepath("data:scripts/hwmp24/autotests/transport.lua") end
+
+if HWA_MODE=="Salvage" or HWA_MODE=="SalvageBaselines" then dofilepath("data:scripts/hwmp24/autotests/salvage.lua") end
+
+if HWA_MODE=="DockStall" then dofilepath("data:scripts/hwmp24/autotests/dock.lua") end
+
+if HWA_MODE=="ResearchEffects" then dofilepath("data:scripts/hwmp24/autotests/research_effects.lua") end
+
+if HWA_MODE=="GravityToggle" or HWA_MODE=="GravityExpiry" then dofilepath("data:scripts/hwmp24/autotests/gravity_lifecycle.lua") end
+if HWA_MODE=="HW1Damage" then dofilepath("data:scripts/hwmp24/autotests/hw1_damage.lua") end
+if HWA_MODE=="EconomyRaids" then dofilepath("data:scripts/hwmp24/autotests/economy_raids.lua") end
+
+if HWA_MODE=="PaidProduction" then dofilepath("data:scripts/hwmp24/autotests/production.lua") end
+
+if HWA_MODE=="EconomyRecovery" then dofilepath("data:scripts/hwmp24/autotests/economy_recovery.lua") end
+if HWA_MODE=="Mines" then dofilepath("data:scripts/hwmp24/autotests/mines.lua") end
 
 function HWA_Log(c,event,fields)
     print("HWMP_AUTO|v=1|run="..HWA_RUN.."|mode="..HWA_MODE.."|case="..(c.id or "suite")..
@@ -40,7 +58,7 @@ function HWA_Result(c,status,fields)
     c.done=1
     c.result=status
     HWA_Log(c,"result","status="..status.."|"..(fields or ""))
-    if c.source and SobGroup_Count(c.source)>0 then
+    if c.source and c.source~="" and SobGroup_Count(c.source)>0 then
         SobGroup_Stop(c.source_player or 1,c.source)
         SobGroup_AbilityActivate(c.source,AB_Attack,0)
     end
@@ -55,7 +73,18 @@ end
 
 function HWA_InitCase(c)
     c.last_sample=-1
-    if c.kind=="gravity" or c.kind=="gravity_scope" then
+    if c.kind=="economy_recovery" then HWV_Init(c)
+    elseif c.kind=="mine_attack" then HWM_Init(c)
+    elseif c.kind=="paid_production" then HWB_Init(c)
+    elseif c.kind=="gravity_lifecycle" then HWG_Init(c)
+    elseif c.kind=="hw1_damage" then HWQ_Init(c)
+    elseif c.kind=="economy_raids" then HWR_Init(c)
+    elseif c.kind=="research_effects" then HWE_Init(c)
+    elseif c.kind=="dock_stall" then HWJ_Init(c)
+    elseif c.kind=="salvage" then HWS_Init(c)
+    elseif c.kind=="transport" then HWT_Init(c)
+    elseif c.kind=="defense" then HWD_InitCase(c)
+    elseif c.kind=="gravity" or c.kind=="gravity_scope" then
         SobGroup_SetROE(c.a,PassiveROE)
         SobGroup_SetROE(c.b,PassiveROE)
         SobGroup_SetROE(c.target,PassiveROE)
@@ -94,6 +123,11 @@ function HWA_InitCase(c)
         else SobGroup_SetStance(c.target,EvasiveStance) end
         c.source_player=1
         if c.shooter=="flak" then c.source_player=0 end
+        if c.source_moving==1 then SobGroup_AbilityActivate(c.source,AB_Move,1)
+        elseif HWA_MODE=="CombatGeometry" then
+            -- AB_Move=0 alone still permits native attack-style translation.
+            SobGroup_SetSpeed(c.source,0)
+        end
         c.initial_hp=HWA_Hp(c.target);c.in_range=0;c.peak_speed=0
         HWA_Log(c,"baseline","hp="..c.initial_hp.."|shooter="..c.shooter.."|stance="..c.stance.."|native_stance="..SobGroup_GetStance(c.target).."|upgrade="..c.upgrade.."|target_owner="..c.owner)
     elseif c.kind=="economy" or c.kind=="economy_clean" then
@@ -192,11 +226,12 @@ function HWA_Missile(c,t)
 end
 
 function HWA_Pass(c,t)
+    if c.geometry=="turn" and t>=13 and not c.turned then c.turned=1;SobGroup_Move(c.owner,c.target,c.turn_volume);HWA_Log(c,"turn_order","native=1") end
     if t>=5 and not c.started then
         c.started=1;SobGroup_Move(c.owner,c.target,c.volume)
         SobGroup_AbilityActivate(c.source,AB_Attack,1)
         SobGroup_Attack(c.source_player,c.source,c.target)
-        HWA_Log(c,"attack","source_move=0|target_attack=0")
+        HWA_Log(c,"attack","source_move="..(c.source_moving or 0).."|target_attack=0")
     end
     if c.last_sample<0 or t-c.last_sample>=0.5 then
         local d=HWA_Distance(c.source,c.target)
@@ -207,7 +242,7 @@ function HWA_Pass(c,t)
         if c.shooter=="flak" then range=3000 end
         if d>=0 and d<=range and c.last_sample>=0 then c.in_range=c.in_range+t-c.last_sample end
         c.last_sample=t
-        HWA_Log(c,"sample","hp="..HWA_Hp(c.target).."|entries="..SobGroup_Count(c.target).."|distance="..d.."|speed="..speed)
+        HWA_Log(c,"sample","hp="..HWA_Hp(c.target).."|entries="..SobGroup_Count(c.target).."|distance="..d.."|speed="..speed.."|source_speed="..sqrt(SobGroup_GetActualSpeed(c.source)))
     end
     if t>=62 then
         local status="measured"
@@ -264,6 +299,17 @@ function HWA_Tick()
         local c=HWA_CASES[i]
         if not c.done then
             if HWA_MODE=="SaveLoad" or (HWA_MODE=="SaveLoadAuto" or HWA_MODE=="SaveLoadTrace") then HWA_SaveCase(c,t)
+            elseif c.kind=="economy_recovery" then HWV_Tick(c,t)
+            elseif c.kind=="mine_attack" then HWM_Tick(c,t)
+            elseif c.kind=="paid_production" then HWB_Tick(c,t)
+            elseif c.kind=="gravity_lifecycle" then HWG_Tick(c,t)
+            elseif c.kind=="hw1_damage" then HWQ_Tick(c,t)
+            elseif c.kind=="economy_raids" then HWR_Tick(c,t)
+            elseif c.kind=="research_effects" then HWE_Tick(c,t)
+            elseif c.kind=="dock_stall" then HWJ_Tick(c,t)
+            elseif c.kind=="salvage" then HWS_Tick(c,t)
+            elseif c.kind=="transport" then HWT_Tick(c,t)
+            elseif c.kind=="defense" then HWD_Tick(c)
             elseif c.kind=="gravity" or c.kind=="gravity_scope" then HWA_Gravity(c,t)
             elseif c.kind=="missile" then HWA_Missile(c,t)
             elseif c.kind=="pass" then HWA_Pass(c,t)
@@ -378,6 +424,15 @@ function OnInit()
     for p=1,Universe_PlayerCount()-1 do CPU_Enable(p,0) end
     HWA_Log({id="suite"},"native_players","count="..Universe_PlayerCount())
     if Selection_Create then Selection_Create("HWA_AllMissiles");Selection_Create("HWA_NearMissiles") end
+    if (HWA_MODE=="Defense" or HWA_MODE=="DefenseIdentity" or HWA_MODE=="DefenseOrders" or HWA_MODE=="DefenseIntercept") then
+        HWD_CURRENT=1
+        SobGroup_CreateIfNotExist("HWD_Active");SobGroup_Clear("HWD_Active")
+        Selection_Create("HWD_AllMissiles");Selection_Create("HWD_Current");Selection_Create("HWD_OldAlive")
+        for p=0,Universe_PlayerCount()-1 do
+            for q=0,Universe_PlayerCount()-1 do if p~=q then BreakAlliance(p,q) end end
+        end
+        SetAlliance(3,5);SetAlliance(5,3)
+    end
     HWA_Freeze("HWA_MotherH");HWA_Freeze("HWA_MotherV")
     SobGroup_SetInvulnerability("HWA_MotherH",1);SobGroup_SetInvulnerability("HWA_MotherV",1)
     SobGroup_AbilityActivate("HWA_MotherH",AB_Builder,0);SobGroup_AbilityActivate("HWA_MotherV",AB_Builder,0)

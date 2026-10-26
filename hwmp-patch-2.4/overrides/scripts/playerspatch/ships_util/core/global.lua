@@ -55,25 +55,66 @@ function SobGroup_Split(group, granularity)
     return result
 end
 
-function SobGroup_NoSalvageScuttle(group)
-    local owner = "salvage:" .. group
-    if SobGroup_IsDoingAbility(group, AB_Dock) == 1 then
+-- Native capture disables Scuttle before the first towing callback.
+HWMP_SalvageStates = HWMP_SalvageStates or {}
+function SobGroup_NoSalvageScuttle(group, player_index, ship_id)
+    local owner = "salvage:" .. (ship_id or group)
+    if SobGroup_Empty(group) == 1 then
+        HWMP_ReleaseOwner(owner)
+        if ship_id ~= nil then HWMP_SalvageStates[ship_id] = nil end
+        return
+    end
+    local docking = SobGroup_IsDoingAbility(group, AB_Dock)
+    -- Legacy callers without a stable hull ID retain the immediate contract.
+    if ship_id == nil then
+        if docking == 1 then HWMP_BlockGroup(group, owner, { AB_Scuttle }, 0)
+        else HWMP_ReleaseOwner(owner) end
+        return
+    end
+    local state = HWMP_SalvageStates[ship_id]
+    if state == nil then state = {}; HWMP_SalvageStates[ship_id] = state end
+    local record = HWMP_FindEffectRecord(group, 0)
+    local saved = nil
+    if record and record.abilities[AB_Scuttle] then saved = record.abilities[AB_Scuttle].baseline end
+    if docking == 1 then
+        local baseline = saved or state.allowed
         HWMP_BlockGroup(group, owner, { AB_Scuttle }, 0)
-    else HWMP_ReleaseOwner(owner) end
+        if state.active ~= 1 and baseline ~= nil then
+            -- CanDoAbility also includes native Dock eligibility. Set the baseline
+            -- after the effect record exists; enabling alone cannot bypass that gate.
+            HWMP_SetAbilityAllowed(group, AB_Scuttle, baseline)
+        end
+        record = HWMP_FindEffectRecord(group, 0)
+        state.allowed = record.abilities[AB_Scuttle].baseline
+        state.active = 1
+    else
+        if state.active == 1 then
+            -- Cooperative baseline changes take precedence over the earlier snapshot.
+            if saved ~= nil then state.allowed = saved end
+            HWMP_ReleaseOwner(owner)
+            -- Capture can remove old group membership while preserving native shipID.
+            if state.allowed ~= nil then HWMP_SetAbilityAllowed(group, AB_Scuttle, state.allowed) end
+            state.active = nil
+        end
+        record = HWMP_FindEffectRecord(group, 0)
+        if record and record.abilities[AB_Scuttle] then state.allowed = record.abilities[AB_Scuttle].baseline
+        else state.allowed = SobGroup_CanDoAbility(group, AB_Scuttle) end
+    end
 end
 
 HWMP_DockStalls = HWMP_DockStalls or {}
-function SobGroup_UnderAttackReissueDock(group)
+function SobGroup_UnderAttackReissueDock(group, ship_id)
+    local key = ship_id or group
     if SobGroup_GetCurrentOrder(group) ~= COMMAND_Dock or SobGroup_IsDocked(group) == 1 or
        SobGroup_UnderAttack(group) ~= 1 or SobGroup_CanDoAbility(group, AB_Dock) ~= 1 or
        SobGroup_CanDoAbility(group, AB_Move) ~= 1 then
-        HWMP_DockStalls[group] = nil
+        HWMP_DockStalls[key] = nil
         return
     end
     local now = Universe_GameTime()
-    if SobGroup_GetActualSpeed(group) >= 1 then HWMP_DockStalls[group] = nil; return end
-    local state = HWMP_DockStalls[group]
-    if state == nil then state = { since = now, retry = -100 }; HWMP_DockStalls[group] = state end
+    if SobGroup_GetActualSpeed(group) >= 1 then HWMP_DockStalls[key] = nil; return end
+    local state = HWMP_DockStalls[key]
+    if state == nil then state = { since = now, retry = -100 }; HWMP_DockStalls[key] = state end
     if now - state.since >= 3 and now - state.retry >= 5 then
         SobGroup_DockSobGroupWithAny(group)
         state.retry = now

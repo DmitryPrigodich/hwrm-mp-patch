@@ -175,7 +175,8 @@ groups.Player_Ships0={'a'};groups.Player_Ships1={'b'};groups.Player_Ships2={'dea
 local active=Universe_GetAllActiveShips();assert(SobGroup_Count(active)==2)
 groups.Player_Ships0={};active=Universe_GetAllActiveShips();assert(SobGroup_Count(active)==1 and groups[active][1]=='b')
 ''')
-    return 'empty/dense split, bounded stalled dock retry, active ship refresh passed'
+    vm.execute((ROOT.parent/'tools/fixtures/dock_identity.lua').read_text(encoding='ascii'))
+    return 'empty/dense split, bounded stalled dock retry with independent hull IDs, active ship refresh passed'
 
 
 def check_defense():
@@ -216,36 +217,21 @@ assert(getn(attacks)==2 and guardOrders[1]=='capital')
 
 
 def check_transport():
+    from hwrm_common import PROJECT
     vm,load=vm_for()
     load('data:scripts/playerspatch/ships_util/lib/frigates.lua')
-    vm.execute('''
-unit('carrier',1,1,1,1);unit('a',1,0,0,1);unit('b',1,1,1,1)
-groups.carrier={'carrier'};groups.cargo={'a','b'};groups.LatchDockTempGroup={}
-groups.LatchDockTempGroup50={};realspace=0
-function SobGroup_AreAllInRealSpace(g) return realspace end
-function SobGroup_GetSobGroupDockedWithGroup(g,dst) SobGroup_Copy(dst,'cargo') end
-function SobGroup_MakeSelectable(...) end
-function SobGroup_SetHidden(...) end
-function SobGroup_DockSobGroupAndStayDocked(...) end
-function SobGroup_GetROE(g) return 1 end
-SupportFrigate_HyperspaceDock('carrier',50)
-assert(ships.b.a[AB_Attack]==0 and ships.b.a[AB_Dock]==0)
-HWMP_SetAbilityAllowed('cargo',AB_Scuttle,0)
-HWMP_BlockGroup('cargo','gravwell:10',{AB_Attack},1)
-realspace=1;SupportFrigate_HyperspaceDock('carrier',50)
-assert(ships.a.a[AB_Dock]==1 and ships.b.a[AB_Attack]==0 and ships.b.a[AB_Scuttle]==0)
-HWMP_ReleaseOwner('gravwell:10')
-assert(ships.a.a[AB_Attack]==0 and ships.b.a[AB_Attack]==1)
-''')
+    vm.execute((PROJECT/'tools/fixtures/transport.lua').read_text(encoding='ascii'))
     for race,label in (('kus','Kus'),('tai','Tai')):
         load(f'data:ship/{race}_supportfrigate/{race}_supportfrigate.lua')
-        vm.execute('''
-groups.LatchDockTempGroup51={};realspace=0
-SupportFrigate_HyperspaceDock('carrier',51)
-''')
+        vm.execute("ships.carrier.real=1;ships.a.real=1;ships.b.real=1;ships.a.docked=1;ships.b.docked=1")
+        vm.globals()[f'Create_{label}_SupportFrigate']('carrier',0,51)
+        vm.execute("ships.carrier.real=0;SupportFrigate_HyperspaceDock('carrier',51);SupportFrigate_HyperspaceDock('carrier',51)")
+        vm.execute("deferSpawn=true")
         vm.globals()[f'Destroy_{label}_SupportFrigate']('carrier',0,51)
-        vm.execute('assert(ships.a.a[AB_Attack]==0 and ships.b.a[AB_Attack]==1 and ships.b.a[AB_Scuttle]==0 and ships.b.a[AB_Dock]==1)')
-    return 'actual transport entry/exit, mission ban, overlapping field and both destruction callbacks passed'
+        vm.execute("assert(ships.a.real==0 and ships.b.real==0 and ships.a.hidden==0 and ships.b.hidden==0);assert(ships.a.selectable==1 and ships.b.selectable==1);finishSpawns();deferSpawn=false")
+        vm.execute("assert(ships.a.real==1 and ships.b.real==1 and ships.a.hidden==0 and ships.b.hidden==0);assert(ships.a.a[AB_Attack]==0 and ships.b.a[AB_Attack]==1 and ships.b.a[AB_Scuttle]==0 and ships.b.a[AB_Dock]==1);assert(HWMP_TransportAnchors[51]==nil)")
+    vm.execute((PROJECT/'tools/fixtures/salvage.lua').read_text(encoding='ascii'))
+    return 'mock: stalled redock does not retain visibility/locks; mixed baselines/other owner native pre-disabled salvage/identity/other-owner mocks and deferred-Spawn recovery on both destruction callbacks passed'
 
 
 def check_tooltips():
@@ -298,6 +284,16 @@ def check_tooltips():
 def verify_source():
     manifest=json.loads((WORK/'manifest.json').read_text(encoding='utf8'))
     files=index(SOURCE);upstream=index(DONOR);overrides=index(ROOT/'overrides')
+    dock_callbacks=[]
+    for name,path in upstream.items():
+        if name.startswith('ship/') and name.endswith('.lua'):
+            before=path.read_text(encoding='ascii')
+            old='SobGroup_UnderAttackReissueDock(CustomGroup)'
+            if old in before:
+                assert before.count(old)==1,name
+                assert files[name].read_text(encoding='ascii').replace('\r\n','\n').strip()==before.replace(old,'SobGroup_UnderAttackReissueDock(CustomGroup, shipID)').replace('\r\n','\n').strip(),name
+                dock_callbacks.append(name)
+    assert len(dock_callbacks)==11,dock_callbacks
     assert manifest['files']=={n:sha(p) for n,p in files.items()}
     for name in manifest['base_runtime_files']:
         if name in overrides:assert sha(files[name])==sha(overrides[name])

@@ -84,13 +84,18 @@ def launch(mode):
     shutil.copy2(WORK/'source.json',directory/'source.json')
     return {'launched':True,'mode':mode,'pid':process.pid,'directory':str(directory)}
 
-def collect(close=False):
+def collect(close=False,abort_invalid=False):
     run,report,events,text=status()
     directory=Path(run['directory']).resolve();assert directory.is_relative_to((WORK/'runs').resolve())
     shutil.copy2(LOG,directory/'HwRM.log')
     save(directory/'results.json',report);save(directory/'events.json',events)
     (directory/'native.txt').write_text(text,encoding='utf8')
     report['log_sha256']=sha(directory/'HwRM.log')
+    if abort_invalid:
+        assert close and report['result_counts'].get('blocked',0)>0,'Only an evidenced invalid fixture may be aborted'
+        report['previous_status']=report['status']
+        report['status']='aborted_invalid_fixture'
+        report['abort_reason']='Native fixture produced blocked cells; preserve evidence before rebuilding'
     if run['mode'] in ('SaveLoad','SaveLoadAuto','SaveLoadTrace'):
         label=next((e['checkpoint'] for e in events if e.get('event')=='save_requested'),'HWMP_AutoFields_'+run['run'][:8])
         candidates=[]
@@ -110,7 +115,7 @@ def collect(close=False):
         else:report['checkpoint_matches']=len(candidates)
     save(directory/'results.json',report)
     if close:
-        assert report['status'] in ('finished','fatal_error','process_exited'),'Never close an unfinished healthy suite'
+        assert report['status'] in ('finished','fatal_error','process_exited','aborted_invalid_fixture'),'Never close an unfinished healthy suite'
         pid=int(run['pid'])
         script=f"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = {pid}'; if ($p) {{ if ($p.Name -ne 'HomeworldRM.exe' -or $p.CommandLine -notlike '*HWMPAutoTests*') {{throw 'Refusing a non-test process'}}; Stop-Process -Id {pid} }}"
         result=subprocess.run(['powershell.exe','-NoProfile','-Command',script],capture_output=True,text=True)
@@ -150,7 +155,8 @@ def stage_auto_checkpoint():
     raise RuntimeError('No owned checkpoint available before auto-load deadline')
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--launch',choices=MODES);p.add_argument('--collect',action='store_true');p.add_argument('--close',action='store_true');a=p.parse_args()
-    result=launch(a.launch) if a.launch else collect(a.close) if a.collect else {k:v for k,v in status()[1].items() if k!='results'}
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--launch',choices=MODES);p.add_argument('--collect',action='store_true');p.add_argument('--close',action='store_true');p.add_argument('--abort-invalid-fixture',action='store_true');a=p.parse_args()
+    assert not a.abort_invalid_fixture or (a.collect and a.close and not a.launch)
+    result=launch(a.launch) if a.launch else collect(a.close,a.abort_invalid_fixture) if a.collect else {k:v for k,v in status()[1].items() if k!='results'}
     print(json.dumps(result,ensure_ascii=False,indent=2))
     if a.launch in ('SaveLoadAuto','SaveLoadTrace'):print(json.dumps(stage_auto_checkpoint()))

@@ -113,3 +113,26 @@ Flak сохраняет площадную механику: Hit и Miss соз�
 Потребители закреплены на a3973a7/c29f96a2…; автоматически не продвигать их. Действующая цепочка: hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod. Последние две рабочие копии остаются без изменений. Все три репозитория публичные по просьбе Дмитрия; публикуются только код и документация, без ассетов, BIG/ZIP и local/.
 
 Prepared six-collector release: fix b7e7e753a237f11c7e68825674f15abbac6a28bbc7a35132ffa9a41d4bf1e05d; main BIG d748e600291016a9148b2f1fbc234555a5c073f3166aa0f061c57ed15d7f8c56, 105152835 bytes, 27 overrides/1123 source files. Source regression and full extraction of all three archives passed. Previous prepared release preserved in local/six-collector-start/previous-release. No native launch/install, downstream builds or pin updates.
+
+
+## 25 октября: продолжение автоматической очереди
+
+[Отдельный разбор защиты от ракет и перевозки](docs/NATIVE_FOLLOWUP_2026-10-25.md). Фильтры ракет и узкая замена целей с raw/cache=2 подтверждены native traces с отрицательным Test21 control. Непрерывная охрана не покидала Guard; автоматический возврат из Attack этим не закрыт. Три боевые пары Medium/Heavy остаются измерениями, без новой правки оружия.
+
+У перевозки найдено настоящее зависание без saves: поздний redock удерживал видимость/команды, а после гибели перевозчика живые пассажиры оставались off-map. Кандидат 94efcc8e… даёт 6/6 native passed в scripted off-map/exit, включая гибель обоих типов перевозчика. Не путать с UI-отменой оплаченной зарядки: native Stop этот scripted переход не отменил. Нормальный BIG ещё прежний b7e7e753…/d748e600… до явной упаковки; установлен только отдельный диагностический пакет. Зависимости потребителей не обновлялись.
+
+## Native queue checkpoint, 25 October: transport/salvage/Dock fixed
+
+Read docs/NATIVE_FOLLOWUP_2026-10-25.md. Candidate source c71b74ee… has39 overrides/1124 files; no further numeric rebalance. Transport6/6, Salvage6/6 with baseline1 and6/6 with baseline0; Dock10 raw measurements plus10 derived native invariants passed under real fire. Timer now keys by hull ID, forwarded by exactly11 otherwise unchanged callbacks. Scuttle uses prior idle permission by ID, not CanDoAbility's temporary Dock zero. Capture preserves shipID even when named group membership changes. Unknown cold-tow baseline is not guessed; cross-VM cooperation/save-load remain unproven.
+
+ResearchEffects4/4: old/new stock Hgn/Vgr interceptors really gain1.4 speed, scouts retain1.0; Hgn individual frigate and Vgr frigate-family HP scope confirmed. Grants/spawns are explicit; this is not paid production validation. Source-only numerical policies remain accepted Assault last1.2 and starts6/6. Prior regular prepared package was b7e7e753…/d748e600…; packaging checkpoint now prepares c71b74ee… separately and preserves that previous release. Regular installation and all consumer pins/builds are unchanged.
+
+Further diagnostic worlds prepared: HW1Damage (paid family tiers with private constant weapon and foreign-race controls), GravityToggle (fresh sources each cycle), GravityExpiry (natural end, marker/range checks), EconomyRaids (three scripted subsystem knockouts, alternate-controller control). Inspect latest native records before claiming completion. Extra Missions are a harness; product remains unsaved skirmish/MP. Gravity save/load stays last optional task.
+
+## Latest 26 October: automatic queue collected, human release checks remain
+
+Read docs/CLOSURE_CHECKLIST.md for the short current remainder and docs/NATIVE_FOLLOWUP_2026-10-25.md for methods/negative controls. Three technical fixes are in prepared normal b46f71f4… / fix c71b74ee… (39 overrides/1124 source files): transport return, ID-based salvage baseline, ID-based Dock stall timers. Source regressions and full 3-archive payload comparison passed; normal installed package and consumer pins/builds remain unchanged.
+
+Final native queue: HW1Damage18 measurements +18 derived invariants passed (e2e1bae6…); EconomyRecovery6 measurements, real shots recover on both races, no automatic harvest-order rewrite; Mines8 measurements with successful sweeper/Assault controls (ddc6cf35…); CombatGeometry36 measurements +36 source-motion fixture invariants passed (870986fa…). Earlier geometry ddc6cf35… allowed attack-style source motion despite AB_Move0 and is not a fixed-source control. The clean repeat adds SetSpeed0 only for stationary CombatGeometry cells. Two invalid pilots (private HW1 transform and 4-argument native mine filter) remain rejected, not hidden or promoted to passes.
+
+PaidProduction4/4, GravityToggle8/8, GravityExpiry8/8 and prior technical fix runs are documented. All owned test processes are collected/closed; latest diagnostic install870986fa… only. No new combat/economy coefficients beyond accepted Assault1.2/starts6/6. Human checklist: 2-client MP, standard/2x RU/EN starts, physical squadron repair, UI paid jump/cancel and actual guard return, full Hgn/Vgr matches. Computer Use capture still times out after fresh monitor/window binding, so no blind menu clicks. Save/load remains the last optional task, not a current MP gate. Do not auto-build or advance downstream.
