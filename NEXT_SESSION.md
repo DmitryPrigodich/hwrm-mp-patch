@@ -4,8 +4,8 @@ The base is ready for field acceptance. English primary README/docs, Russian sep
 
 ## Prepared / installed
 
-- Main BIG56b63f0fe04686b7b35408728905a8a831e0a6dcd9ebe77ab249d176a0d80548; fix1b71d5fff945e59abcdcdd2fa1213e626e4ed1e690b5b4700145273222a8fcf5;109316359bytes;51overrides/1134files.
-- Main+six language BIGs fully extracted/compared; all source/effect/tooltip fixtures and37override Lua4 parses passed.52Python tools formatted with AST checks; effect code tokens unchanged.73text-only frozen examples verified.
+- Installed main BIG 36f62f22b5aa207a811771ae2f71a8de6c23057767fc73cc8e711e8518a582b8; fix 125102671aad7009d3aab2c2cb85a04152780631376d2dd2edf48df3bc16894a; 109331590 bytes; 56 overrides / 1136 files.
+- Main+six language BIGs fully extracted/compared; all source/effect/tooltip fixtures and 40 override Lua 4 parses passed.52Python tools formatted with AST checks; effect code tokens unchanged.73text-only frozen examples verified.
 - Diagnostic5b9cd6e3… passed Recycle/Auto/Cold/Coop2/2each. Older Empty/Pressure and lifecycle proofs retain their own identities. All owned native processes collected/closed; normal game/launcher not launched by installation.
 - Normal HWMPPatch24 folder installed. Actual local launcher slot roundtrip HWMP→VR→HWMP passed and is left on HWMP. Native32-bit config parser accepts HWMP. Original BananaDLC and other mods preserved; previous VR hash-backed outside game.
 
@@ -19,9 +19,10 @@ Workshop loose input is staged at the current ignored local/workshop-latest.json
 
 New checkpoints passed gravity save/load; old active saves without baseline data are not guaranteed. All campaigns/transitions remain separate acceptance. The former campaign ban for future new-race holding is reopened by the author; implement/design/test only in that layer. Computer Use capture still reports FrameArrived timeout; do not claim a generated cover is a game screenshot or do blind UI clicks.
 
+## Menu correction — 26 October 2026
 
-## Front-end update —26October2026
+The owner's screenshot of installed main 56b63f0f… confirmed the new background/footer but exposed the incorrect atlas crop: the title disappeared and part of the blue emblem remained. The template now selects the upper 192 rows with UV {0, 0.375, 1, 0}. Separate white Hiigaran, Vaygr and Taiidan badges share one row; Multiplayer Patch 2.4 is below them. Inhibitors/STAGING_04 remains the menu track. All three Game Type display names now carry HWMP 2.4; only GameRulesName changed, with every other rule-script character preserved.
 
-User requested a native alternative background, Taiidan emblem, Homeworld/Remastered + Multiplayer Patch2.4, a clean HWMP2.4footer and specifically Inhibitors from HW2RM mission4. Added pinned native UI/music generation; three copied native textures remain ignored and are rebuilt from the cache. Music uses shared Music.big/staging_04.wav, no copied audio. All5new/changed UI/audio Lua files passed Lua4 parsing and table inspection; full core/source regressions and7archive extraction checks passed. No gameplay coefficients or consumer pins changed. Native menu layout/audio has NOT been observed after this update; do not promote the earlier gravity smoke runs into a claim about the new UI. See docs/MENU_BRANDING.md.
+Prepared main 36f62f22b5aa207a811771ae2f71a8de6c23057767fc73cc8e711e8518a582b8, 109331590 bytes; fix 125102671aad7009d3aab2c2cb85a04152780631376d2dd2edf48df3bc16894a; 56 overrides / 1136 source files. All seven archives were fully extracted/compared; source/effect/localization and installer fixtures passed. All 40 override Lua files passed Lua 4 parsing; table/atlas inspection confirmed the crop, ordering, titles and footer. Five native textures are copied byte-identically and excluded from Git. See docs/MENU_BRANDING.md and its separate Russian version.
 
-Current ordinary main56b63f0fe04686b7b35408728905a8a831e0a6dcd9ebe77ab249d176a0d80548,109316359bytes; fix1b71d5fff945e59abcdcdd2fa1213e626e4ed1e690b5b4700145273222a8fcf5;51overrides/1134sourcefiles. Installation is performed separately after verifying the game/launcher are closed. Keep the previous VR backup and owner-selected preview when refreshing the local HWMP slot. Workshop remains unpublished.
+After the owner confirmed the game was closed, the corrected package was installed into the normal HWMP folder and the selected local launcher slot, with matching hashes. The previous HWMP package and original Vast Reaches slot are backed up outside the game; BananaDLC, other mods and the selected cover are preserved. No game/launcher launch was performed. Corrected native layout/audio still need human confirmation. Workshop input is refreshed but unpublished; no consumer pin/build was advanced.

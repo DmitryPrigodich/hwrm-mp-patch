@@ -13,7 +13,15 @@ MUSIC = "data:sound/music/staging/STAGING_04"  # Inhibitors, HW2 mission4.
 ASSETS = {
     "ui/newui/background/hwmp24_main_bg.tga": "rm-campaign-hw2/ui/newui/background/main_bg.tga",
     "ui/newui/background/hwmp24_wordmark.tga": "rm-base/ui/newui/background/logo.tga",
+    "ui/newui/background/hwmp24_hiigaran.tga": "rm-base/badges/hiigaran.tga",
+    "ui/newui/background/hwmp24_vaygr.tga": "rm-base/badges/vaygr_outline_white.tga",
     "ui/newui/background/hwmp24_taiidan.tga": "rm-base/badges/taiidan_white.tga",
+}
+
+RULE_NAMES = {
+    "deathmatch.lua": "Homeworld RM - HWMP 2.4",
+    "deathmatchhw1.lua": "Homeworld 1 RM - HWMP 2.4",
+    "deathmatchhw2.lua": "Homeworld 2 RM - HWMP 2.4",
 }
 
 
@@ -68,6 +76,18 @@ def generate(overrides):
         menu = hide_engine_label(menu, name)
     write("ui/newui/main/newmainmenu.lua", menu)
     write("playerspatch_buildnumber.lua", 'PlayersPatchBuildNumber = "HWMP 2.4"\n')
+    for filename, title in RULE_NAMES.items():
+        relative = "scripts/rules/" + filename
+        rules = (DONOR / relative).read_text(encoding="ascii")
+        rules, count = re.subn(
+            r'(?m)^(GameRulesName\s*=\s*)"[^"\r\n]*"',
+            lambda match: match[1] + '"' + title + '"',
+            rules,
+        )
+        if count != 1:
+            raise ValueError("Expected one native game-type title: " + filename)
+        # Display name only: preserve GUID, filters, save version and options.
+        write(relative, rules)
     write(
         "ui/newui/background/logo.lua",
         (PROJECT / "tools/templates/menu_logo.lua").read_text(encoding="ascii"),

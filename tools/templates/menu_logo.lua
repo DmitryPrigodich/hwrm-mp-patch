@@ -1,4 +1,4 @@
--- Keep the native wordmark/font; the cropped UV excludes the Hiigaran emblem.
+-- Native atlas V=0 is its top: keep the wordmark, exclude the baked blue emblem.
 BACKGROUND_LOGO = {
     type = "Frame",
     visible = 1,
@@ -18,16 +18,46 @@ BACKGROUND_LOGO = {
         },
         BackgroundGraphic = {
             type = "Graphic",
-            uvRect = { 0, 1, 1, 0.625 },
+            uvRect = { 0, 0.375, 1, 0 },
             texture = "Data:UI/NewUI/Background/hwmp24_wordmark.tga",
         },
     },
     [2] = {
         type = "Frame",
+        name = "HWMP_HiigaranEmblem",
+        Layout = {
+            pos_XY = { x = 0.28, y = 0.64, xr = "par", yr = "par" },
+            size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
+            pivot_XY = { 0.5, 0.5 },
+            lockAspect = 1,
+        },
+        BackgroundGraphic = {
+            type = "Graphic",
+            uvRect = { 0, 1, 1, 0 },
+            texture = "Data:UI/NewUI/Background/hwmp24_hiigaran.tga",
+        },
+    },
+    [3] = {
+        type = "Frame",
+        name = "HWMP_VaygrEmblem",
+        Layout = {
+            pos_XY = { x = 0.5, y = 0.64, xr = "par", yr = "par" },
+            size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
+            pivot_XY = { 0.5, 0.5 },
+            lockAspect = 1,
+        },
+        BackgroundGraphic = {
+            type = "Graphic",
+            uvRect = { 0, 1, 1, 0 },
+            texture = "Data:UI/NewUI/Background/hwmp24_vaygr.tga",
+        },
+    },
+    [4] = {
+        type = "Frame",
         name = "HWMP_TaiidanEmblem",
         Layout = {
-            pos_XY = { x = 0.5, y = 0.62, xr = "par", yr = "par" },
-            size_WH = { w = 0.25, h = 0.5, wr = "par", hr = "par" },
+            pos_XY = { x = 0.72, y = 0.64, xr = "par", yr = "par" },
+            size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
             pivot_XY = { 0.5, 0.5 },
             lockAspect = 1,
         },
@@ -37,11 +67,11 @@ BACKGROUND_LOGO = {
             texture = "Data:UI/NewUI/Background/hwmp24_taiidan.tga",
         },
     },
-    [3] = {
+    [5] = {
         type = "TextLabel",
         name = "HWMP_MenuTitle",
         Layout = {
-            pos_XY = { x = 0.5, y = 0.97, xr = "par", yr = "par" },
+            pos_XY = { x = 0.5, y = 0.95, xr = "par", yr = "par" },
             size_WH = { w = 1, h = 0.15, wr = "par", hr = "par" },
             pivot_XY = { 0.5, 0.5 },
         },
