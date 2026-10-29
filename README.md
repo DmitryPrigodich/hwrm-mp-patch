@@ -1,4 +1,6 @@
-# HWMP Patch 2.4.1
+# HWMP Patch 2.4.5 candidate
+
+Experimental **HWMP 2.4.5 Cataclysm** adds shared SU, retained carrier caps, a counter below RU, build prices and the fourth Kushan emblem. The owner confirmed startup and readable UI; build thresholds, queues and two-client synchronization remain field tests. Workshop is still **2.4.1**, with the 2.4.5 update authorized after review/startup checks. [Rules and tests](docs/CATACLYSM_2_4_5.md).
 
 Maintenance2.4.1 removes stock-identical mothership/Medium missile model copies; corvette copies retain their distinct impact sounds. [Investigation and native test method](docs/ASSET_DEDUPLICATION_2_4_1.md).
 
@@ -13,7 +15,7 @@ A standalone Homeworld Remastered patch built on **Players Patch 2.3Test build21
 - Taiidan defense fighters refresh missile selections when targets change without changing their count. The missing Vaygr Medium missile weapon-fire binding is restored.
 - Narrow accepted balance changes: **6 Hiigaran / 6 Vaygr starting collectors**, and the Assault Frigate's last speed-accuracy node **4 → 1.2** on its three cannons. Two inherited missile inconsistencies are corrected; no broad rebalance is claimed.
 - Build/research tooltips use effective base times and the selected native language. English is the documentation/default starter language; French, German, Italian, Spanish and Russian tooltip overlays are included.
-- Front-end identity: native HW2 planetary backdrop, a row of Hiigaran/Vaygr/Taiidan badges, HWMP 2.4.1 footer and the requested **Inhibitors** menu track. [Details](docs/MENU_BRANDING.md).
+- Front-end identity: native HW2 planetary backdrop, a row of Hiigaran/Vaygr/Taiidan/Kushan badges, HWMP 2.4.5 footer and the requested **Inhibitors** menu track. [Details](docs/MENU_BRANDING.md).
 
 ## Field tests still needed
 
@@ -32,11 +34,10 @@ Requires your own game, Toolkit and the pinned Test21 input; no game assets are 
 ```powershell
 python -m pip install -r requirements.txt
 python tools/prepare_inputs.py
-python tools/hwmp24.py --package
-python tools/install_hwmp24.py --install
+python tools/hwmp24.py --package --candidate
 ```
 
-Output: `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4.1 - Field Test**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
+Candidate output: `local/HWMPPatch245-candidate`; the preserved 2.4.1 baseline remains in `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4.1 - Field Test**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
 
 Use this complete package by itself; do not stack another Players Patch on top. Old active-well saves made before the new journal are not guaranteed to resume correctly. New checkpoint tests do not certify every campaign or level transition.
 

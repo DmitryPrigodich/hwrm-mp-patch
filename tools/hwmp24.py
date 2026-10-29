@@ -392,6 +392,9 @@ end""",
 
     generate()
     locale_tables()
+    from cataclysm import generate as generate_cataclysm
+
+    generate_cataclysm(out)
 
 
 def prepare():
@@ -482,7 +485,7 @@ def package():
     data = [
         short + "\\" + str(path.relative_to(SOURCE))
         for name, path in sorted(index(SOURCE).items())
-        if not name.startswith("locale/")
+        if builder.data_file(name)
     ]
     lines = [
         f'Archive name="{TITLE}"',
@@ -562,7 +565,14 @@ if __name__ == "__main__":
 
     p = argparse.ArgumentParser()
     p.add_argument("--package", action="store_true")
+    p.add_argument(
+        "--candidate", action="store_true", help="Package separately; preserve the ordinary release"
+    )
     args = p.parse_args()
+    if args.candidate:
+        if not args.package:
+            p.error("--candidate requires --package")
+        RELEASE = PROJECT / "local/HWMPPatch245-candidate"
     if args.package:
         package()
     else:

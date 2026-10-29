@@ -11,7 +11,8 @@
     "rm-base/badges/vaygr_outline_white.tga": "b3218bfbef88c3bd806abfd0049b7bf99f8f244ac88bbdcfae9e5178998bd123",
     "test/scripts/rules/deathmatch.lua": "86b5ce7ea4a36119466564fff28e0be2f1f2456808e40ebe7c8204c311013096",
     "test/scripts/rules/deathmatchhw1.lua": "c32536f0a7fea0a5046a95cc0aea580ada92a0edc16f9843b4947690dd7132a0",
-    "test/scripts/rules/deathmatchhw2.lua": "2699aa46a4adae21177e4057447408a9069e8a6e6fa8951b4752d09ce891b575"
+    "test/scripts/rules/deathmatchhw2.lua": "2699aa46a4adae21177e4057447408a9069e8a6e6fa8951b4752d09ce891b575",
+    "rm-base/badges/kushan.tga": "d11829f8fe690eeb3c73909bf98f521cedb6669035162706da05c26eef291ad1"
   },
   "shared_music_metadata_sha256": "9349eced9be8f08bbd59fb58d1885052edb0f0c45d0e04e5aa6c1979847690eb",
   "music_title": "Inhibitors",

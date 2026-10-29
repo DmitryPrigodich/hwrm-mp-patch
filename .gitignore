@@ -63,3 +63,10 @@ exports/
 .env
 .env.*
 !.env.example
+
+# Generated patched copies of pinned native Russian dictionaries; generator code only.
+hwmp-patch-2.4/overrides/locale/[Rr]ussian/ships.ucs
+hwmp-patch-2.4/overrides/locale/[Rr]ussian/events.ucs
+hwmp-patch-2.4/overrides/locale/[Rr]ussian/buildresearch.ucs
+hwmp-patch-2.4/overrides/locale/[Rr]ussian/hw1ships.ucs
+hwmp-patch-2.4/overrides/locale/[Rr]ussian/hw1buildresearch.ucs

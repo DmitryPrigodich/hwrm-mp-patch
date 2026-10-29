@@ -10,7 +10,7 @@ def plain(value):
     return value
 
 
-def record_config(text, override=None):
+def record_config(text, override=None, rule_props=None):
     vm = LuaRuntime(unpack_returned_tuples=True, register_eval=False, register_builtins=False)
     g = vm.globals()
     for name in ["python", "os", "io", "package", "require", "dofile", "loadfile", "debug"]:
@@ -28,6 +28,7 @@ def record_config(text, override=None):
     g.NewWeaponType = config
     g.getShipNum = lambda obj, key, default: (override or {}).get(key, default)
     g.getShipStr = lambda obj, key, default: (override or {}).get(key, default)
+    g.getRulesNum = lambda obj, key, default: (rule_props or {}).get(key, default)
     vm.execute(text)
     return plain(config), calls
 

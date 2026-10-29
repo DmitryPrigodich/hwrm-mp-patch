@@ -1,1 +1,1 @@
-PlayersPatchBuildNumber = "HWMP 2.4.1"
+PlayersPatchBuildNumber = "HWMP 2.4.5"

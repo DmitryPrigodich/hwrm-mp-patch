@@ -1,0 +1,140 @@
+HWMP_CataclysmCosts = {
+    ["hgn_assaultcorvette"] = 12,
+    ["hgn_assaultfrigate"] = 12,
+    ["hgn_attackbomber"] = 15,
+    ["hgn_battlecruiser"] = 150,
+    ["hgn_carrier"] = 40,
+    ["hgn_defensefieldfrigate"] = 20,
+    ["hgn_destroyer"] = 80,
+    ["hgn_ecmprobe"] = 0,
+    ["hgn_gunturret"] = 2,
+    ["hgn_interceptor"] = 15,
+    ["hgn_ioncannonfrigate"] = 15,
+    ["hgn_ionturret"] = 2,
+    ["hgn_marinefrigate"] = 20,
+    ["hgn_minelayercorvette"] = 6,
+    ["hgn_mothership"] = 0,
+    ["hgn_probe"] = 0,
+    ["hgn_proximitysensor"] = 0,
+    ["hgn_pulsarcorvette"] = 15,
+    ["hgn_resourcecollector"] = 4,
+    ["hgn_resourcecontroller"] = 13,
+    ["hgn_scout"] = 6,
+    ["hgn_shipyard"] = 50,
+    ["hgn_torpedofrigate"] = 12,
+    ["kus_assaultfrigate"] = 12,
+    ["kus_attackbomber"] = 3,
+    ["kus_carrier"] = 40,
+    ["kus_cloakedfighter"] = 2,
+    ["kus_cloakgenerator"] = 6,
+    ["kus_defender"] = 2,
+    ["kus_destroyer"] = 40,
+    ["kus_dronefrigate"] = 20,
+    ["kus_gravwellgenerator"] = 6,
+    ["kus_heavycorvette"] = 4,
+    ["kus_heavycruiser"] = 90,
+    ["kus_interceptor"] = 3,
+    ["kus_ioncannonfrigate"] = 15,
+    ["kus_lightcorvette"] = 3,
+    ["kus_minelayercorvette"] = 6,
+    ["kus_missiledestroyer"] = 45,
+    ["kus_mothership"] = 0,
+    ["kus_multiguncorvette"] = 5,
+    ["kus_probe"] = 0,
+    ["kus_proximitysensor"] = 0,
+    ["kus_repaircorvette"] = 3,
+    ["kus_researchship"] = 10,
+    ["kus_researchship_1"] = 10,
+    ["kus_researchship_2"] = 10,
+    ["kus_researchship_3"] = 10,
+    ["kus_researchship_4"] = 10,
+    ["kus_researchship_5"] = 10,
+    ["kus_resourcecollector"] = 3,
+    ["kus_resourcecontroller"] = 10,
+    ["kus_salvagecorvette"] = 4,
+    ["kus_scout"] = 2,
+    ["kus_sensorarray"] = 10,
+    ["kus_supportfrigate"] = 20,
+    ["tai_assaultfrigate"] = 12,
+    ["tai_attackbomber"] = 3,
+    ["tai_carrier"] = 40,
+    ["tai_cloakgenerator"] = 6,
+    ["tai_defender"] = 2,
+    ["tai_defensefighter"] = 3,
+    ["tai_destroyer"] = 40,
+    ["tai_fieldfrigate"] = 20,
+    ["tai_gravwellgenerator"] = 6,
+    ["tai_heavycorvette"] = 4,
+    ["tai_heavycruiser"] = 90,
+    ["tai_interceptor"] = 3,
+    ["tai_ioncannonfrigate"] = 15,
+    ["tai_lightcorvette"] = 3,
+    ["tai_minelayercorvette"] = 6,
+    ["tai_missiledestroyer"] = 45,
+    ["tai_mothership"] = 0,
+    ["tai_multiguncorvette"] = 5,
+    ["tai_probe"] = 0,
+    ["tai_proximitysensor"] = 0,
+    ["tai_repaircorvette"] = 3,
+    ["tai_researchship"] = 10,
+    ["tai_researchship_1"] = 10,
+    ["tai_researchship_2"] = 10,
+    ["tai_researchship_3"] = 10,
+    ["tai_researchship_4"] = 10,
+    ["tai_researchship_5"] = 10,
+    ["tai_resourcecollector"] = 3,
+    ["tai_resourcecontroller"] = 10,
+    ["tai_salvagecorvette"] = 4,
+    ["tai_scout"] = 2,
+    ["tai_sensorarray"] = 10,
+    ["tai_supportfrigate"] = 20,
+    ["vgr_assaultfrigate"] = 12,
+    ["vgr_battlecruiser"] = 150,
+    ["vgr_bomber"] = 12,
+    ["vgr_carrier"] = 40,
+    ["vgr_commandcorvette"] = 6,
+    ["vgr_destroyer"] = 80,
+    ["vgr_heavymissilefrigate"] = 12,
+    ["vgr_hyperspace_platform"] = 3,
+    ["vgr_infiltratorfrigate"] = 20,
+    ["vgr_interceptor"] = 14,
+    ["vgr_lancefighter"] = 15,
+    ["vgr_lasercorvette"] = 16,
+    ["vgr_minelayercorvette"] = 6,
+    ["vgr_missilecorvette"] = 12,
+    ["vgr_mothership"] = 0,
+    ["vgr_probe"] = 0,
+    ["vgr_probe_ecm"] = 0,
+    ["vgr_probe_prox"] = 0,
+    ["vgr_resourcecollector"] = 4,
+    ["vgr_resourcecontroller"] = 13,
+    ["vgr_scout"] = 6,
+    ["vgr_shipyard"] = 50,
+    ["vgr_weaponplatform_gun"] = 2,
+    ["vgr_weaponplatform_missile"] = 2,
+}
+HWMP_CataclysmBudgets = {small=1450,normal=1900,large=2600,huge=3850,vast=7650}
+-- Cataclysm HUD reports nominal owned groups; native supply owns enforcement.
+-- No queues, build restrictions or ship ownership are changed by this display.
+
+function HWMP_CataclysmUpdateHUD()
+    local player = Universe_CurrentPlayer()
+    if player < 0 or player >= Universe_PlayerCount() then return end
+    local used = 0
+    for ship, cost in HWMP_CataclysmCosts do
+        used = used + cost * Player_GetNumberOfSquadronsOfTypeAwakeOrSleeping(player, ship)
+    end
+    local profile = strlower(tostring(GetGameSettingAsString("unitcaps")))
+    local limit = HWMP_CataclysmBudgets[profile]
+    if limit == nil then limit = "?" end
+    UI_SetTextLabelText("ResourceMenu", "HWMP_SUOwned", used .. "/" .. limit)
+    UI_SetElementVisible("ResourceMenu", "HWMP_SURow", 1)
+    return used
+end
+
+function HWMP_CataclysmHUDStart()
+    print("HWMP Cataclysm HUD started; unitcaps=" .. tostring(GetGameSettingAsString("unitcaps")))
+    if Rule_Exists("HWMP_CataclysmUpdateHUD") == 0 then
+        Rule_AddInterval("HWMP_CataclysmUpdateHUD", 1)
+    end
+end

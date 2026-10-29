@@ -3,6 +3,7 @@
 from language_data import LANGUAGES
 
 RELEASE_DOCS = (
+    "CATACLYSM_2_4_5.md",
     "NATIVE_TESTS.md",
     "AUTO_TESTS.md",
     "AUTO_TEST_RESULTS.md",
@@ -20,6 +21,7 @@ RELEASE_DOCS = (
     "ASSET_DEDUPLICATION_2_4_1.md",
 )
 RELEASE_RUSSIAN_DOCS = (
+    "CATACLYSM_2_4_5.md",
     "UPDATE_WORKFLOW.md",
     "PATCH_ENGINEERING.md",
     "LOCAL_INSTALLATION.md",

@@ -1,0 +1,62 @@
+    -- SU follows the native RU bottom-left anchor at every UI scale.
+    {
+        type = "Frame",
+        name = "HWMP_SURow",
+        visible = 0,
+        giveParentMouseInput = 1,
+        autosize = 1,
+        autoarrange = 1,
+        arrangetype = "horiz",
+        backgroundColor = {20,20,20,20},
+        BackgroundGraphic = BORDER_GRAPHIC_BUILDFRAME_HORIZ,
+        Layout = {
+            pos_XY = {x=0,y=2,xr="px",yr="px"},
+            pivot_XY = {0,0},
+            Flags = {canArrange=0},
+        },
+        Anchor_Binds = {
+            pivotX = "HWMP_ResourceBottomLeft",
+            pivotY = "HWMP_ResourceBottomLeft",
+        },
+        [1] = {
+            type = "Frame",
+            name = "HWMP_SUCrewIcon",
+            giveParentMouseInput = 1,
+            Layout = {
+                pos_XY = {x=1,y=0.5,xr="px",yr="par"},
+                pivot_XY = {0,0.5},
+                size_WH = {w=32/800,h=24/600,wr="scr",hr="scr"},
+                lockAspect = 1,
+            },
+            BackgroundGraphic = {
+                texture = "data:ui/newui/ingameicons/hwmp_support_units.tga",
+                uvRect = {0,1,1,0},
+            },
+        },
+        [2] = {
+            type = "TextLabel",
+            name = "HWMP_SUTitle",
+            autosize = 1,
+            giveParentMouseInput = 1,
+            Layout = {
+                pos_XY = {x=1,y=0.5,xr="px",yr="par"},
+                pivot_XY = {0,0.5},
+                pad_LT = {l=LISTBOXITEM_ICON_PAD_HORIZ,t=0,lr="scr",tr="px"},
+            },
+            Text = {text="$9684401",textStyle="RM_DescriptionLabel_TextStyle",hAlign="Left",vAlign="Center"},
+        },
+        [3] = {
+            type = "TextLabel",
+            name = "HWMP_SUOwned",
+            autosize = 1,
+            giveParentMouseInput = 1,
+            Layout = {
+                pos_XY = {x=1,y=0.5,xr="px",yr="par"},
+                pivot_XY = {0,0.5},
+                min_WH = {w=1,h=height-2,wr="px",hr="px"},
+                pad_LT = {l=LISTBOXITEM_ICON_PAD_HORIZ,t=0,lr="scr",tr="px"},
+                pad_RB = {r=LISTBOXITEM_ICON_PAD_HORIZ,b=0,rr="scr",br="px"},
+            },
+            Text = {text="0/1900",textStyle="RM_DescriptionLabel_TextStyle",hAlign="Left",vAlign="Center",color=COLOR_BUTTON_TEXT_DEFAULT},
+        },
+    },

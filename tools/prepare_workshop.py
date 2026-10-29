@@ -8,7 +8,7 @@ import shutil
 from hwrm_common import PROJECT, index, save, sha
 from hwmp24 import SOURCE, WORK
 from project_version import TITLE
-from install_hwmp24 import release_files
+import install_hwmp24
 
 
 def workshop_item_id():
@@ -23,10 +23,10 @@ def workshop_item_id():
     return identifier
 
 
-def prepare(preview=None):
+def prepare(preview=None, title=None):
     from PIL import Image
 
-    release_files()
+    install_hwmp24.release_files()
     manifest = json.loads((WORK / "manifest.json").read_text(encoding="utf8"))
     if {name: sha(path) for name, path in index(SOURCE).items()} != manifest["files"]:
         raise ValueError("Prepared source changed after verification.")
@@ -49,7 +49,9 @@ def prepare(preview=None):
             "Staging already exists; preserve its WorkshopID and choose/review an update instead of resetting it."
         )
     description = (PROJECT / "workshop/description.en.bbcode").read_text(encoding="utf8").strip()
-    title = TITLE + " - Field Test"
+    title = title or TITLE + " - Field Test"
+    if not title.strip() or "\n" in title or "\r" in title:
+        raise ValueError("Workshop title must be one nonempty line.")
     workshop_id = workshop_item_id()
     if len(title) > 128 or len(description) > 8000:
         raise ValueError("Toolkit title/description limit exceeded.")
@@ -78,6 +80,7 @@ def prepare(preview=None):
             "fix_revision": manifest["fix_revision"],
             "content_revision": revision,
             "source_inventory": manifest["files"],
+            "release_directory": str(install_hwmp24.RELEASE),
             "preview_sha256": sha(preview) if preview else None,
             "artwork_kind": "owner_review_pending",
             "description_characters": len(description),
@@ -108,5 +111,15 @@ def prepare(preview=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--preview", type=Path)
+    parser.add_argument(
+        "--title", help="Explicit owner-reviewed Workshop title; filenames stay stable"
+    )
+    parser.add_argument(
+        "--candidate",
+        action="store_true",
+        help="Stage the verified 2.4.5 candidate without replacing the ordinary release",
+    )
     args = parser.parse_args()
-    print(json.dumps(prepare(args.preview), indent=2))
+    if args.candidate:
+        install_hwmp24.RELEASE = PROJECT / "local/HWMPPatch245-candidate"
+    print(json.dumps(prepare(args.preview, args.title), indent=2))

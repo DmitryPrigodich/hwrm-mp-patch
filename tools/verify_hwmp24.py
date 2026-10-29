@@ -444,6 +444,9 @@ def verify_source():
         assault_weapons.add(name)
     expected_weapons.update(assault_weapons)
     expected_weapons.update(missile_aliases)
+    from cataclysm import ship_paths
+
+    expected_weapons.update(ship_paths())
     assert {
         n for n, p in overrides.items() if p.suffix in (".ship", ".wepn", ".subs", ".miss")
     } == expected_weapons
@@ -470,8 +473,11 @@ def verify_source():
     from production_data import verify as verify_data
     from verify_effect_journal import verify as verify_journal
 
+    from verify_cataclysm import verify as verify_cataclysm
+
     result = {
         "status": "passed",
+        "cataclysm": verify_cataclysm(),
         "production_data": verify_data(SOURCE),
         "files": len(files),
         "fix_revision": manifest["fix_revision"],
@@ -506,7 +512,7 @@ def verify_source():
 
 
 def verify_archive(archive):
-    from hwrm_archive import TOOL, native_aliases
+    from hwrm_archive import TOOL, native_aliases, data_file
     from hwrm_common import short_path
 
     archive = Path(archive)
@@ -533,7 +539,7 @@ def verify_archive(archive):
         assert proc.returncode == 0, (path, proc.returncode)
         expected = {}
         for name, source in sources.items():
-            if not name.startswith("locale/"):
+            if data_file(name):
                 if language is None:
                     expected[name] = sha(source)
             elif name.startswith("locale/" + (language or "English").lower() + "/"):

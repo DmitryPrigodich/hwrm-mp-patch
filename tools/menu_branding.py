@@ -18,6 +18,7 @@ ASSETS = {
     "ui/newui/background/hwmp24_hiigaran.tga": "rm-base/badges/hiigaran.tga",
     "ui/newui/background/hwmp24_vaygr.tga": "rm-base/badges/vaygr_outline_white.tga",
     "ui/newui/background/hwmp24_taiidan.tga": "rm-base/badges/taiidan_white.tga",
+    "ui/newui/background/hwmp24_kushan.tga": "rm-base/badges/kushan.tga",
 }
 
 RULE_NAMES = {

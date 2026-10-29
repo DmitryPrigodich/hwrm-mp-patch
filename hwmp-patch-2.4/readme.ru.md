@@ -1,4 +1,6 @@
-# HWMP Patch 2.4
+# HWMP Patch 2.4.5 candidate
+
+Подготовлен экспериментальный **HWMP 2.4.5 Cataclysm**: общий бюджет SU, штатные лимиты авианосцев, счётчик под RU, цены строительства и четвёртая эмблема кушан. Владелец подтвердил запуск и читаемый интерфейс; пороги постройки, очереди и два клиента остаются полевыми тестами. Workshop пока **2.4.1**, обновление 2.4.5 согласовано после ревью и проверки запуска. [Правила и проверки](docs/CATACLYSM_2_4_5.md).
 
 [English — основной README](README.md)
 
@@ -11,7 +13,7 @@
 - Защитный истребитель обновляет набор ракет при замене целей с прежним счётчиком. Восстановлена недостающая привязка Vaygr Medium missile weaponfire.
 - Принятые изменения: **старт Hgn/Vgr 6/6 сборщиков**, последний скоростной множитель трёх пушек Assault **4 → 1,2**. Исправлены два ранее разобранных ракетных несоответствия; общего нового перебаланса нет.
 - Подсказки стройки/науки показывают действительное базовое время на выбранном языке. Поддерживаются English, French, German, Italian, Spanish и Russian. Основной язык документации и CMD — английский.
-- Меню: родной фон HW2 с планетой, ряд знаков хиигарян/вэйгров/таиидан, подпись HWMP 2.4 и музыка **Inhibitors**. [Подробности](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/MENU_BRANDING.md).
+- Меню: родной фон HW2 с планетой, ряд знаков хиигарян/вэйгров/таиидан/кушан, подпись HWMP 2.4.5 и музыка **Inhibitors**. [Подробности](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/MENU_BRANDING.md).
 
 ## Что осталось тестерам
 
@@ -22,11 +24,10 @@
 ```powershell
 python -m pip install -r requirements.txt
 python tools/prepare_inputs.py
-python tools/hwmp24.py --package
-python tools/install_hwmp24.py --install
+python tools/hwmp24.py --package --candidate
 ```
 
-Готовый пакет: `local/HWMPPatch24-release`. Для русского CMD-запуска: `HWMP Patch 2.4.cmd -Language Russian`. [Штатный лаунчер и обратимый переключатель слота](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/LOCAL_INSTALLATION.md). Опубликовано в [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) как **HWMP Patch 2.4 - Field Test**. Для сетевых испытаний всем участникам нужна одна версия Workshop: хеши архивов Toolkit отличаются от локальной сборки разработчика.
+Кандидат: `local/HWMPPatch245-candidate`. Обычный установленный релиз 2.4.1 сохранён в `local/HWMPPatch24-release`. Для русского CMD-запуска: `HWMP Patch 2.4.cmd -Language Russian`. [Штатный лаунчер и обратимый переключатель слота](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/ru/LOCAL_INSTALLATION.md). Опубликовано в [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) как **HWMP Patch 2.4 - Field Test**. Для сетевых испытаний всем участникам нужна одна версия Workshop: хеши архивов Toolkit отличаются от локальной сборки разработчика.
 
 Поверх полного пакета не нужен второй Players Patch. Совместимость старых сохранений с уже активными полями не гарантируется. Новые проверки загрузки не означают приёмку всех кампаний и переходов уровней.
 

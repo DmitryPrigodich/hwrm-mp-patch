@@ -26,7 +26,7 @@ BACKGROUND_LOGO = {
         type = "Frame",
         name = "HWMP_HiigaranEmblem",
         Layout = {
-            pos_XY = { x = 0.28, y = 0.64, xr = "par", yr = "par" },
+            pos_XY = { x = 0.17, y = 0.64, xr = "par", yr = "par" },
             size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
             pivot_XY = { 0.5, 0.5 },
             lockAspect = 1,
@@ -41,7 +41,7 @@ BACKGROUND_LOGO = {
         type = "Frame",
         name = "HWMP_VaygrEmblem",
         Layout = {
-            pos_XY = { x = 0.5, y = 0.64, xr = "par", yr = "par" },
+            pos_XY = { x = 0.39, y = 0.64, xr = "par", yr = "par" },
             size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
             pivot_XY = { 0.5, 0.5 },
             lockAspect = 1,
@@ -56,7 +56,7 @@ BACKGROUND_LOGO = {
         type = "Frame",
         name = "HWMP_TaiidanEmblem",
         Layout = {
-            pos_XY = { x = 0.72, y = 0.64, xr = "par", yr = "par" },
+            pos_XY = { x = 0.61, y = 0.64, xr = "par", yr = "par" },
             size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
             pivot_XY = { 0.5, 0.5 },
             lockAspect = 1,
@@ -68,6 +68,21 @@ BACKGROUND_LOGO = {
         },
     },
     [5] = {
+        type = "Frame",
+        name = "HWMP_KushanEmblem",
+        Layout = {
+            pos_XY = { x = 0.83, y = 0.64, xr = "par", yr = "par" },
+            size_WH = { w = 0.18, h = 0.36, wr = "par", hr = "par" },
+            pivot_XY = { 0.5, 0.5 },
+            lockAspect = 1,
+        },
+        BackgroundGraphic = {
+            type = "Graphic",
+            uvRect = { 0, 1, 1, 0 },
+            texture = "Data:UI/NewUI/Background/hwmp24_kushan.tga",
+        },
+    },
+    [6] = {
         type = "TextLabel",
         name = "HWMP_MenuTitle",
         Layout = {

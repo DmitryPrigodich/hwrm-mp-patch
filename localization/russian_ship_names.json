@@ -1,0 +1,50 @@
+{
+  "scope": "Owner-approved Vaygr build names plus native selected-ship/module aliases; shared aliases retain one consistent term.",
+  "entries": {
+    "7118": {
+      "english": "Cloak Generator",
+      "expected_russian": "Генератор маскировочного поля",
+      "russian": "Стэлс-генератор"
+    },
+    "7130": {
+      "english": "Survey Scout",
+      "expected_russian": "Корабль-разведчик",
+      "russian": "Разведчик"
+    },
+    "7138": {
+      "english": "Missile Corvette",
+      "expected_russian": "Корвет-ракетоносец",
+      "russian": "Ракетный корвет"
+    },
+    "7142": {
+      "english": "Minelayer",
+      "expected_russian": "Минный заградитель",
+      "russian": "Минный корвет"
+    },
+    "7150": {
+      "english": "Infiltrator Frigate",
+      "expected_russian": "Фрегат-лазутчик",
+      "russian": "Абордажный фрегат"
+    },
+    "1612": {
+      "english": "Missile Corvette",
+      "expected_russian": "Корвет-ракетоносец",
+      "russian": "Ракетный корвет"
+    },
+    "1614": {
+      "english": "Minelayer Corvette",
+      "expected_russian": "Минный заградитель",
+      "russian": "Минный корвет"
+    },
+    "1620": {
+      "english": "Infiltrator Frigate",
+      "expected_russian": "Фрегат-лазутчик",
+      "russian": "Абордажный фрегат"
+    },
+    "2012": {
+      "english": "Cloak Generator",
+      "expected_russian": "Генератор маскировочного поля",
+      "russian": "Стэлс-генератор"
+    }
+  }
+}

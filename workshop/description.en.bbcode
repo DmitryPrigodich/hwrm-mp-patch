@@ -1,11 +1,31 @@
-[h1]HWMP Patch 2.4.1 - Field Test[/h1]
+[h1]HWMP Patch 2.4.5 - Cataclysm (Field Test)[/h1]
 Shared fixes and original four races for Homeworld Remastered, based on the complete Players Patch 2.3Test build21.
 Use this standalone package by itself; do not add another Players Patch.
-
 Workshop release is a field-test candidate.
 
+[h2]New in 2.4.5: Cataclysm Support Units mode[/h2]
+Choose [b]HWMP 2.4.5 Cataclysm[/b] under [b]Game Type[/b] in the skirmish/multiplayer setup. The ordinary HWMP modes remain available in the same mod.
+
+Inspired by Homeworld: Cataclysm, this optional mode replaces combat and economy class caps with one weighted Support Units (SU) pool. Mix your fleet freely within that shared budget.
+[list]
+[*] Four existing races: Hiigaran, Vaygr, Kushan and Taiidan; no additional race selection or separate mod required.
+[*] Starting SU budgets: Small 1450; Normal 1900; Large 2600; Huge 3850; Vast 7650.
+[*] SU prices in construction, tooltips and selected-ship descriptions; the total counter sits below Resource Units.
+[*] Existing carrier/shipyard count caps remain. Carriers do not add capacity. Zero-SU probes keep their classic per-type caps.
+[*] A squadron uses its full nominal batch price. The HUD reports owned units and does not include queued construction.
+[*] Russian terminology and text encoding fixes; a fourth Kushan emblem in the main menu.
+[/list]
+
+[b]Public playtest:[/b] startup and SU display have been checked in-game. Please help test actual build thresholds, simultaneous queues and cancellations, squadron losses/replenishment, capture, saves and two-client synchronization. Balance values are provisional; report the Game Type, Unit Cap, race, observed SU, actions and expected result.
+
 [h2]2.4.1 maintenance update[/h2]
-Removed two stock-identical model copies (Hiigaran mothership and Vaygr Medium missile HODs). Both corvette HOD copies remain because shared loading would replace their distinct impact sounds. Native missile launch/impact checks passed; gameplay coefficients are unchanged. The local main BIG is about 28 MB smaller. Technical filenames stay stable.
+[list]
+[*] Removed two stock-identical model copies (Hiigaran mothership and Vaygr Medium missile HODs). 
+[*] Both corvette HOD copies remain because shared loading would replace their distinct impact sounds.
+[*] Native missile launch/impact checks passed;
+[*] Gameplay coefficients are unchanged.
+[*] The local main BIG is about 28 MB smaller. Technical filenames stay stable.
+[/list]
 
 [h2]Changes[/h2]
 [list]
@@ -15,7 +35,6 @@ Removed two stock-identical model copies (Hiigaran mothership and Vaygr Medium m
 [*] Accepted Hgn/Vgr6/6 starting collectors and the Assault Frigate's final speed-accuracy node4 to1.2. Other broad balance coefficients are preserved.
 [*] Native build/research tooltip translations for English, French, German, Italian, Spanish and Russian.
 [/list]
-
 [h2]Playtesting needed[/h2]
 [list]
 [*] Two-client MP synchronization;
@@ -24,12 +43,9 @@ Removed two stock-identical model copies (Hiigaran mothership and Vaygr Medium m
 [*] paid UI hyperspace/cancel and Guard return;
 [*] full Hiigaran versus Vaygr matches with side/map swaps.
 [/list]
-
 Report release hashes and reproduction steps.
-
 Old active-well saves made before the new journal are not guaranteed.
 Specific engine tests do not certify all campaigns or saved transport states.
-
 [h2]Credits[/h2]
 [list]
 [*] Players Patch 2.3 team;
@@ -37,9 +53,7 @@ Specific engine tests do not certify all campaigns or saved transport states.
 [*] 2.3Test: Fear/Novaras;
 [*] HWMP 2.4: AmDDRed, Hix, Twofoxich.
 [/list]
-
 Workshop creator accounts additionally include CPU8 and Gunner; source profile names are preserved in the full credits.
 Community map authors and original author/editing tags are preserved.
-
 Full credits:
 [*] https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/CREDITS.md

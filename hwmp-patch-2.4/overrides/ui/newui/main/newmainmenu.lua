@@ -301,7 +301,7 @@ NewMainMenu = {
         },
         wrapping = 0,
         Text = {
-            text = "Credits: Players Patch 2.3 team | 2.3Test: Fear/Novaras | HWMP 2.4.1: AmDDRed, Hix, Twofoxich",
+            text = "Credits: Players Patch 2.3 team | 2.3Test: Fear/Novaras | HWMP 2.4.5: AmDDRed, Hix, Twofoxich",
             font = "ListBoxItemFont",
             pixels = 28,
             rel = 2160,
