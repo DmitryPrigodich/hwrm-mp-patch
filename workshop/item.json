@@ -1,9 +1,10 @@
 {
   "schema_version": 1,
+  "version": "2.4.5",
   "workshop_id": "3827773780",
   "consumer_app_id": 244160,
   "creator_app_id": 347380,
   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780",
-  "title": "HWMP Patch 2.4.1 - Field Test",
+  "title": "HWMP Patch 2.4.5 - Cataclysm (Field Test)",
   "status": "public"
 }

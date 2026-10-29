@@ -1,95 +1,103 @@
 {
   "schema_version": 1,
-  "version": "2.4.1",
+  "version": "2.4.5",
   "workshop_id": "3827773780",
   "consumer_app_id": 244160,
   "creator_app_id": 347380,
   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780",
-  "title": "HWMP Patch 2.4.1 - Field Test",
+  "title": "HWMP Patch 2.4.5 - Cataclysm (Field Test)",
   "status": "public",
-  "updated_at_utc": "2026-10-26T21:16:37+00:00",
-  "source_commit": "9ed197239490d36db1e4eaf9dd92e759abd23c48",
-  "source_fix_revision": "918818ee91a81a3c46bfa61b8a301649716ec16868f0a9b4da7ac2e8bb5970b7",
-  "content_revision": "9fe4ce118585d5ab96154d6995d3405650187a6f132765ed0f23c14d5214638f",
-  "local_main_sha256": "722521185ac8125dedbbd5efded4981bb6ff7ed04ee1660af80cb7326e2c5d9b",
-  "local_main_bytes": 81519866,
-  "steam_manifest_id": "2695969873528017586",
+  "published_at_utc": "2026-10-26T16:23:21+00:00",
+  "updated_at_utc": "2026-10-29T23:30:29+00:00",
+  "source_commit": "e601ec82cf85583a1bf1983c7f42143a20bb9422",
+  "source_fix_revision": "c3b5f248f1f18a6f699a0bf6a723910532266ac164d0b5d9ffbc20ea54e7641a",
+  "local_main_sha256": "22dfd3a7cc59054edf8b137e755fc88c7007789af61725c0e82b3f2e7dbe29d6",
+  "steam_manifest_id": "2989530265250103357",
   "anonymous_api_visibility_verified": true,
-  "page_ui_review": "not repeated after maintenance upload",
+  "authenticated_page_verified": true,
+  "exact_approved_description_verified": true,
+  "approved_preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
   "steam_download_verification": {
-    "workshop_id": "3827773780",
-    "manifest_id": "2695969873528017586",
-    "downloaded_from_steam": true,
     "status": "passed",
+    "workshop_id": "3827773780",
+    "manifest_id": "2989530265250103357",
+    "downloaded_from_steam": true,
     "full_extract_hash_comparison": true,
     "archives": [
       {
         "filename": "HWMPPatch24.big",
-        "bytes": 81973633,
-        "sha256": "b3b591c18d84ca2077e22b4a4fca3de0b387bb65b7d0d3203a84a7dae1fa6b6f",
-        "files": 1128,
+        "sha256": "c1e3f78bb52034b8561842dc7363ffbc3ca62c9860230aa66e78a2b35c94fc28",
+        "bytes": 82019598,
+        "files": 1172,
         "aliases": [
           "data"
         ]
       },
       {
         "filename": "english.big",
-        "bytes": 15221,
-        "sha256": "90a23e2d47f7f876e08933e65d398e20af079f30463da2c95b0a552d6be23ec4",
-        "files": 1,
+        "sha256": "bc9e3afd3cc22d0024558fc93cad79101ff8fb6ede70633d9305341ffa6d2600",
+        "bytes": 29494,
+        "files": 3,
         "aliases": [
           "locale"
         ]
       },
       {
         "filename": "french.big",
-        "bytes": 16362,
-        "sha256": "9b67164af38aedeb4ae116655743d6152df21340147b92236b8dc595d7834707",
-        "files": 1,
+        "sha256": "63c53bed55e4f64609645933c4e3e82d0f32f3be905cd2ae1c4e74275c203b65",
+        "bytes": 31340,
+        "files": 3,
         "aliases": [
           "locale"
         ]
       },
       {
         "filename": "german.big",
-        "bytes": 16068,
-        "sha256": "cc343294cfb07ad67cf31a57d053d4ad9df07f5076c5a88337f9d0bdf604a7b0",
-        "files": 1,
+        "sha256": "c2feb523533ccf3f5d4ac8af2d7f53f3187750d1e1015d6333302ac60b324edd",
+        "bytes": 30944,
+        "files": 3,
         "aliases": [
           "locale"
         ]
       },
       {
         "filename": "italian.big",
-        "bytes": 16187,
-        "sha256": "0f531b1eaaa98212e415ed307180b97c4b7322b0a9eba6599127e68262136c0d",
-        "files": 1,
+        "sha256": "a35c572eac599f12e72b3382de5389285734c0e9cecdec4547def439dc2d263d",
+        "bytes": 31449,
+        "files": 3,
         "aliases": [
           "locale"
         ]
       },
       {
         "filename": "spanish.big",
-        "bytes": 16450,
-        "sha256": "779fc82bf62fabdfeb4412e1a3ba224de783f81881e6ede2b92f37829acb0a88",
-        "files": 1,
+        "sha256": "b14e059a840e58629c47633097e5ed774cdc22fc354c36f7d24319209eda361d",
+        "bytes": 31479,
+        "files": 3,
         "aliases": [
           "locale"
         ]
       },
       {
         "filename": "russian.big",
-        "bytes": 26749,
-        "sha256": "e853421b374bea85350bae25e7541c118b1c8c3862f00e335f309393425caab3",
-        "files": 1,
+        "sha256": "eaaf85cda0645c9d5223072294967fef505be8b2a6b033fa30d82f1846183184",
+        "bytes": 65486,
+        "files": 8,
         "aliases": [
           "locale"
         ]
       }
     ],
-    "source_files": 1134,
-    "preview_sha256": "3596b83983098e057c4e750d15608b00ab0a636ad8d8648d8cf8c8add92310c4",
-    "engine_launched": false,
-    "total_download_bytes": 82202657
-  }
+    "source_files": 1195,
+    "preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
+    "registry_in_data_verified": true,
+    "custom_and_patched_ucs_verified": true,
+    "native_workshop_launch_performed": false,
+    "total_download_bytes": 82365909
+  },
+  "native_developer_startup_verified": true,
+  "native_workshop_launch_performed": false,
+  "native_kushan_callback_scene_verified": true,
+  "two_client_sync_verified": false,
+  "weighted_queue_boundary_verified": false
 }

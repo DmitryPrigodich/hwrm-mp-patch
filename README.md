@@ -1,6 +1,6 @@
 # HWMP Patch 2.4.5 candidate
 
-Experimental **HWMP 2.4.5 Cataclysm** adds shared SU, retained carrier caps, a counter below RU, build prices and the fourth Kushan emblem. The owner confirmed startup and readable UI; build thresholds, queues and two-client synchronization remain field tests. Workshop is still **2.4.1**, with the 2.4.5 update authorized after review/startup checks. [Rules and tests](docs/CATACLYSM_2_4_5.md).
+Experimental **HWMP 2.4.5 Cataclysm** adds shared SU, retained carrier caps, a counter below RU, build prices and the fourth Kushan emblem. The owner confirmed startup and readable UI; build thresholds, queues and two-client synchronization remain field tests. **2.4.5 is published on Workshop** after review and startup checks. [Release/download verification](docs/WORKSHOP_RELEASE_2026-10-30.md). [Rules and tests](docs/CATACLYSM_2_4_5.md).
 
 Maintenance2.4.1 removes stock-identical mothership/Medium missile model copies; corvette copies retain their distinct impact sounds. [Investigation and native test method](docs/ASSET_DEDUPLICATION_2_4_1.md).
 
@@ -37,7 +37,7 @@ python tools/prepare_inputs.py
 python tools/hwmp24.py --package --candidate
 ```
 
-Candidate output: `local/HWMPPatch245-candidate`; the preserved 2.4.1 baseline remains in `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4.1 - Field Test**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
+Candidate output: `local/HWMPPatch245-candidate`; the preserved 2.4.1 baseline remains in `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4.5 - Cataclysm (Field Test)**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
 
 Use this complete package by itself; do not stack another Players Patch on top. Old active-well saves made before the new journal are not guaranteed to resume correctly. New checkpoint tests do not certify every campaign or level transition.
 

@@ -1,6 +1,6 @@
 # HWMP Patch 2.4.5 candidate
 
-Experimental **HWMP 2.4.5 Cataclysm** adds shared SU, retained carrier caps, a counter below RU, build prices and the fourth Kushan emblem. The owner confirmed startup and readable UI; build thresholds, queues and two-client synchronization remain field tests. Workshop is still **2.4.1**, with the 2.4.5 update authorized after review/startup checks. [Rules and tests](docs/CATACLYSM_2_4_5.md).
+Experimental **HWMP 2.4.5 Cataclysm** adds shared SU, retained carrier caps, a counter below RU, build prices and the fourth Kushan emblem. The owner confirmed startup and readable UI; build thresholds, queues and two-client synchronization remain field tests. **2.4.5 is published on Workshop** after review and startup checks. [Release/download verification](docs/WORKSHOP_RELEASE_2026-10-30.md). [Rules and tests](docs/CATACLYSM_2_4_5.md).
 
 [Русский](README.ru.md)
 
