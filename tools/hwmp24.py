@@ -202,6 +202,32 @@ def make_overrides():
     generate_menu(out)
 
     write(out, "scripts/hwmp24/effects.lua", generate_effects())
+
+    # Native ship callbacks can load before the shared utility scan (Kushan start).
+    # Load their dependency explicitly, and retain its registry on a later scan.
+    memory_path = "scripts/playerspatch/ships_util/core/memgroup.lua"
+    memory = (DONOR / memory_path).read_text(encoding="ascii")
+    assert memory.count("MemGroup = {") == 1
+    write(out, memory_path, memory.replace("MemGroup = {", "MemGroup = MemGroup or {", 1))
+    for ship in ("kus_cloakedfighter", "kus_dronefrigate"):
+        name = f"ship/{ship}/{ship}.lua"
+        code = (DONOR / name).read_text(encoding="ascii")
+        prefix = (
+            "-- Callback loading may precede the shared ships_util scan.\n"
+            'if MemGroup == nil then\n    dofilepath("data:' + memory_path + '")\nend\n'
+        )
+        if ship == "kus_cloakedfighter":
+            assert code.count("SobGroup_GetActualSpeed(this_cf.group)") == 1
+            code = code.replace(
+                "SobGroup_GetActualSpeed(this_cf.group)",
+                "SobGroup_GetActualSpeed(this_cf.self_group)",
+            )
+            assert code.count("SobGroup_IsDocked(this_cf.self_group) and") == 1
+            code = code.replace(
+                "SobGroup_IsDocked(this_cf.self_group) and",
+                "SobGroup_IsDocked(this_cf.self_group) == 0 and",
+            )
+        write(out, name, prefix + code)
     # Approved 25 October after native clean-income tests: equal six-collector starts.
     # Carrier/full-fleet starts already have six; empty starts stay empty.
     for filename, folder, digest in START_FLEET_INPUTS:

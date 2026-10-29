@@ -475,9 +475,12 @@ def verify_source():
 
     from verify_cataclysm import verify as verify_cataclysm
 
+    from verify_kushan_callbacks import verify as verify_kushan_callbacks
+
     result = {
         "status": "passed",
         "cataclysm": verify_cataclysm(),
+        "kushan_callback_loading": verify_kushan_callbacks(),
         "production_data": verify_data(SOURCE),
         "files": len(files),
         "fix_revision": manifest["fix_revision"],
