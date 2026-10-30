@@ -14,3 +14,5 @@ English is primary; Russian current docs live in docs/ru. Read NEXT_SESSION.md, 
 - Git is code/docs/localization/pinned metadata only. No models/media/BIGs/cache/backups/saves/credentials. examples/native-testgrounds is frozen reference; never import it into normal runtime or silently rewrite its manifest.
 - Keep current behavior/known issues in Markdown near the documentation entry points; historical/rejected experiments in docs/archive. JSON is functional input, pins or machine receipts, not a prose history. Preserve literal upstream and original source-language records.
 - Recommend High for native compatibility/accounting diagnosis and substantial review; Medium for routine follow-through. Recommendations do not change app settings.
+
+Current publication completed30October2026: Workshop manifest4437220967220031387; actual7BIG/1195resources fully compared; current EN/RU description/cover verified. See NEXT_SESSION.md and docs/WORKSHOP_RELEASE.md. No new native game launch or manual local installation was performed for this revision.

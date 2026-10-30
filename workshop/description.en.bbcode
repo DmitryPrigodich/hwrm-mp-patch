@@ -3,27 +3,54 @@ Standalone Homeworld Remastered multiplayer patch based on the complete Players 
 
 [h2]Cataclysm: Support Units mode[/h2]
 Choose [b]HWMP 2.4.5 Cataclysm[/b] under Game Type in skirmish/multiplayer. The existing Hiigaran, Vaygr, Kushan and Taiidan races use a shared weighted SU pool. Ordinary HWMP modes remain available.
+
 [list]
 [*] Nominal budgets: Small 1440; Normal 1920; Large 2560; Huge 3840; Vast 7680.
 [*] SU prices in construction, tooltips and selected-ship descriptions; owned-fleet counter below Resource Units.
 [*] Existing carrier/shipyard count caps remain; carriers add no capacity. Zero-SU probes keep classic caps.
 [*] The HUD counts full configured squadron entries, including docked ones. Queued construction is excluded; surviving physical hulls are not measured.
-[*] Russian naming/encoding corrections and four original-race menu emblems.
+[*] four original-race menu emblems
+[*] Russian naming/encoding corrections
 [/list]
 
 [h2]Known SU limitation — please read[/h2]
-[b]The SU limiter is currently unreliable.[/b] Native accounting of small fractional ship weights differs from the displayed nominal prices. Some compositions are refused early; others can exceed the displayed budget. The size of the mismatch depends on fleet composition and is not necessarily small.
+[b]The SU limiter is currently unreliable.[/b]
 
-Native tests with the former 1900 budget reproduced ordinary-UI refusal at 1885 for a15SU order. Separate AI/backend tests completed paid construction to 1915/1900 even though every request first received CanBuild approval. The same overflow through the human UI, simultaneous producers, cancellations, replenishment, capture, saves/mode switching and two-client synchronization are not yet verified.
+Native accounting of small fractional ship weights differs from the displayed nominal prices. Some compositions are refused early; others can exceed the displayed budget. The size of the mismatch depends on fleet composition and is not necessarily small.
 
-[b]This update changes ceilings to multiples of32; it does not fix fractional ship-cost accounting.[/b] Startup and readable SU UI have been checked on the preceding runtime. Source/Lua4 checks cover the new ceilings; no new native run of this ceiling revision is claimed. Full-match balance/stability remain field tests, without a crash-free guarantee.
+Native tests with the former 1900 budget reproduced ordinary-UI refusal at 1885 for a 15 SU order. Separate AI/backend tests completed paid construction to 1915/1900 even though every request first received CanBuild approval. The same overflow through the human UI, simultaneous producers, cancellations, replenishment, capture, saves/mode switching and two-client synchronization are not yet verified.
+
+[b]This update changes ceilings to multiples of 32; it does not fix fractional ship-cost accounting.[/b]
+
+Startup and readable SU UI have been checked on the preceding runtime. Source/Lua4 checks cover the new ceilings; no new native run of this ceiling revision is claimed. Full-match balance/stability remain field tests, without a crash-free guarantee.
 
 [h2]Shared fixes[/h2]
-Owner-safe gravity restoration with specific tested new save/load cases; support-frigate cargo recovery; per-ship capture/self-destruct permissions; independent stalled-docking timers; refreshed Taiidan missile-defense targets; restored Vaygr Medium missile weapon-fire binding. Accepted Hiigaran/Vaygr6/6 collector starts, Assault Frigate final speed-accuracy multiplier1.2 and two scoped missile corrections. Six native tooltip languages. Old active-well saves predating the journal are not guaranteed.
+[list]
+[*] Owner-safe gravity restoration with specific tested new save/load cases;
+[*] support-frigate cargo recovery;
+[*] per-ship capture/self-destruct permissions;
+[*] independent stalled-docking timers;
+[*] refreshed Taiidan missile-defense targets;
+[*] restored Vaygr Medium missile weapon-fire binding.
+[*] Accepted Hiigaran/Vaygr6/6 collector starts,
+[*] Accepted Assault Frigate final speed-accuracy multiplier 1.2
+[*] Accepted two scoped missile corrections.
+[*] Six native tooltip languages.
+[*] Old active-well saves predating the journal are not guaranteed.
+[/list]
 
-Please report Game Type, Unit Cap, race, matching archive hashes, displayed SU, queue state, RU spent and reproducible actions. Known limitations and current documentation: https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/KNOWN_ISSUES.md
+Please report Game Type, Unit Cap, race, matching archive hashes, displayed SU, queue state, RU spent and reproducible actions.
+Known limitations and current documentation:
+* https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/KNOWN_ISSUES.md
 
 [h2]Credits[/h2]
-Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich.
-Players Patch contributors: Cloaked, NoOne, QuadS, Sastrei, Lif, Dwarfinator, Trebic, Fear, Echo, Stuart, Gunnerth, radar, Lone Wolf, Dom2, HW_Lover,178thBattleGroup, CryCoh, Kadeshi, omniconsumer. Workshop creator accounts also include CPU8 and Gunner. Map/file-level authorship is retained.
-Full credits: https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/CREDITS.md
+[list]
+[*] Players Patch 2.3 team;
+[*] 2.3Test: Fear/Novaras;
+[*] HWMP: AmDDRed, Hix, Twofoxich
+[*] Players Patch contributors: Cloaked, NoOne, QuadS, Sastrei, Lif, Dwarfinator, Trebic, Fear, Echo, Stuart, Gunnerth, radar, Lone Wolf, Dom2, HW_Lover,178thBattleGroup, CryCoh, Kadeshi, omniconsumer.
+[*] Workshop creator accounts also include CPU8 and Gunner.
+[*] Map/file-level authorship is retained.
+[/list]
+Full credits:
+* https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/CREDITS.md

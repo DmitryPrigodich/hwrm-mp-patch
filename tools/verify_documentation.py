@@ -39,7 +39,12 @@ def verify():
         assert len(paths) == len(documents)
     return dict(
         status="passed",
-        current_markdown=len(current),
+        current_markdown=sum(
+            "<!-- historical-redirect -->" not in p.read_text(encoding="utf8") for p in current
+        ),
+        historical_redirects=sum(
+            "<!-- historical-redirect -->" in p.read_text(encoding="utf8") for p in current
+        ),
         release_documents=len(documents),
         current_and_flat_release_links_checked=True,
     )

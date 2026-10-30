@@ -1,19 +1,15 @@
 # Current handoff — 30 October 2026
 
-## Current work
+Completed the owner's documentation/review/Git/Workshop request. Current entry points: docs/README.md and docs/ru/README.md. Historical documents live under docs/archive; old URLs have short archive links. JSON is functional input/pins/receipts; prose/history is Markdown.
 
-The owner requested documentation cleanup, renewed code review, Git update and Workshop publication describing the known SU limitations. English/Russian current pages are separate. Old session history is archived. Main entry points: docs/README.md and docs/ru/README.md.
+## Published
 
-Cataclysm budgets are1440/1920/2560/3840/7680 (native45/60/80/120/240). Only ceilings/HUD denominators changed in gameplay. Prices/stats/count caps/divisor32 remain unchanged. Native small fractional weights are defective; guarded backend overflow and ordinary UI early refusal are confirmed. Two-client/simultaneous queues/full matches remain unverified.
+Workshop3827773780, manifest4437220967220031387, public. Budgets1440/1920/2560/3840/7680; native45/60/80/120/240; prices/stats/count caps and scale32 unchanged. Source3f82576; fix404321717a16d9af37d061be8e4f0a71c84d55e1d131c38e643c76d45aafa4ed; developer main857998d8b4cd5f6ce1adee9bac65a71ceedbe1de010bcac4ac617cfd33d94d7b; Steam mainfc38fb19d1c3a93213fda180ef746ce4746f3abe32b2d41a7c4fa3a8dd3c32fc. Actual7BIG/1195resource comparison and public description/cover verified. Git receipt/docs follow-up contains the exact publication metadata. Live text formatting preserved and synchronized into Git.
 
-## Artifact state before this publication
+## Validation and local state
 
-Prepared developer main0fb9431e…/81580097bytes; fix40432171…. Both-mode113type checks,214Lua4parses,360padding plans, effect/install fixtures and seven full archive comparisons passed. No new native run of integral ceilings is claimed.
+Both-mode113type checks,214runtime Lua4parses,2diagnostic templates,360padding plans, effect/install fixtures, diagnostic fresh-log/queue fixtures and current/release documentation links passed. Review did not change the1195-file runtime beyond the already approved ceiling candidate. Diagnostic worlds are excluded from normal runtime.
 
-Installed normal HWMP and local launcher slot still use main22dfd3a7…; subscribed Steam mainc1e3f78b…/manifest2989530265250103357. These are the earlier public2.4.5 artifacts until the current upload is verified. Ordinary2.4.1 and Vast Reaches backups are preserved. No consumer pin/build advanced.
+No new native game launch or manual local-slot installation was performed for this revision. The normal HWMP/selected local-slot installation was last recorded as22dfd3a7…; subscribed Workshop is the new manifest above. Old2.4.1/VR backups are preserved. No downstream pin/build performed by this task.
 
-## Next completion steps
-
-Finish documentation/link/data review; resolve actionable code findings; verify current package and code-only Git changes; commit/push; update existing Workshop item with current English description and unchanged cover; verify public metadata and actual downloaded payload. Refresh publication receipt and this handoff with exact final identities. No new game launch or local install is implied by publication.
-
-Historical methods and failure evidence: docs/archive/README.md. Current feature/limitation statements: docs/CATACLYSM_2_4_5.md and docs/KNOWN_ISSUES.md. Do not report the SU limiter as fixed or approximate overflow as necessarily small.
+Cataclysm enforcement remains KNOWN DEFECTIVE; integral ceilings do not repair small fractional weights. Ordinary-UI early refusal and guarded backend paid overflow are confirmed on historical sources; UI overflow, simultaneous producers, queues/cancel/pause, saves/mode switching, physical replenishment and two-client/full-match acceptance remain unverified. Do not relabel archived1900 results as1920 passes. Current review: docs/CODE_REVIEW.md; limitations: docs/KNOWN_ISSUES.md. Recommend Medium for routine field feedback/documentation, High for a replacement accounting mechanism; app settings unchanged.

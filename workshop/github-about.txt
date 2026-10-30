@@ -1,1 +1,1 @@
-HWMP Patch 2.4.1: Homeworld Remastered multiplayer fixes and original-race improvements. Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP 2.4: AmDDRed, Hix, Twofoxich. Code only; game assets excluded.
+HWMP Patch 2.4.5: original-race HWRM fixes and experimental Cataclysm SU mode (known limiter defect). Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich. Code/docs only; game assets excluded.

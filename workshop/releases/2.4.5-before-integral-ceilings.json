@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "version": "2.4.5",
+  "workshop_id": "3827773780",
+  "consumer_app_id": 244160,
+  "creator_app_id": 347380,
+  "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780",
+  "title": "HWMP Patch 2.4.5 - Cataclysm (Field Test)",
+  "status": "public",
+  "published_at_utc": "2026-10-26T16:23:21+00:00",
+  "updated_at_utc": "2026-10-29T23:30:29+00:00",
+  "source_commit": "e601ec82cf85583a1bf1983c7f42143a20bb9422",
+  "source_fix_revision": "c3b5f248f1f18a6f699a0bf6a723910532266ac164d0b5d9ffbc20ea54e7641a",
+  "local_main_sha256": "22dfd3a7cc59054edf8b137e755fc88c7007789af61725c0e82b3f2e7dbe29d6",
+  "steam_manifest_id": "2989530265250103357",
+  "anonymous_api_visibility_verified": true,
+  "authenticated_page_verified": true,
+  "exact_approved_description_verified": true,
+  "approved_preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
+  "steam_download_verification": {
+    "status": "passed",
+    "workshop_id": "3827773780",
+    "manifest_id": "2989530265250103357",
+    "downloaded_from_steam": true,
+    "full_extract_hash_comparison": true,
+    "archives": [
+      {
+        "filename": "HWMPPatch24.big",
+        "sha256": "c1e3f78bb52034b8561842dc7363ffbc3ca62c9860230aa66e78a2b35c94fc28",
+        "bytes": 82019598,
+        "files": 1172,
+        "aliases": [
+          "data"
+        ]
+      },
+      {
+        "filename": "english.big",
+        "sha256": "bc9e3afd3cc22d0024558fc93cad79101ff8fb6ede70633d9305341ffa6d2600",
+        "bytes": 29494,
+        "files": 3,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "french.big",
+        "sha256": "63c53bed55e4f64609645933c4e3e82d0f32f3be905cd2ae1c4e74275c203b65",
+        "bytes": 31340,
+        "files": 3,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "german.big",
+        "sha256": "c2feb523533ccf3f5d4ac8af2d7f53f3187750d1e1015d6333302ac60b324edd",
+        "bytes": 30944,
+        "files": 3,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "italian.big",
+        "sha256": "a35c572eac599f12e72b3382de5389285734c0e9cecdec4547def439dc2d263d",
+        "bytes": 31449,
+        "files": 3,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "spanish.big",
+        "sha256": "b14e059a840e58629c47633097e5ed774cdc22fc354c36f7d24319209eda361d",
+        "bytes": 31479,
+        "files": 3,
+        "aliases": [
+          "locale"
+        ]
+      },
+      {
+        "filename": "russian.big",
+        "sha256": "eaaf85cda0645c9d5223072294967fef505be8b2a6b033fa30d82f1846183184",
+        "bytes": 65486,
+        "files": 8,
+        "aliases": [
+          "locale"
+        ]
+      }
+    ],
+    "source_files": 1195,
+    "preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
+    "registry_in_data_verified": true,
+    "custom_and_patched_ucs_verified": true,
+    "native_workshop_launch_performed": false,
+    "total_download_bytes": 82365909
+  },
+  "native_developer_startup_verified": true,
+  "native_workshop_launch_performed": false,
+  "native_kushan_callback_scene_verified": true,
+  "two_client_sync_verified": false,
+  "weighted_queue_boundary_verified": false
+}

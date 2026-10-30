@@ -8,26 +8,28 @@
   "title": "HWMP Patch 2.4.5 - Cataclysm (Field Test)",
   "status": "public",
   "published_at_utc": "2026-10-26T16:23:21+00:00",
-  "updated_at_utc": "2026-10-29T23:30:29+00:00",
-  "source_commit": "e601ec82cf85583a1bf1983c7f42143a20bb9422",
-  "source_fix_revision": "c3b5f248f1f18a6f699a0bf6a723910532266ac164d0b5d9ffbc20ea54e7641a",
-  "local_main_sha256": "22dfd3a7cc59054edf8b137e755fc88c7007789af61725c0e82b3f2e7dbe29d6",
-  "steam_manifest_id": "2989530265250103357",
+  "updated_at_utc": "2026-10-30T11:51:03+00:00",
+  "verified_at_utc": "2026-10-30T13:51:19.299397+00:00",
+  "source_commit": "3f82576d4e4f12e1ef0809e3b3ca3f36828e95ea",
+  "source_fix_revision": "404321717a16d9af37d061be8e4f0a71c84d55e1d131c38e643c76d45aafa4ed",
+  "local_main_sha256": "857998d8b4cd5f6ce1adee9bac65a71ceedbe1de010bcac4ac617cfd33d94d7b",
+  "steam_manifest_id": "4437220967220031387",
   "anonymous_api_visibility_verified": true,
-  "authenticated_page_verified": true,
-  "exact_approved_description_verified": true,
+  "exact_live_description_mirrored_to_git": true,
+  "live_formatting_preserved": true,
+  "live_description_sha256": "1d28f3f8f58e64320800dbd3e32b46cb1604218c54046537ca2bf98dfcf0aed5",
   "approved_preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
   "steam_download_verification": {
     "status": "passed",
     "workshop_id": "3827773780",
-    "manifest_id": "2989530265250103357",
+    "manifest_id": "4437220967220031387",
     "downloaded_from_steam": true,
     "full_extract_hash_comparison": true,
     "archives": [
       {
         "filename": "HWMPPatch24.big",
-        "sha256": "c1e3f78bb52034b8561842dc7363ffbc3ca62c9860230aa66e78a2b35c94fc28",
-        "bytes": 82019598,
+        "sha256": "fc38fb19d1c3a93213fda180ef746ce4746f3abe32b2d41a7c4fa3a8dd3c32fc",
+        "bytes": 82019573,
         "files": 1172,
         "aliases": [
           "data"
@@ -35,7 +37,7 @@
       },
       {
         "filename": "english.big",
-        "sha256": "bc9e3afd3cc22d0024558fc93cad79101ff8fb6ede70633d9305341ffa6d2600",
+        "sha256": "861b6d5beaf7a32926ea3a25edcb3e205f2b82c24838d143e237bcb3ad187e63",
         "bytes": 29494,
         "files": 3,
         "aliases": [
@@ -44,7 +46,7 @@
       },
       {
         "filename": "french.big",
-        "sha256": "63c53bed55e4f64609645933c4e3e82d0f32f3be905cd2ae1c4e74275c203b65",
+        "sha256": "eef810e5333899ddc23de2d683b6c09aed465d3c06f23ab755d432a23582a052",
         "bytes": 31340,
         "files": 3,
         "aliases": [
@@ -53,7 +55,7 @@
       },
       {
         "filename": "german.big",
-        "sha256": "c2feb523533ccf3f5d4ac8af2d7f53f3187750d1e1015d6333302ac60b324edd",
+        "sha256": "67c4613691d4ed8583fe4b0b3eca6333f085b75236c2f1cb9dd6149863347665",
         "bytes": 30944,
         "files": 3,
         "aliases": [
@@ -62,7 +64,7 @@
       },
       {
         "filename": "italian.big",
-        "sha256": "a35c572eac599f12e72b3382de5389285734c0e9cecdec4547def439dc2d263d",
+        "sha256": "0ff58e079b83be83b2af77b42e8f99324198672aca091608f381f4763ba12162",
         "bytes": 31449,
         "files": 3,
         "aliases": [
@@ -71,7 +73,7 @@
       },
       {
         "filename": "spanish.big",
-        "sha256": "b14e059a840e58629c47633097e5ed774cdc22fc354c36f7d24319209eda361d",
+        "sha256": "90ee5eb82d1ec8f4a1fa7ca51eea8b9e30eb745cbab43ff2f8598b2a0981e8d5",
         "bytes": 31479,
         "files": 3,
         "aliases": [
@@ -80,7 +82,7 @@
       },
       {
         "filename": "russian.big",
-        "sha256": "eaaf85cda0645c9d5223072294967fef505be8b2a6b033fa30d82f1846183184",
+        "sha256": "d3fed98903411966b89f261de671ddcc50656e62cef04ceb9d71a8ac83400605",
         "bytes": 65486,
         "files": 8,
         "aliases": [
@@ -93,11 +95,21 @@
     "registry_in_data_verified": true,
     "custom_and_patched_ucs_verified": true,
     "native_workshop_launch_performed": false,
-    "total_download_bytes": 82365909
+    "total_download_bytes": 82365528
   },
-  "native_developer_startup_verified": true,
+  "native_developer_startup_verified": false,
   "native_workshop_launch_performed": false,
-  "native_kushan_callback_scene_verified": true,
+  "previous_native_evidence_main_sha256": "22dfd3a7cc59054edf8b137e755fc88c7007789af61725c0e82b3f2e7dbe29d6",
   "two_client_sync_verified": false,
-  "weighted_queue_boundary_verified": false
+  "weighted_queue_boundary_verified": false,
+  "weighted_SU_enforcement_known_defective": true,
+  "nominal_SU_budgets": {
+    "small": 1440,
+    "normal": 1920,
+    "large": 2560,
+    "huge": 3840,
+    "vast": 7680
+  },
+  "known_issues_document": "docs/KNOWN_ISSUES.md",
+  "local_manual_slots_updated": false
 }
