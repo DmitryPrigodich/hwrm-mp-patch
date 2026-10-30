@@ -141,7 +141,7 @@ supplyShow("Research5", "Never");
 
 
 -- Exact binary scale; the player-facing HUD uses ordinary SU.
-supplyLimit("HWMP_SupportUnits", 239.0625)
+supplyLimit("HWMP_SupportUnits", 240)
 supplyShow("HWMP_SupportUnits", "Never")
 supplyShow("Fighter", "Never")
 supplyShow("Corvette", "Never")

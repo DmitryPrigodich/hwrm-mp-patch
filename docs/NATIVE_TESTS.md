@@ -1,9 +1,11 @@
-# Native field-test plan
+# Manual native validation
 
-[Original detailed Russian22-case/81-variant catalogue](ru/NATIVE_TESTS.md)
+[Русский](ru/NATIVE_TESTS.md)
 
-The old catalogue is a list of variants, not a list declared fully passed. Completed scoped automated cases are in AUTO_TEST_RESULTS.md; remaining acceptance is in CLOSURE_CHECKLIST.md. Start a new result as not_run and pin the complete archive set. A normal match does not prove an intentionally forbidden ability baseline, equal-count missile replacement or forced Dock stall.
+Use an exact identified package and fresh matches for all four races. Check ordinary and Cataclysm modes, panels/languages, building, ownership changes and saves. Automatic verdicts do not replace human observations.
 
-For each field session: record versions/hashes and map/mode; agree reproducible actions; collect both clients' observations; separate visible hull evidence from configured squadron size; record expected/observed behavior and reproduction rate. Use RU/EN standard/2x starts and review other supported-language overlays. Cover paid UI hyperspace/cancel, actual Guard return and real Hgn↔Vgr matches with side swaps. Preserve failed/invalid attempts and report scope rather than a generic passed label.
+Priorities: [acceptance checklist](CLOSURE_CHECKLIST.md) and [known defects](KNOWN_ISSUES.md). For SU record displayed used/limit, queue state, RU spent and actual completion. Separate exact-fit,1SU insufficient/spare, two producers, cancellation, pause, producer loss and released capacity. IsBuilding alone does not prove production started.
 
-Native tools and source: AUTO_TESTS.md and examples/native-testgrounds. Build/check/installation: UPDATE_WORKFLOW.md. Do not launch without the owner's request or publish personal raw logs/checkpoints.
+tools/native_checks.py creates a local result record from autotests/manual-cases.ru.json without launching. This explicitly Russian operator dataset includes historical research hypotheses; use current rules for actual values, not old installation statuses. The preceding detailed guide remains [archived](archive/2026-10-30/PREVIOUS_NATIVE_TESTS.md).
+
+Record version, all archive hashes, Game Type, map, Unit Cap, race, language, actions and reproducibility. Use not_run/blocked/partial when evidence is missing; preserve negative outcomes. Raw logs, saves and process data stay outside Git.

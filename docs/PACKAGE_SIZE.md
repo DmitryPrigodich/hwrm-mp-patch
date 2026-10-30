@@ -16,6 +16,6 @@ The Hiigaran mothership HOD alone is 29,495,305 bytes. The five native menu text
 
 [Model/icon reasons and stock comparison](ASSET_PROVENANCE.md).
 
-[Prepared2.4.1 primary: 81519866 bytes; 27811963 bytes saved versus local2.4. The figures above describe the first published2.4. See cleanup decisions and acceptance](ASSET_DEDUPLICATION_2_4_1.md).
+[Prepared2.4.1 primary: 81519866 bytes; 27811963 bytes saved versus local2.4. The figures above describe the first published2.4. See cleanup decisions and acceptance](archive/2026-10-30/ASSET_DEDUPLICATION_2_4_1.md).
 
 Published2.4.1: 82202657bytes total; main81973633bytes. All7Steam archives verified. [Receipt](../workshop/published-release.json).

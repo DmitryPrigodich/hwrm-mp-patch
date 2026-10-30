@@ -4,10 +4,13 @@ from language_data import LANGUAGES
 
 RELEASE_DOCS = (
     "CATACLYSM_2_4_5.md",
+    "KNOWN_ISSUES.md",
+    "SUPPORT_UNITS_PRICES.md",
+    "DATA_FORMATS.md",
     "NATIVE_TESTS.md",
     "AUTO_TESTS.md",
     "AUTO_TEST_RESULTS.md",
-    "NATIVE_FOLLOWUP_2026-10-25.md",
+    "SU_BOUNDARY_TESTS.md",
     "CLOSURE_CHECKLIST.md",
     "GRAVITY_SAVELOAD_FIX.md",
     "UPDATE_WORKFLOW.md",
@@ -17,11 +20,21 @@ RELEASE_DOCS = (
     "WORKSHOP.md",
     "MENU_BRANDING.md",
     "CREDITS.md",
+    "CODE_REVIEW.md",
+    "WORKSHOP_RELEASE.md",
     "MAP_CREDITS.md",
-    "ASSET_DEDUPLICATION_2_4_1.md",
 )
 RELEASE_RUSSIAN_DOCS = (
     "CATACLYSM_2_4_5.md",
+    "KNOWN_ISSUES.md",
+    "SUPPORT_UNITS_PRICES.md",
+    "DATA_FORMATS.md",
+    "NATIVE_TESTS.md",
+    "AUTO_TESTS.md",
+    "AUTO_TEST_RESULTS.md",
+    "SU_BOUNDARY_TESTS.md",
+    "CLOSURE_CHECKLIST.md",
+    "GRAVITY_SAVELOAD_FIX.md",
     "UPDATE_WORKFLOW.md",
     "PATCH_ENGINEERING.md",
     "LOCAL_INSTALLATION.md",
@@ -29,8 +42,8 @@ RELEASE_RUSSIAN_DOCS = (
     "WORKSHOP.md",
     "MENU_BRANDING.md",
     "CREDITS.md",
-    "CLOSURE_CHECKLIST.md",
-    "ASSET_DEDUPLICATION_2_4_1.md",
+    "CODE_REVIEW.md",
+    "WORKSHOP_RELEASE.md",
 )
 
 RELEASE_PAYLOAD = frozenset(

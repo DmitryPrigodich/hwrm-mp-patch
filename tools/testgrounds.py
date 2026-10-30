@@ -261,7 +261,9 @@ def package():
         shutil.move(str(p), str(WORK / p.name))
     for name in ("start_testgrounds.ps1", "HWMP Test Grounds.cmd"):
         shutil.copy2(ROOT / name, RELEASE / name)
-    shutil.copy2(PROJECT / "docs/TEST_GROUNDS.md", RELEASE / "TEST_GROUNDS.md")
+    shutil.copy2(
+        PROJECT / "docs/archive/2026-10-26/ru/TEST_GROUNDS.md", RELEASE / "TEST_GROUNDS.md"
+    )
     (RELEASE / "config.txt").write_text(
         "Title: HWMP 2.4 Test Grounds\n\nTags: Test\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPTestGrounds.big\n\nDescription:\nStandalone diagnostic Extra Missions; not the normal balance release.\n"
         + SHORT_CREDITS

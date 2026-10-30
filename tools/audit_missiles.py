@@ -412,7 +412,7 @@ def write_tables(report):
         "",
         "Нулевая точность по Fighter/Corvette и таблица урона отвечают на разные вопросы. Значения в последних столбцах не доказывают возможность прямого огня по этим целям. Смысл weaponName при фактическом попадании требует движка.",
     ]
-    (PROJECT / "docs/MISSILE_TABLES.md").write_text(
+    (PROJECT / "docs/archive/2026-10-26/ru/MISSILE_TABLES.md").write_text(
         "\n".join(lines).rstrip() + "\n", encoding="utf8", newline="\n"
     )
 

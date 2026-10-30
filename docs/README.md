@@ -1,18 +1,22 @@
 # Documentation
 
-English is primary; Russian translations and full original investigation records are in [ru/](ru/).
+[Русский](ru/README.md)
 
-- [Update and release procedure](UPDATE_WORKFLOW.md)
-- [Architecture / scoped changes](PATCH_ENGINEERING.md)
-- [Field acceptance](CLOSURE_CHECKLIST.md)
-- [Native test methods](AUTO_TESTS.md) and [results](AUTO_TEST_RESULTS.md)
-- [Gravity save/load repair](GRAVITY_SAVELOAD_FIX.md)
-- [Local installation / native launcher](LOCAL_INSTALLATION.md)
-- [Localization](LOCALIZATION.md)
-- [Workshop preparation](WORKSHOP.md)
-- [Code review](CODE_REVIEW_2026-10-26.md)
-- [HWMP 2.4.5 Cataclysm candidate and native acceptance](CATACLYSM_2_4_5.md)
-- [Support Units feasibility research](SUPPORT_UNITS_RESEARCH.md) and [Russian investigation](ru/SUPPORT_UNITS_RESEARCH.md)
-- [Cataclysm SU prices, fleet ceilings and carrier bonus](SUPPORT_UNITS_TABLE_2026-10-28.md) and [Russian table](ru/SUPPORT_UNITS_TABLE_2026-10-28.md)
+## Current product
 
-Earlier economy/progression/missile/antistrike investigations retain their original language and observations. They are historical sources, not a replacement for the current acceptance checklist. Literal upstream text, raw references and negative results are preserved.
+- [Cataclysm rules and budgets](CATACLYSM_2_4_5.md)
+- [Known defects and validation limits](KNOWN_ISSUES.md)
+- [Current113ship prices](SUPPORT_UNITS_PRICES.md)
+- [Field acceptance checklist](CLOSURE_CHECKLIST.md)
+- [Install/use](LOCAL_INSTALLATION.md), [localization](LOCALIZATION.md), [credits](CREDITS.md)
+
+## Development
+
+- [Architecture](PATCH_ENGINEERING.md), [update/release](UPDATE_WORKFLOW.md), [Workshop](WORKSHOP.md)
+- [Functional data and machine records](DATA_FORMATS.md)
+- [Native manual tests](NATIVE_TESTS.md), [SU harness](SU_BOUNDARY_TESTS.md)
+- [Latest review](CODE_REVIEW.md), [current publication](WORKSHOP_RELEASE.md)
+
+## Historical material
+
+[Archive index](archive/README.md): old audits, candidate identities, negative experiments and publication receipts. Historical numbers are not current instructions. English current pages live here; Russian current pages are under ru/. Archived source-language investigations remain labeled as such.

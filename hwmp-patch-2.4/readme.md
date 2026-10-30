@@ -1,33 +1,28 @@
-# HWMP Patch 2.4.5 candidate
+# HWMP Patch 2.4.5 — Cataclysm
 
-Experimental **HWMP 2.4.5 Cataclysm** adds shared SU, retained carrier caps, a counter below RU, build prices and the fourth Kushan emblem. The owner confirmed startup and readable UI; build thresholds, queues and two-client synchronization remain field tests. **2.4.5 is published on Workshop** after review and startup checks. [Release/download verification](docs/WORKSHOP_RELEASE_2026-10-30.md). [Rules and tests](docs/CATACLYSM_2_4_5.md).
+[Русский](readme.ru.md)
 
-[Русский](README.ru.md)
+A standalone Homeworld Remastered multiplayer patch based on **Players Patch 2.3Test build21**, retaining the original four races. [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780). Use the complete package by itself and the same Workshop revision on every MP client.
 
-A standalone Homeworld Remastered patch built on **Players Patch 2.3Test build21**. It preserves the original four races and their HW2-style progression while fixing shared mechanics. **Field-test candidate:** automated engine checks cover specific cases; real multiplayer acceptance is still required.
+**Cataclysm is an experimental field test with a known SU-limiter defect:** build refusal can occur early and some compositions can exceed the displayed budget. [Known issues](../docs/KNOWN_ISSUES.md). This update rounds ceilings; it does not repair fractional ship-cost accounting.
 
-## Changes
+## Cataclysm
 
-- Original Kushan/Taiidan gravity wells release overlapping locks correctly, including tested save/load cases. Previous ability restrictions and speed are preserved.
-- Support-frigate transports return surviving passengers; salvage preserves each ship's original self-destruct permission; stalled docking uses independent ship-ID timers.
-- Taiidan defense fighters refresh missile selections when targets change without changing their count. The missing Vaygr Medium missile weapon-fire binding is restored.
-- Narrow accepted balance changes: **6 Hiigaran / 6 Vaygr starting collectors**, and the Assault Frigate's last speed-accuracy node **4 → 1.2** on its three cannons. Two inherited missile inconsistencies are corrected; no broad rebalance is claimed.
-- Build/research tooltips use effective base times and the selected native language. English is the documentation/default starter language; French, German, Italian, Spanish and Russian tooltip overlays are included.
-- Front-end identity: native HW2 planetary backdrop, a row of Hiigaran/Vaygr/Taiidan/Kushan badges, HWMP 2.4.5 footer and the requested **Inhibitors** menu track. [Details](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/MENU_BRANDING.md).
+Select **HWMP 2.4.5 Cataclysm** under Game Type. Nominal budgets: Small 1440, Normal 1920, Large 2560, Huge 3840, Vast 7680. Existing carrier/shipyard and zero-SU probe count caps remain; carriers add no capacity. SU prices appear in construction/tooltips/selection, with owned-fleet totals below RU. Queued construction is excluded from the HUD. [Rules](../docs/CATACLYSM_2_4_5.md) · [Prices](../docs/SUPPORT_UNITS_PRICES.md).
 
-## Field tests still needed
+## Shared fixes
 
-1. Two real multiplayer clients using identical release archives: synchronization, overlapping wells, transport, capture, docking and missile defense.
-2. Normal and 2x starts from the standard UI; six collectors per side; build/research screens in each supported language.
-3. Visible squadron losses and repair/replenishment. A script entry count is not a physical hull count.
-4. Paid UI hyperspace, charging cancellation and actual return to Guard after missile interception.
-5. Full Hiigaran ↔ Vaygr matches on varied maps, with side swaps, raids and late fleets.
+- Owner-safe gravity-well ability/speed restoration, including specific tested new save/load cases.
+- Support-frigate cargo recovery, per-ship capture/self-destruct permissions and independent stalled-docking timers.
+- Refreshed Taiidan missile-defense targeting and restored Vaygr Medium missile weapon-fire binding.
+- Accepted Hiigaran/Vaygr6/6 collector starts, Assault Frigate final speed-accuracy multiplier1.2 and two scoped missile corrections.
+- Native-language build/research timing tooltips in English, French, German, Italian, Spanish and Russian; four original-race menu badges and Inhibitors music.
 
-Record the archive hashes and reproduction steps. [Acceptance checklist](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/CLOSURE_CHECKLIST.md) · [Engine results](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/AUTO_TEST_RESULTS.md).
+Startup/UI and selected native mechanics have been checked; full-match balance and two-client synchronization remain unverified. Old active-well saves predating the journal are not guaranteed. [Field checklist](../docs/CLOSURE_CHECKLIST.md).
 
-## Build and use
+## Build and development
 
-Requires your own game, Toolkit and the pinned Test21 input; no game assets are stored here.
+Requires your own game, Toolkit and pinned Test21 inputs. Game assets are excluded from Git.
 
 ```powershell
 python -m pip install -r requirements.txt
@@ -35,14 +30,8 @@ python tools/prepare_inputs.py
 python tools/hwmp24.py --package --candidate
 ```
 
-Candidate output: `local/HWMPPatch245-candidate`; the preserved 2.4.1 baseline remains in `local/HWMPPatch24-release`. Direct starter: `HWMP Patch 2.4.cmd` (English); add `-Language Russian` or another supported language. For the native launcher's single local slot, use the reversible [slot selector](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/LOCAL_INSTALLATION.md). Published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) as **HWMP Patch 2.4 - Field Test**. For multiplayer acceptance, every client should use the same Workshop version; Toolkit archives have different hashes from the local development build.
+Output: local/HWMPPatch245-candidate. The old2.4.1 release is preserved separately. [Local installation](../docs/LOCAL_INSTALLATION.md) · [Documentation](../docs/README.md) · [Update procedure](../docs/UPDATE_WORKFLOW.md) · [Functional data](../docs/DATA_FORMATS.md) · [History](../docs/archive/README.md).
 
-Use this complete package by itself; do not stack another Players Patch on top. Old active-well saves made before the new journal are not guaranteed to resume correctly. New checkpoint tests do not certify every campaign or level transition.
+Dependency direction: hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod. No automatic downstream builds or pin updates.
 
-## Development
-
-[Architecture and changes](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/PATCH_ENGINEERING.md) · [Update/release procedure](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/UPDATE_WORKFLOW.md) · [Localization](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/LOCALIZATION.md) · [Workshop preparation](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/WORKSHOP.md) · [Frozen test examples](examples/native-testgrounds/README.md).
-
-Dependency direction: **hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod**. Building this base never updates consumer pins, builds or installations.
-
-Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP 2.4: AmDDRed, Hix, Twofoxich. [Full credits and map authors](https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/CREDITS.md). [Players Patch](https://steamcommunity.com/sharedfiles/filedetails/?id=1190476337) · [2.3Test](https://steamcommunity.com/sharedfiles/filedetails/?id=1413859511) · [upstream code](https://github.com/Novaras/2.3-Test). This repository publishes code and documentation, not models, media, compiled BIGs, caches, personal logs or saves.
+Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich. [Full credits](../docs/CREDITS.md), [maps](../docs/MAP_CREDITS.md). Code/docs only: no models, media, BIGs, caches, personal logs or saves.

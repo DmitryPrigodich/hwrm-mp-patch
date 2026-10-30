@@ -113,7 +113,7 @@ HWMP_CataclysmCosts = {
     ["vgr_weaponplatform_gun"] = 2,
     ["vgr_weaponplatform_missile"] = 2,
 }
-HWMP_CataclysmBudgets = {small=1450,normal=1900,large=2600,huge=3850,vast=7650}
+HWMP_CataclysmBudgets = {small=1440,normal=1920,large=2560,huge=3840,vast=7680}
 -- Cataclysm HUD reports nominal owned groups; native supply owns enforcement.
 -- No queues, build restrictions or ship ownership are changed by this display.
 

@@ -37,7 +37,10 @@ RETAINED = {
 
 
 def model():
-    return json.loads(DESIGN.read_text(encoding="utf8"))
+    design = json.loads(DESIGN.read_text(encoding="utf8"))
+    if design["native_scale"] != SCALE:
+        raise ValueError("Design native_scale disagrees with the generator")
+    return design
 
 
 def ship_paths():
@@ -101,6 +104,11 @@ def quote(text):
 
 def generate(out):
     design = model()
+    for profile, budget in design["budgets"].items():
+        if budget % SCALE != 0 or not 0 < budget // SCALE < 250:
+            raise ValueError(
+                "SU budget must be a multiple of SCALE with native limit below250: " + profile
+            )
     from cataclysm_descriptions import (
         description_ids,
         generate as generate_descriptions,

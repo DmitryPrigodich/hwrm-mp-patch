@@ -573,7 +573,7 @@ def write_tables(report):
                 + " | ".join("—" if n is None else f"{n:.4g}" for n in vals)
                 + " |"
             )
-    (PROJECT / "docs/ANTISTRIKE_TABLES.md").write_text(
+    (PROJECT / "docs/archive/2026-10-26/ru/ANTISTRIKE_TABLES.md").write_text(
         "\n".join(lines).rstrip() + "\n", encoding="utf8", newline="\n"
     )
 

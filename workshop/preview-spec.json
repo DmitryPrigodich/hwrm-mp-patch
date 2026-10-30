@@ -1,13 +1,13 @@
 {
-  "kind": "owner-selected illustrative cover",
-  "source": "Final image selected by owner in HW Mod Previews; based on supplied ship/emblem references",
-  "master_sha256": "19d73ee098915a9b3b7352b3fd7e63e2ef267626d7be7619b1619687734e06f2",
-  "preview_sha256": "3596b83983098e057c4e750d15608b00ab0a636ad8d8648d8cf8c8add92310c4",
+  "kind": "owner-supplied 2.4.5 Cataclysm cover",
+  "source": "Preserved owner-approved cover from the initial2.4.5 publication",
+  "master_sha256": "20e0e911c79c1d5415d6289c610d431fb6a5871802a71f4cd9fe465b34303f71",
+  "preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
   "preview_dimensions": [
     512,
     512
   ],
-  "preview_bytes": 119402,
+  "preview_bytes": 122061,
   "images_tracked_in_git": false,
   "published": true
 }

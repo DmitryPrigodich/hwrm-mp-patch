@@ -1,16 +1,15 @@
 {
   "schema": 1,
   "version": "2.4.5",
-  "status": "experimental_prepared_not_engine_tested",
   "property": "hwmp_cataclysm",
   "native_scale": 32,
   "carrier_bonus": false,
   "budgets": {
-    "small": 1450,
-    "normal": 1900,
-    "large": 2600,
-    "huge": 3850,
-    "vast": 7650
+    "small": 1440,
+    "normal": 1920,
+    "large": 2560,
+    "huge": 3840,
+    "vast": 7680
   },
   "races": [
     "hiigaran",
@@ -23,793 +22,679 @@
       "race": "hiigaran",
       "su_per_hull": 3,
       "build_batch": 5,
-      "su_per_group": 15,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 15
     },
     "hgn_interceptor": {
       "race": "hiigaran",
       "su_per_hull": 3,
       "build_batch": 5,
-      "su_per_group": 15,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 15
     },
     "hgn_scout": {
       "race": "hiigaran",
       "su_per_hull": 2,
       "build_batch": 3,
-      "su_per_group": 6,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 6
     },
     "hgn_assaultcorvette": {
       "race": "hiigaran",
       "su_per_hull": 4,
       "build_batch": 3,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "hgn_minelayercorvette": {
       "race": "hiigaran",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 6
     },
     "hgn_pulsarcorvette": {
       "race": "hiigaran",
       "su_per_hull": 5,
       "build_batch": 3,
-      "su_per_group": 15,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 15
     },
     "hgn_assaultfrigate": {
       "race": "hiigaran",
       "su_per_hull": 12,
       "build_batch": 1,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "hgn_defensefieldfrigate": {
       "race": "hiigaran",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 20
     },
     "hgn_ioncannonfrigate": {
       "race": "hiigaran",
       "su_per_hull": 15,
       "build_batch": 1,
-      "su_per_group": 15,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 15
     },
     "hgn_marinefrigate": {
       "race": "hiigaran",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 20
     },
     "hgn_torpedofrigate": {
       "race": "hiigaran",
       "su_per_hull": 12,
       "build_batch": 1,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "hgn_battlecruiser": {
       "race": "hiigaran",
       "su_per_hull": 150,
       "build_batch": 1,
-      "su_per_group": 150,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 150
     },
     "hgn_carrier": {
       "race": "hiigaran",
       "su_per_hull": 40,
       "build_batch": 1,
-      "su_per_group": 40,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 40
     },
     "hgn_destroyer": {
       "race": "hiigaran",
       "su_per_hull": 80,
       "build_batch": 1,
-      "su_per_group": 80,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 80
     },
     "hgn_shipyard": {
       "race": "hiigaran",
       "su_per_hull": 50,
       "build_batch": 1,
-      "su_per_group": 50,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 50
     },
     "hgn_resourcecollector": {
       "race": "hiigaran",
       "su_per_hull": 4,
       "build_batch": 1,
-      "su_per_group": 4,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 4
     },
     "hgn_resourcecontroller": {
       "race": "hiigaran",
       "su_per_hull": 13,
       "build_batch": 1,
-      "su_per_group": 13,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 13
     },
     "hgn_gunturret": {
       "race": "hiigaran",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 2
     },
     "hgn_ionturret": {
       "race": "hiigaran",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 2
     },
     "hgn_ecmprobe": {
       "race": "hiigaran",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 0
     },
     "hgn_probe": {
       "race": "hiigaran",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 0
     },
     "hgn_proximitysensor": {
       "race": "hiigaran",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 0
     },
     "hgn_mothership": {
       "race": "hiigaran",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 0
     },
     "vgr_bomber": {
       "race": "vaygr",
       "su_per_hull": 2,
       "build_batch": 6,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "vgr_interceptor": {
       "race": "vaygr",
       "su_per_hull": 2,
       "build_batch": 7,
-      "su_per_group": 14,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 14
     },
     "vgr_lancefighter": {
       "race": "vaygr",
       "su_per_hull": 3,
       "build_batch": 5,
-      "su_per_group": 15,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 15
     },
     "vgr_scout": {
       "race": "vaygr",
       "su_per_hull": 2,
       "build_batch": 3,
-      "su_per_group": 6,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 6
     },
     "vgr_commandcorvette": {
       "race": "vaygr",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 6
     },
     "vgr_lasercorvette": {
       "race": "vaygr",
       "su_per_hull": 4,
       "build_batch": 4,
-      "su_per_group": 16,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 16
     },
     "vgr_minelayercorvette": {
       "race": "vaygr",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 6
     },
     "vgr_missilecorvette": {
       "race": "vaygr",
       "su_per_hull": 3,
       "build_batch": 4,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "vgr_assaultfrigate": {
       "race": "vaygr",
       "su_per_hull": 12,
       "build_batch": 1,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "vgr_heavymissilefrigate": {
       "race": "vaygr",
       "su_per_hull": 12,
       "build_batch": 1,
-      "su_per_group": 12,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 12
     },
     "vgr_infiltratorfrigate": {
       "race": "vaygr",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 20
     },
     "vgr_battlecruiser": {
       "race": "vaygr",
       "su_per_hull": 150,
       "build_batch": 1,
-      "su_per_group": 150,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 150
     },
     "vgr_carrier": {
       "race": "vaygr",
       "su_per_hull": 40,
       "build_batch": 1,
-      "su_per_group": 40,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 40
     },
     "vgr_destroyer": {
       "race": "vaygr",
       "su_per_hull": 80,
       "build_batch": 1,
-      "su_per_group": 80,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 80
     },
     "vgr_shipyard": {
       "race": "vaygr",
       "su_per_hull": 50,
       "build_batch": 1,
-      "su_per_group": 50,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 50
     },
     "vgr_resourcecollector": {
       "race": "vaygr",
       "su_per_hull": 4,
       "build_batch": 1,
-      "su_per_group": 4,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 4
     },
     "vgr_resourcecontroller": {
       "race": "vaygr",
       "su_per_hull": 13,
       "build_batch": 1,
-      "su_per_group": 13,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 13
     },
     "vgr_hyperspace_platform": {
       "race": "vaygr",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 3
     },
     "vgr_weaponplatform_gun": {
       "race": "vaygr",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 2
     },
     "vgr_weaponplatform_missile": {
       "race": "vaygr",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 2
     },
     "vgr_probe": {
       "race": "vaygr",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 0
     },
     "vgr_probe_ecm": {
       "race": "vaygr",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 0
     },
     "vgr_probe_prox": {
       "race": "vaygr",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз пользователя"
+      "su_per_group": 0
     },
     "vgr_mothership": {
       "race": "vaygr",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 0
     },
     "kus_attackbomber": {
       "race": "kushan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 3
     },
     "kus_cloakedfighter": {
       "race": "kushan",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 2
     },
     "kus_defender": {
       "race": "kushan",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 2
     },
     "kus_interceptor": {
       "race": "kushan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 3
     },
     "kus_scout": {
       "race": "kushan",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 2
     },
     "kus_heavycorvette": {
       "race": "kushan",
       "su_per_hull": 4,
       "build_batch": 1,
-      "su_per_group": 4,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 4
     },
     "kus_lightcorvette": {
       "race": "kushan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 3
     },
     "kus_minelayercorvette": {
       "race": "kushan",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 6
     },
     "kus_multiguncorvette": {
       "race": "kushan",
       "su_per_hull": 5,
       "build_batch": 1,
-      "su_per_group": 5,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 5
     },
     "kus_repaircorvette": {
       "race": "kushan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 3
     },
     "kus_salvagecorvette": {
       "race": "kushan",
       "su_per_hull": 4,
       "build_batch": 1,
-      "su_per_group": 4,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 4
     },
     "kus_assaultfrigate": {
       "race": "kushan",
       "su_per_hull": 12,
       "build_batch": 1,
-      "su_per_group": 12,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 12
     },
     "kus_dronefrigate": {
       "race": "kushan",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 20
     },
     "kus_ioncannonfrigate": {
       "race": "kushan",
       "su_per_hull": 15,
       "build_batch": 1,
-      "su_per_group": 15,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 15
     },
     "kus_supportfrigate": {
       "race": "kushan",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 20
     },
     "kus_carrier": {
       "race": "kushan",
       "su_per_hull": 40,
       "build_batch": 1,
-      "su_per_group": 40,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 40
     },
     "kus_destroyer": {
       "race": "kushan",
       "su_per_hull": 40,
       "build_batch": 1,
-      "su_per_group": 40,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 40
     },
     "kus_heavycruiser": {
       "race": "kushan",
       "su_per_hull": 90,
       "build_batch": 1,
-      "su_per_group": 90,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 90
     },
     "kus_missiledestroyer": {
       "race": "kushan",
       "su_per_hull": 45,
       "build_batch": 1,
-      "su_per_group": 45,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 45
     },
     "kus_resourcecollector": {
       "race": "kushan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 3
     },
     "kus_resourcecontroller": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_cloakgenerator": {
       "race": "kushan",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 6
     },
     "kus_gravwellgenerator": {
       "race": "kushan",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 6
     },
     "kus_probe": {
       "race": "kushan",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 0
     },
     "kus_proximitysensor": {
       "race": "kushan",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 0
     },
     "kus_researchship": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_researchship_1": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_researchship_2": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_researchship_3": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_researchship_4": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_researchship_5": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_sensorarray": {
       "race": "kushan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "kus_mothership": {
       "race": "kushan",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 0
     },
     "tai_attackbomber": {
       "race": "taiidan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 3
     },
     "tai_defender": {
       "race": "taiidan",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 2
     },
     "tai_defensefighter": {
       "race": "taiidan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 3
     },
     "tai_interceptor": {
       "race": "taiidan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 3
     },
     "tai_scout": {
       "race": "taiidan",
       "su_per_hull": 2,
       "build_batch": 1,
-      "su_per_group": 2,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 2
     },
     "tai_heavycorvette": {
       "race": "taiidan",
       "su_per_hull": 4,
       "build_batch": 1,
-      "su_per_group": 4,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 4
     },
     "tai_lightcorvette": {
       "race": "taiidan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 3
     },
     "tai_minelayercorvette": {
       "race": "taiidan",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 6
     },
     "tai_multiguncorvette": {
       "race": "taiidan",
       "su_per_hull": 5,
       "build_batch": 1,
-      "su_per_group": 5,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 5
     },
     "tai_repaircorvette": {
       "race": "taiidan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 3
     },
     "tai_salvagecorvette": {
       "race": "taiidan",
       "su_per_hull": 4,
       "build_batch": 1,
-      "su_per_group": 4,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 4
     },
     "tai_assaultfrigate": {
       "race": "taiidan",
       "su_per_hull": 12,
       "build_batch": 1,
-      "su_per_group": 12,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 12
     },
     "tai_fieldfrigate": {
       "race": "taiidan",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 20
     },
     "tai_ioncannonfrigate": {
       "race": "taiidan",
       "su_per_hull": 15,
       "build_batch": 1,
-      "su_per_group": 15,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 15
     },
     "tai_supportfrigate": {
       "race": "taiidan",
       "su_per_hull": 20,
       "build_batch": 1,
-      "su_per_group": 20,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 20
     },
     "tai_carrier": {
       "race": "taiidan",
       "su_per_hull": 40,
       "build_batch": 1,
-      "su_per_group": 40,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 40
     },
     "tai_destroyer": {
       "race": "taiidan",
       "su_per_hull": 40,
       "build_batch": 1,
-      "su_per_group": 40,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 40
     },
     "tai_heavycruiser": {
       "race": "taiidan",
       "su_per_hull": 90,
       "build_batch": 1,
-      "su_per_group": 90,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 90
     },
     "tai_missiledestroyer": {
       "race": "taiidan",
       "su_per_hull": 45,
       "build_batch": 1,
-      "su_per_group": 45,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 45
     },
     "tai_resourcecollector": {
       "race": "taiidan",
       "su_per_hull": 3,
       "build_batch": 1,
-      "su_per_group": 3,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 3
     },
     "tai_resourcecontroller": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 10
     },
     "tai_cloakgenerator": {
       "race": "taiidan",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 6
     },
     "tai_gravwellgenerator": {
       "race": "taiidan",
       "su_per_hull": 6,
       "build_batch": 1,
-      "su_per_group": 6,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 6
     },
     "tai_probe": {
       "race": "taiidan",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 0
     },
     "tai_proximitysensor": {
       "race": "taiidan",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 0
     },
     "tai_researchship": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 10
     },
     "tai_researchship_1": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "tai_researchship_2": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "tai_researchship_3": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "tai_researchship_4": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "tai_researchship_5": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Предложение для отсутствующей цены"
+      "su_per_group": 10
     },
     "tai_sensorarray": {
       "race": "taiidan",
       "su_per_hull": 10,
       "build_batch": 1,
-      "su_per_group": 10,
-      "basis": "Эскиз; привязка роли предварительная"
+      "su_per_group": 10
     },
     "tai_mothership": {
       "race": "taiidan",
       "su_per_hull": 0,
       "build_batch": 1,
-      "su_per_group": 0,
-      "basis": "Цена принята пользователем 28.10.2026"
+      "su_per_group": 0
     }
-  },
-  "retained_policy": "Carrier/Shipyard count caps, starting mothership, research slots and zero-SU probe subcaps retained; ordinary combat/economy classes replaced only in Cataclysm."
+  }
 }

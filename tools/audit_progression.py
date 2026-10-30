@@ -520,7 +520,7 @@ def write_tables(report):
                 values.append(f"{route['cost']:g} / {route['seconds']:g}")
             lines.append("| " + target + " | " + " | ".join(values) + " |")
         lines.append("")
-    (PROJECT / "docs/PROGRESSION_ROUTES.md").write_text(
+    (PROJECT / "docs/archive/2026-10-26/ru/PROGRESSION_ROUTES.md").write_text(
         "\n".join(lines).rstrip() + "\n", encoding="utf8", newline="\n"
     )
 

@@ -546,14 +546,9 @@ def package():
     verify_archive(output)
     for path in RELEASE.glob("*.log"):
         shutil.move(str(path), str(WORK / path.name))
-    shutil.copy2(ROOT / "README.md", RELEASE / "README.md")
-    from release_layout import RELEASE_DOCS, RELEASE_RUSSIAN_DOCS
+    from release_docs import write_release_docs
 
-    shutil.copy2(ROOT / "readme.ru.md", RELEASE / "README.ru.md")
-    for name in RELEASE_DOCS:
-        shutil.copy2(PROJECT / "docs" / name, RELEASE / name)
-    for name in RELEASE_RUSSIAN_DOCS:
-        shutil.copy2(PROJECT / "docs/ru" / name, RELEASE / name.replace(".md", ".ru.md"))
+    write_release_docs(RELEASE)
     (RELEASE / "config.txt").write_text(
         f"Title: {TITLE}\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n"
         + SHORT_CREDITS

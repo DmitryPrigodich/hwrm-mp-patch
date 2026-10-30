@@ -237,7 +237,7 @@ ResourceMenu = {
                 pad_LT = {l=LISTBOXITEM_ICON_PAD_HORIZ,t=0,lr="scr",tr="px"},
                 pad_RB = {r=LISTBOXITEM_ICON_PAD_HORIZ,b=0,rr="scr",br="px"},
             },
-            Text = {text="0/1900",textStyle="RM_DescriptionLabel_TextStyle",hAlign="Left",vAlign="Center",color=COLOR_BUTTON_TEXT_DEFAULT},
+            Text = {text="0/?",textStyle="RM_DescriptionLabel_TextStyle",hAlign="Left",vAlign="Center",color=COLOR_BUTTON_TEXT_DEFAULT},
         },
     },
 

@@ -1,0 +1,279 @@
+{
+  "date": "2026-10-30",
+  "source_fix": "c3b5f248f1f18a6f699a0bf6a723910532266ac164d0b5d9ffbc20ea54e7641a",
+  "status": "SU_enforcement_failed_no_accepted_fix",
+  "native_runs_used_as_evidence": 9,
+  "invalid_Lua_pilots_excluded": 2,
+  "ambiguous_multi_family_calibration_excluded": 1,
+  "scale32_and64_owned_measurements": 252,
+  "equal_nominal1885_fleets": {
+    "32": [
+      {
+        "case": "Original",
+        "nominal": 1885,
+        "used": 59.0,
+        "max": 59.0,
+        "can": 0
+      },
+      {
+        "case": "MoreFields",
+        "nominal": 1885,
+        "used": 61.0,
+        "max": 59.0,
+        "can": 0
+      },
+      {
+        "case": "Destroyers",
+        "nominal": 1885,
+        "used": 57.0,
+        "max": 59.0,
+        "can": 1
+      },
+      {
+        "case": "Fields",
+        "nominal": 1885,
+        "used": 91.0,
+        "max": 59.0,
+        "can": 0
+      },
+      {
+        "case": "Ions",
+        "nominal": 1885,
+        "used": 2.0,
+        "max": 59.0,
+        "can": 1
+      },
+      {
+        "case": "Mixed",
+        "nominal": 1885,
+        "used": 57.0,
+        "max": 59.0,
+        "can": 1
+      },
+      {
+        "case": "ReverseOriginal",
+        "nominal": 1885,
+        "used": 59.0,
+        "max": 59.0,
+        "can": 0
+      }
+    ],
+    "64": [
+      {
+        "case": "Original",
+        "nominal": 1885,
+        "used": 29.0,
+        "max": 29.0,
+        "can": 0
+      },
+      {
+        "case": "MoreFields",
+        "nominal": 1885,
+        "used": 27.0,
+        "max": 29.0,
+        "can": 1
+      },
+      {
+        "case": "Destroyers",
+        "nominal": 1885,
+        "used": 29.0,
+        "max": 29.0,
+        "can": 0
+      },
+      {
+        "case": "Fields",
+        "nominal": 1885,
+        "used": 2.0,
+        "max": 29.0,
+        "can": 1
+      },
+      {
+        "case": "Ions",
+        "nominal": 1885,
+        "used": 2.0,
+        "max": 29.0,
+        "can": 1
+      },
+      {
+        "case": "Mixed",
+        "nominal": 1885,
+        "used": 29.0,
+        "max": 29.0,
+        "can": 0
+      },
+      {
+        "case": "ReverseOriginal",
+        "nominal": 1885,
+        "used": 29.0,
+        "max": 29.0,
+        "can": 0
+      }
+    ]
+  },
+  "guarded_paid_production": {
+    "32": [
+      {
+        "case": "Original",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      },
+      {
+        "case": "MoreFields",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      },
+      {
+        "case": "Destroyers",
+        "completed": "2",
+        "nominal": "1915",
+        "ru": "99100"
+      },
+      {
+        "case": "Fields",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      },
+      {
+        "case": "Ions",
+        "completed": "2",
+        "nominal": "1915",
+        "ru": "99100"
+      },
+      {
+        "case": "Mixed",
+        "completed": "2",
+        "nominal": "1915",
+        "ru": "99100"
+      },
+      {
+        "case": "ReverseOriginal",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      }
+    ],
+    "64": [
+      {
+        "case": "Original",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      },
+      {
+        "case": "MoreFields",
+        "completed": "2",
+        "nominal": "1915",
+        "ru": "99100"
+      },
+      {
+        "case": "Destroyers",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      },
+      {
+        "case": "Fields",
+        "completed": "2",
+        "nominal": "1915",
+        "ru": "99100"
+      },
+      {
+        "case": "Ions",
+        "completed": "2",
+        "nominal": "1915",
+        "ru": "99100"
+      },
+      {
+        "case": "Mixed",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      },
+      {
+        "case": "ReverseOriginal",
+        "completed": "0",
+        "nominal": "1885",
+        "ru": "100000"
+      }
+    ]
+  },
+  "isolated_quantum_four_entries": [
+    {
+      "weight": 0.015625,
+      "entries": 4,
+      "mathematical": 0.0625,
+      "native": 0.0
+    },
+    {
+      "weight": 0.25,
+      "entries": 4,
+      "mathematical": 1.0,
+      "native": 0.0
+    },
+    {
+      "weight": 0.46875,
+      "entries": 4,
+      "mathematical": 1.875,
+      "native": 0.0
+    },
+    {
+      "weight": 0.5,
+      "entries": 4,
+      "mathematical": 2.0,
+      "native": 0.0
+    },
+    {
+      "weight": 0.53125,
+      "entries": 4,
+      "mathematical": 2.125,
+      "native": 4.0
+    },
+    {
+      "weight": 0.625,
+      "entries": 4,
+      "mathematical": 2.5,
+      "native": 4.0
+    },
+    {
+      "weight": 0.75,
+      "entries": 4,
+      "mathematical": 3.0,
+      "native": 4.0
+    },
+    {
+      "weight": 1,
+      "entries": 4,
+      "mathematical": 4,
+      "native": 4.0
+    },
+    {
+      "weight": 1.25,
+      "entries": 4,
+      "mathematical": 5.0,
+      "native": 5.0
+    },
+    {
+      "weight": 1.5,
+      "entries": 4,
+      "mathematical": 6.0,
+      "native": 6.0
+    },
+    {
+      "weight": 2.34375,
+      "entries": 4,
+      "mathematical": 9.375,
+      "native": 9.0
+    }
+  ],
+  "observed_weight_model": "For tested values: <=0.5 ->0; 0.5<weight<1 ->1; weight>=1 retained. Integer getter matches floor of accumulated effective weights.",
+  "engine_conversion_location_unknown": true,
+  "ordinary_UI_overflow_tested": false,
+  "cross_producer_reservations_tested": false,
+  "normal_runtime_and_installs_unchanged": true,
+  "steam_payload_unchanged": true,
+  "diagnostic_baseline_restored": true,
+  "all_owned_diagnostic_processes_closed": true
+}

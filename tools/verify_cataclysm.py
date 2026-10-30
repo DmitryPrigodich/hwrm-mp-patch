@@ -80,7 +80,7 @@ def verify():
         text = files[relative].read_text()
         found = re.search(r'supplyLimit\("' + FAMILY + r'", ([0-9.]+)\)', text)
         assert found and float(found[1]) * SCALE == budget
-        assert budget / SCALE < 250
+        assert budget % SCALE == 0 and budget / SCALE < 250
         for race in design["races"]:
             ordinary = f"scripts/races/{race}/deathmatch/unitcaps/{profile}.lua"
             alternate = f"scripts/races/{race}/hwmp_cataclysm/unitcaps/{profile}.lua"
@@ -140,12 +140,12 @@ def verify():
     counts.clear()  # Capture/destruction/save rewind is read from current world counts.
     counts.update(vgr_battlecruiser=1)
     assert h.globals().HWMP_CataclysmUpdateHUD() == 150
-    assert labels[-1].endswith("150/1900")
+    assert labels[-1].endswith("150/" + str(design["budgets"]["normal"]))
     h.globals().UI_IsScreenActive = lambda screen: 0
     before = len(labels)
     h.globals().HWMP_CataclysmUpdateHUD()
     assert len(labels) == before + 1
-    assert labels[-1].endswith("150/1900")
+    assert labels[-1].endswith("150/" + str(design["budgets"]["normal"]))
     # Closed-popup prepopulation: an opening window receives existing text/size.
     for profile, budget in design["budgets"].items():
         h.globals().GetGameSettingAsString = lambda key, value=profile: value
