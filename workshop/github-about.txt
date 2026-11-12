@@ -1,1 +1,1 @@
-HWMP Patch 2.4.5: original-race HWRM fixes and experimental Cataclysm SU mode (known limiter defect). Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich. Code/docs only; game assets excluded.
+HWMP Patch 2.4.6: original-race HWRM fixes, classic unit caps and localization improvements. Experimental SU removed. Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich. Code/docs only; game assets excluded.

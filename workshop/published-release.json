@@ -1,115 +1,41 @@
 {
   "schema_version": 1,
-  "version": "2.4.5",
+  "version": "2.4.6",
   "workshop_id": "3827773780",
   "consumer_app_id": 244160,
   "creator_app_id": 347380,
   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780",
-  "title": "HWMP Patch 2.4.5 - Cataclysm (Field Test)",
+  "title": "HWMP Patch 2.4.6",
   "status": "public",
   "published_at_utc": "2026-10-26T16:23:21+00:00",
-  "updated_at_utc": "2026-10-30T11:51:03+00:00",
-  "verified_at_utc": "2026-10-30T13:51:19.299397+00:00",
-  "source_commit": "3f82576d4e4f12e1ef0809e3b3ca3f36828e95ea",
-  "source_fix_revision": "404321717a16d9af37d061be8e4f0a71c84d55e1d131c38e643c76d45aafa4ed",
-  "local_main_sha256": "857998d8b4cd5f6ce1adee9bac65a71ceedbe1de010bcac4ac617cfd33d94d7b",
-  "steam_manifest_id": "4437220967220031387",
+  "updated_at_utc": "2026-11-12T00:38:53+00:00",
+  "verified_at_utc": "2026-11-12T00:48:31.227218+00:00",
+  "source_commit": "b0e3f9f632e949e8cfcd5ff086888215159a64e1",
+  "source_fix_revision": "f6941b453b836532f7ec7ba15a444199c1722a9e2203c72342d6e3de092c0ef4",
+  "content_revision": "aca324e8af1bf2e33c1e857ec4e72a84bea0c94f6efa3927d5c0f71c70f46bdb",
+  "local_main_sha256": "2c28e330b30ecd834a6fcf415e1570bc86954721c7543397c7d94aeb03c17409",
+  "steam_manifest_id": "5924341424333373576",
   "anonymous_api_visibility_verified": true,
   "exact_live_description_mirrored_to_git": true,
-  "live_formatting_preserved": true,
-  "live_description_sha256": "1d28f3f8f58e64320800dbd3e32b46cb1604218c54046537ca2bf98dfcf0aed5",
-  "approved_preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
+  "live_description_sha256": "e2ee2c8398de5958d29686df8ad7ccdba97d6148ca9ccecd96e306b4be3e2b64",
+  "approved_preview_sha256": "3596b83983098e057c4e750d15608b00ab0a636ad8d8648d8cf8c8add92310c4",
   "steam_download_verification": {
-    "status": "passed",
-    "workshop_id": "3827773780",
-    "manifest_id": "4437220967220031387",
-    "downloaded_from_steam": true,
-    "full_extract_hash_comparison": true,
-    "archives": [
-      {
-        "filename": "HWMPPatch24.big",
-        "sha256": "fc38fb19d1c3a93213fda180ef746ce4746f3abe32b2d41a7c4fa3a8dd3c32fc",
-        "bytes": 82019573,
-        "files": 1172,
-        "aliases": [
-          "data"
-        ]
-      },
-      {
-        "filename": "english.big",
-        "sha256": "861b6d5beaf7a32926ea3a25edcb3e205f2b82c24838d143e237bcb3ad187e63",
-        "bytes": 29494,
-        "files": 3,
-        "aliases": [
-          "locale"
-        ]
-      },
-      {
-        "filename": "french.big",
-        "sha256": "eef810e5333899ddc23de2d683b6c09aed465d3c06f23ab755d432a23582a052",
-        "bytes": 31340,
-        "files": 3,
-        "aliases": [
-          "locale"
-        ]
-      },
-      {
-        "filename": "german.big",
-        "sha256": "67c4613691d4ed8583fe4b0b3eca6333f085b75236c2f1cb9dd6149863347665",
-        "bytes": 30944,
-        "files": 3,
-        "aliases": [
-          "locale"
-        ]
-      },
-      {
-        "filename": "italian.big",
-        "sha256": "0ff58e079b83be83b2af77b42e8f99324198672aca091608f381f4763ba12162",
-        "bytes": 31449,
-        "files": 3,
-        "aliases": [
-          "locale"
-        ]
-      },
-      {
-        "filename": "spanish.big",
-        "sha256": "90ee5eb82d1ec8f4a1fa7ca51eea8b9e30eb745cbab43ff2f8598b2a0981e8d5",
-        "bytes": 31479,
-        "files": 3,
-        "aliases": [
-          "locale"
-        ]
-      },
-      {
-        "filename": "russian.big",
-        "sha256": "d3fed98903411966b89f261de671ddcc50656e62cef04ceb9d71a8ac83400605",
-        "bytes": 65486,
-        "files": 8,
-        "aliases": [
-          "locale"
-        ]
-      }
-    ],
-    "source_files": 1195,
-    "preview_sha256": "5fcfc1763129e64722dc6616c9fca3890dd122ef31f65b0999d0db8e02ece9d6",
-    "registry_in_data_verified": true,
-    "custom_and_patched_ucs_verified": true,
-    "native_workshop_launch_performed": false,
-    "total_download_bytes": 82365528
+    "status": "pending_download",
+    "expected_manifest_id": "5924341424333373576",
+    "full_extract_hash_comparison": false
   },
-  "native_developer_startup_verified": false,
+  "native_developer_startup_verified": true,
+  "owner_visual_smoke_check_confirmed": true,
+  "owner_check_scope": "Owner reported the build looks good and later confirmed checking it; no individual full-match or two-client cases were supplied.",
   "native_workshop_launch_performed": false,
-  "previous_native_evidence_main_sha256": "22dfd3a7cc59054edf8b137e755fc88c7007789af61725c0e82b3f2e7dbe29d6",
   "two_client_sync_verified": false,
-  "weighted_queue_boundary_verified": false,
-  "weighted_SU_enforcement_known_defective": true,
-  "nominal_SU_budgets": {
-    "small": 1440,
-    "normal": 1920,
-    "large": 2560,
-    "huge": 3840,
-    "vast": 7680
-  },
-  "known_issues_document": "docs/KNOWN_ISSUES.md",
-  "local_manual_slots_updated": false
+  "full_match_verified": false,
+  "support_units_enabled": false,
+  "classic_caps_restored": true,
+  "original_ship_types_checked": 113,
+  "classic_cap_files_checked": 62,
+  "local_manual_slot_updated": true,
+  "local_launcher_slot_changed": false,
+  "downstream_pins_or_builds_changed": false,
+  "known_issues_document": "docs/KNOWN_ISSUES.md"
 }

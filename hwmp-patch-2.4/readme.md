@@ -1,10 +1,10 @@
-# HWMP Patch 2.4.6 — candidate
+# HWMP Patch 2.4.6
 
 [Русский](readme.ru.md)
 
 A standalone Homeworld Remastered patch for the original four races, based on Players Patch 2.3 Test build 21.
 
-**This 2.4.6 candidate removes Support Units.** The published 2.4.5 limiter failed native accounting tests; the separate 2.4.6 experiment does not reserve build queues reliably. The candidate restores classic unit caps and removes the Cataclysm selector, SU counter and SU prices. Other improvements remain.
+**2.4.6 removes Support Units.** The published 2.4.5 limiter failed native accounting tests; the separate 2.4.6 experiment does not reserve build queues reliably. The candidate restores classic unit caps and removes the Cataclysm selector, SU counter and SU prices. Other improvements remain.
 
 ## What remains
 
@@ -14,7 +14,7 @@ A standalone Homeworld Remastered patch for the original four races, based on Pl
 - Six-collector Hiigaran/Vaygr starts and the approved Assault Frigate final speed-accuracy multiplier of 1.2.
 - Build/research timing tooltips in six languages; Russian ship-name corrections, four race emblems and menu music.
 
-The candidate is prepared locally. [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) still contains **2.4.5 with its known SU defect** until an explicitly requested update. Use one complete patch and matching archives on every multiplayer client. Full-match and two-client acceptance remain pending; see [known issues](../docs/KNOWN_ISSUES.md).
+**2.4.6 is published on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780)** with classic caps. A Russian native launch and owner visual check completed. [Publication and download-verification status](docs/WORKSHOP_RELEASE.md). Use one complete patch and matching archives on every multiplayer client. Full-match and two-client acceptance remain pending; see [known issues](../docs/KNOWN_ISSUES.md).
 
 ## Development
 
