@@ -1,12 +1,16 @@
 """Cold callback dependency order and regeneration gates; native checks separate."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from lupa.lua51 import LuaRuntime
 
 from hwmp24 import SOURCE
 from verify_hwmp24 import inspect_lua
 
 
-def verify():
+def verify(source=SOURCE):
     memory_path = "scripts/playerspatch/ships_util/core/memgroup.lua"
     callbacks = [f"ship/{ship}/{ship}.lua" for ship in ("kus_cloakedfighter", "kus_dronefrigate")]
     for order in (callbacks, list(reversed(callbacks))):
@@ -16,7 +20,7 @@ def verify():
 
         def load(name):
             assert name.startswith("data:")
-            vm.execute(inspect_lua((SOURCE / name[5:]).read_text(encoding="ascii")))
+            vm.execute(inspect_lua((source / name[5:]).read_text(encoding="ascii")))
 
         g.dofilepath = load
         assert g.MemGroup is None

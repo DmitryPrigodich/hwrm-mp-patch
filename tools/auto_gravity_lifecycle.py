@@ -1,5 +1,9 @@
 """Native CustomCommand toggles/energy completion, no saved state or helper calls."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 
 def cases(add, volumes, mode):
     result = []

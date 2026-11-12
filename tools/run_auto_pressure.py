@@ -1,7 +1,11 @@
 """One native pressure sample; wall time is not FPS or pure CPU time."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from pathlib import Path
-import sys, time, json
+import time, json
 from run_auto_tests import launch, collect, readlog, CURRENT, LOG
 from hwrm_common import save, sha
 

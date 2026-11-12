@@ -1,5 +1,9 @@
 """Private constant-damage scout weapon; native family upgrades and paid research."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import re
 
 

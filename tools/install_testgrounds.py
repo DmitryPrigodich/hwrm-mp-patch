@@ -1,5 +1,9 @@
 """Install the verified diagnostic release in its own folder; never launch."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from datetime import datetime, timezone
 import json

@@ -1,37 +1,42 @@
-# HWMP Patch 2.4.5 — Cataclysm
+# HWMP Patch 2.4.6 — candidate
 
 [Русский](readme.ru.md)
 
-A standalone Homeworld Remastered multiplayer patch based on **Players Patch 2.3Test build21**, retaining the original four races. [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780). Use the complete package by itself and the same Workshop revision on every MP client.
+A standalone Homeworld Remastered patch for the original four races, based on Players Patch 2.3 Test build 21.
 
-**Cataclysm is an experimental field test with a known SU-limiter defect:** build refusal can occur early and some compositions can exceed the displayed budget. [Known issues](../docs/KNOWN_ISSUES.md). This update rounds ceilings; it does not repair fractional ship-cost accounting.
+**This 2.4.6 candidate removes Support Units.** The published 2.4.5 limiter failed native accounting tests; the separate 2.4.6 experiment does not reserve build queues reliably. The candidate restores classic unit caps and removes the Cataclysm selector, SU counter and SU prices. Other improvements remain.
 
-## Cataclysm
+## What remains
 
-Select **HWMP 2.4.5 Cataclysm** under Game Type. Nominal budgets: Small 1440, Normal 1920, Large 2560, Huge 3840, Vast 7680. Existing carrier/shipyard and zero-SU probe count caps remain; carriers add no capacity. SU prices appear in construction/tooltips/selection, with owned-fleet totals below RU. Queued construction is excluded from the HUD. [Rules](../docs/CATACLYSM_2_4_5.md) · [Prices](../docs/SUPPORT_UNITS_PRICES.md).
+- Gravity-well ability and speed restoration, with specific tested save/load cases.
+- Support-frigate cargo recovery, capture/self-destruct permissions and independent stalled-docking timers.
+- Taiidan missile-defense targeting, the Vaygr Medium missile binding and two scoped missile corrections.
+- Six-collector Hiigaran/Vaygr starts and the approved Assault Frigate final speed-accuracy multiplier of 1.2.
+- Build/research timing tooltips in six languages; Russian ship-name corrections, four race emblems and menu music.
 
-## Shared fixes
+The candidate is prepared locally. [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3827773780) still contains **2.4.5 with its known SU defect** until an explicitly requested update. Use one complete patch and matching archives on every multiplayer client. Full-match and two-client acceptance remain pending; see [known issues](../docs/KNOWN_ISSUES.md).
 
-- Owner-safe gravity-well ability/speed restoration, including specific tested new save/load cases.
-- Support-frigate cargo recovery, per-ship capture/self-destruct permissions and independent stalled-docking timers.
-- Refreshed Taiidan missile-defense targeting and restored Vaygr Medium missile weapon-fire binding.
-- Accepted Hiigaran/Vaygr6/6 collector starts, Assault Frigate final speed-accuracy multiplier1.2 and two scoped missile corrections.
-- Native-language build/research timing tooltips in English, French, German, Italian, Spanish and Russian; four original-race menu badges and Inhibitors music.
+## Development
 
-Startup/UI and selected native mechanics have been checked; full-match balance and two-client synchronization remain unverified. Old active-well saves predating the journal are not guaranteed. [Field checklist](../docs/CLOSURE_CHECKLIST.md).
-
-## Build and development
-
-Requires your own game, Toolkit and pinned Test21 inputs. Game assets are excluded from Git.
+Requires your own game, Toolkit and pinned Test21 inputs. Code-only checks need no game assets:
 
 ```powershell
-python -m pip install -r requirements.txt
-python tools/prepare_inputs.py
-python tools/hwmp24.py --package --candidate
+python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -v
 ```
 
-Output: local/HWMPPatch245-candidate. The old2.4.1 release is preserved separately. [Local installation](../docs/LOCAL_INSTALLATION.md) · [Documentation](../docs/README.md) · [Update procedure](../docs/UPDATE_WORKFLOW.md) · [Functional data](../docs/DATA_FORMATS.md) · [History](../docs/archive/README.md).
+For a separate candidate:
 
-Dependency direction: hwrm-mp-patch → hwrm-hw1-races-reimogined → hwvr-to-hwrm-mod. No automatic downstream builds or pin updates.
+```powershell
+python tools/prepare_inputs.py
+python tools/hwmp24.py --package --candidate
+python tools/install_hwmp24.py --candidate
+```
 
-Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich. [Full credits](../docs/CREDITS.md), [maps](../docs/MAP_CREDITS.md). Code/docs only: no models, media, BIGs, caches, personal logs or saves.
+The last command prints an installation plan. `--install` applies it only when explicitly requested. Candidate output is `local/HWMPPatch246-candidate`; the ordinary build uses `local/HWMPPatch246-release`. Their sources and receipts are isolated; earlier releases are preserved. Python `-O`/`-OO` and `PYTHONOPTIMIZE` are rejected before tool work.
+
+[Documentation](../docs/README.md) · [Update procedure](../docs/UPDATE_WORKFLOW.md) · [Local installation](../docs/LOCAL_INSTALLATION.md) · [Review changes](../docs/REVIEW_2_4_6.md) · [History](../docs/archive/README.md).
+
+Dependency direction: base → HW1 races → campaign. Consumer pins/builds are never advanced automatically. On Windows, `git config core.longpaths true` may be needed before cloning into a long path.
+
+Credits: Players Patch 2.3 team; 2.3Test: Fear/Novaras; HWMP: AmDDRed, Hix, Twofoxich. [Full credits](../docs/CREDITS.md), [maps](../docs/MAP_CREDITS.md). Game assets, BIGs, local caches and personal logs are excluded from Git.

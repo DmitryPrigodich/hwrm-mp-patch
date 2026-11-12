@@ -1,16 +1,18 @@
 """Single release inventory shared by packaging, installation and publication staging."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from language_data import LANGUAGES
 
 RELEASE_DOCS = (
-    "CATACLYSM_2_4_5.md",
     "KNOWN_ISSUES.md",
-    "SUPPORT_UNITS_PRICES.md",
+    "REVIEW_2_4_6.md",
     "DATA_FORMATS.md",
     "NATIVE_TESTS.md",
     "AUTO_TESTS.md",
     "AUTO_TEST_RESULTS.md",
-    "SU_BOUNDARY_TESTS.md",
     "CLOSURE_CHECKLIST.md",
     "GRAVITY_SAVELOAD_FIX.md",
     "UPDATE_WORKFLOW.md",
@@ -25,14 +27,12 @@ RELEASE_DOCS = (
     "MAP_CREDITS.md",
 )
 RELEASE_RUSSIAN_DOCS = (
-    "CATACLYSM_2_4_5.md",
     "KNOWN_ISSUES.md",
-    "SUPPORT_UNITS_PRICES.md",
+    "REVIEW_2_4_6.md",
     "DATA_FORMATS.md",
     "NATIVE_TESTS.md",
     "AUTO_TESTS.md",
     "AUTO_TEST_RESULTS.md",
-    "SU_BOUNDARY_TESTS.md",
     "CLOSURE_CHECKLIST.md",
     "GRAVITY_SAVELOAD_FIX.md",
     "UPDATE_WORKFLOW.md",
@@ -54,6 +54,7 @@ RELEASE_PAYLOAD = frozenset(
         "README.md",
         "README.ru.md",
         "version.json",
+        "verification-package.json",
         "HWMP Patch 2.4.cmd",
         "start_hwmp_patch.ps1",
         *RELEASE_DOCS,

@@ -1,5 +1,9 @@
 """Parse diagnostic log observations without declaring native test passes."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 from pathlib import Path

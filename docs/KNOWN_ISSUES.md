@@ -2,17 +2,14 @@
 
 [Русский](ru/KNOWN_ISSUES.md)
 
-## Cataclysm SU enforcement: confirmed defect
+## Candidate 2.4.6
 
-Small fractional ship weights after division by32 do not match nominal SU. On controlled types, weights≤0.5 contributed0 and weights between0.5 and1 contributed1 per entry; larger fractions could accumulate. This describes tested values, not every engine numeric API. The exact conversion site is unknown. Divisor64 also failed.
+Support Units is removed, not advertised as repaired. Classic unit caps are restored. The earlier Access Violation cause remains unknown; completed diagnostics without a crash do not certify full matches. Two-client synchronization, full-match balance, physical squadron replenishment and campaign transitions require their own native tests. Old active-gravity saves made before the checkpoint journal may lack original ability baselines. Specific new gravity save/load cases passed on their recorded older artifacts.
 
-At the former 1900 budget, the human UI refused a15SU order at 1885SU. In separate native32/64 tests, some1885SU compositions completed two paid squadrons:1915/1900, spending900RU. EVERY Build request required CanBuild=1. This confirms guarded AI/backend overflow; human UI overflow was not separately tested. Integral budgets are not an enforcement fix.
+The new candidate has source, Lua 4, regression and full archive checks; these are not a native startup result. Report version/archive hashes, mode, race, actions and observed behavior. [Acceptance checklist](CLOSURE_CHECKLIST.md).
 
-## Other validation boundaries
+## Still-published 2.4.5
 
-- The owner confirmed startup/readable UI on the preceding runtime; the latest ceiling change has source/Lua4 validation.
-- No crash occurred in completed diagnostic runs. This is not a long-match/save guarantee; the old Access Violation cause remains unknown.
-- Simultaneous queue reservations, cancel/pause, damaged-squadron replenishment, capture, saves/mode switching and two-client MP are not certified.
-- Old saves with active gravity wells predating the native journal may lack original ability baselines.
+The Workshop item remains 2.4.5 until explicitly updated. Its SU limiter is defective. Of 99 positive-price ship types, 76 cost at most 16 SU. Their weights after division by 32 fall in the range that contributed zero in controlled native tests. For example, a 15-SU interceptor received weight 0.46875; a 20-SU marine frigate received 0.625 and contributed one native unit (32 nominal SU) in controlled tests. This is a serious composition-dependent mismatch; Layout and retained count caps still apply. These observations are not a universal precision contract for all engine APIs/types.
 
-Report Game Type, Unit Cap, race, matching archive hashes, displayed SU, queue state, RU spent and reproduction steps. [Acceptance](CLOSURE_CHECKLIST.md). Historical methods/results: [accounting investigation](archive/2026-10-30/SU_ACCOUNTING_2026-10-30.md).
+Ordinary UI refused 15 SU at 1885/1900. Guarded paid backend requests also completed to 1915/1900. Divisors 32/64 and rounded ceilings did not fix the mechanism. The unpublished Test1 periodic gate does not atomically reserve queues and may overflow or stall production. [Historical investigation](archive/2026-10-30/SU_ACCOUNTING_2026-10-30.md), [Test1](CATACLYSM_2_4_6_TEST.md).

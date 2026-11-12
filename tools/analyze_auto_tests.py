@@ -1,5 +1,9 @@
 """Summarize completed native HWMP tests; never promote observations to passes."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from collections import Counter, defaultdict
 import json

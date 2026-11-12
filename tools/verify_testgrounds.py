@@ -3,6 +3,10 @@
 Fixtures do not model native weapons, gravity callbacks, movement or research.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 from pathlib import Path
@@ -10,7 +14,7 @@ import re
 import subprocess
 from lupa.lua51 import LuaRuntime
 from hwrm_common import index, save, sha
-from testgrounds import SOURCE, WORK, ROOT, MISSIONS, COLLECTION, REGISTRY, digest_tree, read_ucs
+from testgrounds import SOURCE, WORK, MISSIONS, COLLECTION, REGISTRY, digest_tree, read_ucs
 from collect_testgrounds import collect
 
 MOCK = r"""

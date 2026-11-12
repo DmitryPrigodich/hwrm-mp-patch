@@ -1,5 +1,9 @@
 """Evidence-based defense checks. Raw native measurements remain unchanged."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from collections import Counter, defaultdict
 from statistics import mean
 

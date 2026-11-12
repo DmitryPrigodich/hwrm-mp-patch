@@ -1,5 +1,9 @@
 """Native per-ship SU descriptions and build tooltips, gated by Cataclysm."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 import re
 from hwrm_common import CACHE, PROJECT, save
@@ -78,21 +82,7 @@ def suffix(row, language):
     )
 
 
-def generate(out, design, inherited, quote):
-    ids = description_ids(design)
-    descriptions = {}
-    build_rows = {}
-    aliases = {ident: ident for ident in ids}
-    for ident in ids:
-        name = f"ship/{ident}/{ident}.ship"
-        fields, _ = record_config(inherited[name].read_text(encoding="utf-8-sig"))
-        descriptions[ident] = fields.get("sobDescription", "")
-    for race in design["races"]:
-        build = table(inherited[f"scripts/races/{race}/scripts/def_build.lua"], "build")
-        for row in build.values():
-            if row["Type"] == 0 and row["ThingToBuild"].lower() in ids:
-                aliases[row["ThingToBuild"]] = row["ThingToBuild"].lower()
-                build_rows[row["ThingToBuild"].lower()] = row
+def generate_russian_names(out):
     strings = {language: stock_strings(language) for language in LANGUAGES}
     carrier_keys = sorted(
         k
@@ -139,7 +129,27 @@ def generate(out, design, inherited, quote):
                 changed = True
         if changed:
             target = out / "locale/Russian" / source.name
+            target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes("".join(lines).encode(encoding))
+    return strings
+
+
+def generate(out, design, inherited, quote, report_path=None):
+    ids = description_ids(design)
+    descriptions = {}
+    build_rows = {}
+    aliases = {ident: ident for ident in ids}
+    for ident in ids:
+        name = f"ship/{ident}/{ident}.ship"
+        fields, _ = record_config(inherited[name].read_text(encoding="utf-8-sig"))
+        descriptions[ident] = fields.get("sobDescription", "")
+    for race in design["races"]:
+        build = table(inherited[f"scripts/races/{race}/scripts/def_build.lua"], "build")
+        for row in build.values():
+            if row["Type"] == 0 and row["ThingToBuild"].lower() in ids:
+                aliases[row["ThingToBuild"]] = row["ThingToBuild"].lower()
+                build_rows[row["ThingToBuild"].lower()] = row
+    strings = generate_russian_names(out)
     build_numbers = {ident: i for i, ident in enumerate(sorted(build_rows))}
     # Reject future growth/collisions before a native dictionary is emitted.
     ranges = [
@@ -272,7 +282,7 @@ def generate(out, design, inherited, quote):
         helper.read_text(encoding="ascii"), encoding="ascii", newline="\n"
     )
     save(
-        PROJECT / "local/cataclysm/descriptions.json",
+        report_path if report_path is not None else PROJECT / "local/cataclysm/descriptions.json",
         {"ships": ids, "languages": report, "native_tested": False},
     )
 

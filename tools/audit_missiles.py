@@ -4,6 +4,10 @@ Classic bytecode is passively read; textual .miss/.wepn data uses a Lua recorder
 No missile controller, collision, flight, target selection or combat is simulated.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 import re

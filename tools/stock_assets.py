@@ -4,6 +4,10 @@ No donor or native file is edited. Fail closed on changed input hashes.
 Source equality is not proof that a native model-loading call works.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import hashlib
 import json
 

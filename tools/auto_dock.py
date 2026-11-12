@@ -1,5 +1,9 @@
 """Private native callback trace, forced stationary Dock under real fire."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import re
 
 

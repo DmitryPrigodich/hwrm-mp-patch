@@ -1,5 +1,9 @@
 """Extract local native inputs with the official Archive tool; never run a game."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 import subprocess
 from pathlib import Path

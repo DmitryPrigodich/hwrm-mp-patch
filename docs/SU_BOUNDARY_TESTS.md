@@ -1,12 +1,14 @@
 # SU diagnostic scenarios
 
+> Reference only: SU is excluded from the current 2.4.6 candidate by owner decision on 2 November 2026. Published 2.4.5 and prior experiments are described below.
+
 [Русский](ru/SU_BOUNDARY_TESTS.md)
 
 These are isolated diagnostics, not ordinary mod content. [Current known defect](KNOWN_ISSUES.md); [archived native evidence](archive/2026-10-30/SU_ACCOUNTING_2026-10-30.md). Historical1900 results remain attached to their original source; they are not relabeled for1920.
 
 ## Boundary suite
 
-tools/su_boundary_tests.py prepare generates52worlds:12manual cases plus one six-case Auto world per race. Current prices per interceptor entry: Hiigaran15, Vaygr14, Kushan3, Taiidan3. Every world pads the owned baseline exactly for all five configured profiles (360plans).
+tools/su_boundary_tests.py prepare generates52worlds:12manual cases plus one six-case Auto world per race. Current prices per interceptor entry: Hiigaran 15, Vaygr 14, Kushan 3, Taiidan 3. Every world pads the owned baseline exactly for all five configured profiles (360plans).
 
 | Case | Initial free SU | Observe |
 |---|---:|---|

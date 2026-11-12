@@ -1,12 +1,15 @@
 """Isolated SU production boundaries. Never modifies normal release or Workshop."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from datetime import datetime, timezone
 import json
 from pathlib import Path
 import shutil
 import subprocess
-import sys
 import time
 import hashlib
 import re

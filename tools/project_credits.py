@@ -1,5 +1,9 @@
 """Shared attribution for menus, launcher metadata and publication descriptions."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 HWMP_CONTRIBUTORS = ("AmDDRed", "Hix", "Twofoxich")
 PLAYERS_PATCH_CREDITS = {
     "Gameplay options and features": (

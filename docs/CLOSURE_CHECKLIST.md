@@ -2,7 +2,7 @@
 
 [Русский](ru/CLOSURE_CHECKLIST.md)
 
-**Cataclysm SU enforcement is known failing, not merely untested. Integral ceilings do not fix it.** See [known issues](KNOWN_ISSUES.md).
+**Candidate 2.4.6 removes SU and restores classic caps. The still-published 2.4.5 SU defect remains documented.**
 
 The automatic queue is complete for the stated scenarios. The current product is original-race skirmish/multiplayer; Extra Missions are diagnostic harnesses. The optional known active-gravity save/load defect has been repaired and tested separately. This is a field candidate, not a certification of all matches or campaigns.
 

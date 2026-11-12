@@ -5,6 +5,10 @@ inspector. Defaults are source configuration, not observed hull counts or combat
 results. Screenshot price mappings remain draft; the hull|group notation is user-confirmed.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import hashlib
 import json

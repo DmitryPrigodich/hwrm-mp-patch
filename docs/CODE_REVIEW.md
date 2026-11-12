@@ -11,7 +11,7 @@ Reviewed the integral-ceiling update and diagnostic/documentation changes agains
 - **Fixed false production evidence:** IsBuilding may indicate a waiting queue. Paid RU/completion now distinguish started production; two queue flags cannot pass cross-producer progress. An offline Lua fixture checks waiting versus paid/completed behavior.
 - **Fixed budget-bound diagnostic data:** Equal fixtures derive their exact-fit baseline from the frozen source's Normal ceiling (1885/1900 or1905/1920); frozen ship prices must match, and unsupported baselines/profile selections are rejected. Historical logs are not rewritten.
 - **Fixed documentation packaging:** canonical readmes and paired current EN/RU pages now render correct flat-release links. Historical investigations are archived; descriptive provenance is Markdown, functional prices/pins/receipts remain JSON. The unchanged Russian manual-case manifest is explicitly language-labeled and candidate records now support --candidate.
-- **Fixed cover metadata:** preview-spec still described the old2.4cover. It now matches the unchanged owner-approved2.4.5cover and actual hashes. No image bytes changed.
+- **Fixed cover metadata:** preview-spec still described the old 2.4cover. It now matches the unchanged owner-approved2.4.5cover and actual hashes. No image bytes changed.
 - **Added configuration consistency:** integral ceiling and native_scale agreement guards reject unsupported inputs. No ship-stat/cost changes or ordinary-mode changes were introduced. Runtime performance code remains unchanged; the simple1s owned-fleet HUD was not expanded.
 
 ## Verification and scope

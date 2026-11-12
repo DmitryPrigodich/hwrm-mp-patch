@@ -1,8 +1,11 @@
 """Pinned native front-end presentation. No new images, fonts or audio are invented."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import hashlib
 import json
-from pathlib import Path
 import re
 import shutil
 import struct

@@ -4,6 +4,10 @@ These schedules are data models, not measured opening times or optimal builds.
 Uses the existing passive Classic reader and strict HWRM data-table loader.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 import re

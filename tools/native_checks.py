@@ -1,5 +1,9 @@
 """Create a pinned human test record. Does not run the game or mark tests passed."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -9,9 +13,9 @@ from language_data import LANGUAGES
 
 
 def create_run(language, candidate=False):
-    if candidate:
-        install_hwmp24.RELEASE = PROJECT / "local/HWMPPatch245-candidate"
-    sums, version = install_hwmp24.release_files()
+    from build_paths import paths
+
+    sums, version = install_hwmp24.release_files(paths(candidate).release)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     plan = PROJECT / "autotests/manual-cases.ru.json"
     cases = json.loads(plan.read_text(encoding="utf8"))

@@ -5,8 +5,11 @@ Ordinary configuration and all Layout supplies remain byte/semantically intact.
 Native supply is scaled by 32 (exact binary fractions); HUD displays nominal SU.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
-from pathlib import Path
 import re
 
 from hwrm_common import CACHE, DONOR, PROJECT, index, save, sha

@@ -4,13 +4,16 @@ Only project-local preparation/package operations. No install, game or launcher.
 """
 
 from __future__ import annotations
+
+from tool_safety import require
 from project_credits import SHORT_CREDITS
 from project_version import TITLE, VERSION
 import json
+import hashlib
+from datetime import datetime, timezone
 from pathlib import Path
 import re
 import shutil
-import subprocess
 import zipfile
 
 from hwrm_common import (
@@ -19,20 +22,23 @@ from hwrm_common import (
     DONOR,
     ARCHIVE,
     DONOR_SHA,
-    RUSSIAN_STOCK,
     sha,
     index,
     save,
     copy_layer,
     donor_runtime,
-    build_directory,
 )
 
 ROOT = PROJECT / "hwmp-patch-2.4"
-WORK = PROJECT / "local/hwmp-patch-2.4"
-BUILD = build_directory("hwmp24", PROJECT)
-SOURCE = BUILD / "source"
-RELEASE = PROJECT / "local/HWMPPatch24-release"
+from build_paths import paths
+
+DEFAULT_PATHS = paths()
+WORK, BUILD, SOURCE, RELEASE = (
+    DEFAULT_PATHS.work,
+    DEFAULT_PATHS.build,
+    DEFAULT_PATHS.source,
+    DEFAULT_PATHS.release,
+)
 IDENTITY = "HWMP-Patch-2.4-dev1"
 START_FLEET_INPUTS = (
     ("vaygr00.lua", "rm-base", "8e22ba6545d98a62e611ee2533bd5068201d0640843939696177d45a9a852b30"),
@@ -188,14 +194,13 @@ def lua_quote(value):
     return result + '"'
 
 
-def locale_tables():
+def locale_tables(out):
     from language_data import generate
 
-    return generate(ROOT / "overrides", lua_quote)
+    return generate(out, lua_quote)
 
 
-def make_overrides():
-    out = ROOT / "overrides"
+def make_overrides(out):
     from effect_journal import generate_effects, patch_gravity
     from menu_branding import generate as generate_menu
 
@@ -235,7 +240,7 @@ def make_overrides():
         source = CACHE / "players-patch-audit" / folder / name
         assert sha(source) == digest, name
         write(out, name, equal_collector_start(source.read_text(encoding="ascii")))
-    core = (DONOR / "scripts/playerspatch/ships_util/core/global.lua").read_text()
+    core = (DONOR / "scripts/playerspatch/ships_util/core/global.lua").read_text(encoding="ascii")
     core = 'dofilepath("data:scripts/hwmp24/effects.lua")\n' + core
     core = replace_function(core, "SobGroup_Split", SPLIT)
     core = replace_function(core, "SobGroup_NoSalvageScuttle", SCUTTLE)
@@ -255,7 +260,7 @@ def make_overrides():
     )
     for ship in dock_ships:
         name = f"ship/{ship}/{ship}.lua"
-        text = (DONOR / name).read_text()
+        text = (DONOR / name).read_text(encoding="ascii")
         old = "SobGroup_UnderAttackReissueDock(CustomGroup)"
         assert text.count(old) == 1, name
         write(out, name, text.replace(old, "SobGroup_UnderAttackReissueDock(CustomGroup, shipID)"))
@@ -268,7 +273,7 @@ def make_overrides():
     core = core.replace("if (Player_IsAlive(i)) then", "if (Player_IsAlive(i) == 1) then", 1)
     write(out, "scripts/playerspatch/ships_util/core/global.lua", core)
     name = "scripts/playerspatch/ships_util/lib/gravwells.lua"
-    text = (DONOR / name).read_text()
+    text = (DONOR / name).read_text(encoding="ascii")
     start = text.index("\tfunction GRAVWELL_PROTO:StunGroup")
     end = text.index("\n\t-- tumbles", start)
     text = text[:start] + """    function GRAVWELL_PROTO:StunGroup(group, stunned)
@@ -308,14 +313,14 @@ end
 """
     write(out, name, patch_gravity(text))
     name = "scripts/playerspatch/ships_util/lib/frigates.lua"
-    text = (DONOR / name).read_text()
+    text = (DONOR / name).read_text(encoding="ascii")
     text = replace_function(
         text, "SupportFrigate_HyperspaceDock", 'dofilepath("data:scripts/hwmp24/transport.lua")'
     )
     write(out, name, text)
     for prefix, label in (("kus", "Kus"), ("tai", "Tai")):
         name = f"ship/{prefix}_supportfrigate/{prefix}_supportfrigate.lua"
-        text = (DONOR / name).read_text()
+        text = (DONOR / name).read_text(encoding="ascii")
         create = f"function Create_{label}_SupportFrigate(CustomGroup, playerIndex, shipID)"
         assert text.count(create) == 1
         text = text.replace(create, create + "\n    HWMP_TransportRemember(CustomGroup, shipID)", 1)
@@ -326,7 +331,7 @@ end
         )
         write(out, name, text)
     name = "ship/tai_defensefighter/tai_defensefighter.lua"
-    text = (DONOR / name).read_text()
+    text = (DONOR / name).read_text(encoding="ascii")
     start = text.index("    if (defenseFighterMissileTargets[shipID] ~= numberEnemyMissiles) then")
     end = text.index("    return incomingEnemyMissiles", start)
     text = (
@@ -416,32 +421,54 @@ end""",
     write(out, "scripts/productiontimes/applyresearchtimes.lua", RESEARCH_TIMES)
     from production_data import generate
 
-    generate()
-    locale_tables()
-    from cataclysm import generate as generate_cataclysm
-
-    generate_cataclysm(out)
+    generate(out)
+    locale_tables(out)
+    # SU is deliberately excluded from the release. Only ordinary rules are shipped.
 
 
-def prepare():
-    assert sha(ARCHIVE) == DONOR_SHA, "Pinned Test changed."
+def prepare(context=None):
+    context = context or DEFAULT_PATHS
+    WORK, BUILD, SOURCE = context.work, context.build, context.source
+    WORK.mkdir(parents=True, exist_ok=True)
+    require(sha(ARCHIVE) == DONOR_SHA, "Pinned Test changed.")
     inventory = json.loads((PROJECT / "baseline/test-inventory.json").read_text(encoding="utf8"))[
         "inventory"
     ]
     expected = {row["path"]: row["sha256"] for row in inventory if row["patch"] == "test"}
-    assert {
-        name: sha(path) for name, path in index(DONOR).items()
-    } == expected, "Donor extraction changed."
+    require(
+        {name: sha(path) for name, path in index(DONOR).items()} == expected,
+        "Donor extraction changed.",
+    )
     from stock_assets import validate_inputs, generate_aliases, content_revision
 
     stock_assets = validate_inputs()
-    make_overrides()
-    generate_aliases(ROOT / "overrides", stock_assets)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    generated = WORK / "generated" / stamp
+    generated.mkdir(parents=True)
+    manual_files = json.loads((ROOT / "manual-files.json").read_text(encoding="utf8"))
+    require(manual_files["schema"] == 1, "Unknown manual input schema")
+    for name in manual_files["files"]:
+        manual = ROOT / "overrides" / name
+        require(
+            manual.resolve().is_relative_to((ROOT / "overrides").resolve()),
+            "Manual input escapes overrides",
+        )
+        write(generated, name, manual.read_text(encoding="ascii"))
+    make_overrides(generated)
+    generate_aliases(generated, stock_assets)
     SOURCE.mkdir(parents=True, exist_ok=True)
     marker = SOURCE / "hwmp24-id.txt"
     if any(SOURCE.iterdir()):
-        assert marker.is_file() and marker.read_text().strip() == IDENTITY
-        assert SOURCE.resolve().is_relative_to(BUILD.resolve())
+        require(
+            marker.is_file() and marker.read_text(encoding="ascii").strip() == IDENTITY,
+            "Refuse unowned source directory",
+        )
+        require(
+            SOURCE.resolve().is_relative_to(BUILD.resolve())
+            and not SOURCE.is_symlink()
+            and not SOURCE.is_junction(),
+            "Unsafe source cleanup path",
+        )
         shutil.rmtree(SOURCE)
         SOURCE.mkdir()
     write(SOURCE, "hwmp24-id.txt", IDENTITY + "\n")
@@ -450,15 +477,15 @@ def prepare():
     for name, path in index(SOURCE).items():
         if path.stat().st_size == 0 and path.suffix == ".lua":
             write(SOURCE, name, "-- Intentionally empty upstream Lua file.\n")
-    overrides = copy_layer(ROOT / "overrides", SOURCE)
+    overrides = copy_layer(generated, SOURCE)
     files = {name: sha(path) for name, path in index(SOURCE).items()}
-    fix_hashes = {name: sha(path) for name, path in index(ROOT / "overrides").items()}
-    revision = (
-        __import__("hashlib").sha256(json.dumps(fix_hashes, sort_keys=True).encode()).hexdigest()
-    )
+    fix_hashes = {name: sha(path) for name, path in index(generated).items()}
+    revision = hashlib.sha256(json.dumps(fix_hashes, sort_keys=True).encode()).hexdigest()
     report = {
         "identity": IDENTITY,
         "source": str(SOURCE),
+        "generated_overrides": str(generated),
+        "su_enabled": False,
         "base_sha256": DONOR_SHA,
         "base_runtime_files": names,
         "overrides": fix_hashes,
@@ -471,18 +498,6 @@ def prepare():
         "installed": False,
     }
     save(WORK / "manifest.json", report)
-    save(
-        ROOT / "fixes.json",
-        {
-            "identity": IDENTITY,
-            "base_sha256": DONOR_SHA,
-            "fix_revision": revision,
-            "content_revision": report["content_revision"],
-            "stock_asset_fallbacks": stock_assets,
-            "version": VERSION,
-            "overrides": fix_hashes,
-        },
-    )
     print(
         json.dumps(
             {
@@ -496,87 +511,79 @@ def prepare():
     return report
 
 
-def package():
-    import hwrm_archive as builder
-    from hwrm_common import short_path
-    from verify_hwmp24 import verify_source, verify_archive
-
-    report = prepare()
-    verify_source()
-    RELEASE.mkdir(parents=True, exist_ok=True)
-    output = RELEASE / "HWMPPatch24.big"
-    oldroot = builder.ROOT
-    builder.ROOT = SOURCE
-    short = short_path(SOURCE)
-    data = [
-        short + "\\" + str(path.relative_to(SOURCE))
-        for name, path in sorted(index(SOURCE).items())
-        if builder.data_file(name)
-    ]
-    lines = [
-        f'Archive name="{TITLE}"',
-        'TOCStart name="HWMP24Data" alias="data" relativeroot=""',
-        'FileSettingsStart defcompression="2"',
-        "FileSettingsEnd",
-        *data,
-        "TOCEnd",
-        *builder.locale_toc("English", "HWMP24Locale", short),
-        "",
-    ]
-    manifest = WORK / "HWMPPatch24.archive.txt"
-    manifest.write_text("\r\n".join(lines), encoding="ascii", newline="")
-    builder.archive(manifest, output)
-    from language_data import LANGUAGES
-
-    for language in LANGUAGES:
-        manifest = WORK / (language + ".archive.txt")
-        manifest.write_text(
-            "\r\n".join(
-                [
-                    'Archive name="' + TITLE + " " + language + '"',
-                    *builder.locale_toc(language, "HWMP24" + language, short),
-                    "",
-                ]
-            ),
-            encoding="ascii",
-            newline="",
-        )
-        builder.archive(manifest, RELEASE / (language + ".big"))
-    builder.ROOT = oldroot
-    verify_archive(output)
-    for path in RELEASE.glob("*.log"):
-        shutil.move(str(path), str(WORK / path.name))
+def package(context=None):
+    from hwrm_archive import package_source
+    from verify_hwmp24 import verify_source
+    from release_layout import RELEASE_PAYLOAD
     from release_docs import write_release_docs
 
-    write_release_docs(RELEASE)
-    (RELEASE / "config.txt").write_text(
-        f"Title: {TITLE}\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21-based multiplayer fixes and scoped balance improvements.\n"
+    context = context or DEFAULT_PATHS
+    report = prepare(context)
+    verify_source(context)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    stage = context.work / "packages" / stamp
+    stage.mkdir(parents=True)
+    verification = package_source(context.source, stage, "HWMPPatch24.big", TITLE)
+    for path in stage.glob("*.log"):
+        shutil.move(str(path), str(context.work / (stamp + "-" + path.name)))
+    portable = dict(
+        verification,
+        archives=[dict(row, archive=Path(row["archive"]).name) for row in verification["archives"]],
+    )
+    save(stage / "verification-package.json", portable)
+    write_release_docs(stage)
+    (stage / "config.txt").write_text(
+        f"Title: {TITLE}\n\nTags: Balance Fixes Multiplayer\nGameType: HomeworldRM\nModType: MOD\nBigFilename: HWMPPatch24.big\n\nDescription:\nTest21 multiplayer fixes and localization improvements. SU mode removed.\n"
         + SHORT_CREDITS
         + "\n",
         encoding="ascii",
     )
     for name in ("start_hwmp_patch.ps1", "HWMP Patch 2.4.cmd"):
-        shutil.copy2(ROOT / name, RELEASE / name)
-    shutil.copy2(ROOT / "fixes.json", RELEASE / "version.json")
-    sums = {p.name: sha(p) for p in RELEASE.iterdir() if p.is_file() and p.name != "SHA256SUMS.txt"}
-    (RELEASE / "SHA256SUMS.txt").write_text(
+        shutil.copy2(ROOT / name, stage / name)
+    save(
+        stage / "version.json",
+        {
+            key: report[key]
+            for key in (
+                "identity",
+                "version",
+                "base_sha256",
+                "fix_revision",
+                "content_revision",
+                "su_enabled",
+            )
+        },
+    )
+    require({p.name for p in stage.iterdir()} == RELEASE_PAYLOAD, "Unexpected staged release files")
+    sums = {p.name: sha(p) for p in stage.iterdir()}
+    (stage / "SHA256SUMS.txt").write_text(
         "".join(v + "  " + k + "\n" for k, v in sorted(sums.items())), encoding="ascii"
     )
-    with zipfile.ZipFile(RELEASE.with_suffix(".zip"), "w", zipfile.ZIP_DEFLATED) as z:
-        for p in RELEASE.iterdir():
-            if p.is_file():
-                z.write(p, RELEASE.name + "/" + p.name)
+    from package_promotion import promote
+
+    target = context.release
+    promote(stage, target, context.work, PROJECT / "local", IDENTITY, stamp)
+    # Receipt paths must refer to the promoted archives, not the vanished staging path.
+    for row in verification["archives"]:
+        row["archive"] = str(target / Path(row["archive"]).name)
+    save(context.work / "verification-package.json", verification)
+    # Keep the portable receipt byte-identical to the checksummed staged copy.
+    with zipfile.ZipFile(target.with_suffix(".zip"), "w", zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(target.iterdir()):
+            archive.write(path, target.name + "/" + path.name)
     result = {
         "identity": IDENTITY,
-        "release": str(RELEASE),
-        "main_sha256": sha(output),
-        "main_bytes": output.stat().st_size,
+        "release": str(target),
+        "version": VERSION,
+        "main_sha256": sha(target / "HWMPPatch24.big"),
+        "main_bytes": (target / "HWMPPatch24.big").stat().st_size,
         "fix_revision": report["fix_revision"],
         "content_revision": report["content_revision"],
+        "su_enabled": False,
         "installed": False,
         "engine_tested": False,
     }
-    save(WORK / "release.json", result)
+    save(context.work / "release.json", result)
     print(json.dumps(result))
     return result
 
@@ -584,17 +591,9 @@ def package():
 if __name__ == "__main__":
     import argparse
 
-    p = argparse.ArgumentParser()
-    p.add_argument("--package", action="store_true")
-    p.add_argument(
-        "--candidate", action="store_true", help="Package separately; preserve the ordinary release"
-    )
-    args = p.parse_args()
-    if args.candidate:
-        if not args.package:
-            p.error("--candidate requires --package")
-        RELEASE = PROJECT / "local/HWMPPatch245-candidate"
-    if args.package:
-        package()
-    else:
-        prepare()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--package", action="store_true")
+    parser.add_argument("--candidate", action="store_true")
+    args = parser.parse_args()
+    context = paths(args.candidate)
+    package(context) if args.package else prepare(context)

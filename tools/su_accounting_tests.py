@@ -1,5 +1,9 @@
 """Isolated native accounting probes. Preparation and collection never auto-launch."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from collections import Counter
 from copy import deepcopy

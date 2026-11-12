@@ -1,5 +1,9 @@
 """Validate research hash identifiers and temporary-effect stock-save roundtrip."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 import re
 import subprocess

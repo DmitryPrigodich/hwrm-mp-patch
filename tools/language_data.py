@@ -1,8 +1,11 @@
 """Generate tooltip dictionaries from pinned native translations, not English copies."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 import re
-from pathlib import Path
 
 from hwrm_common import CACHE, DONOR, GAME, PROJECT, RUSSIAN_STOCK, save, sha
 
@@ -54,8 +57,11 @@ def generate(output, quote):
     english = dict(vm.globals().localization.items())
     labels = json.loads((PROJECT / "localization/hwmp24.json").read_text(encoding="utf8"))
     coverage = {}
+    from cataclysm_descriptions import generate_russian_names
+
+    corrected = generate_russian_names(output)
     for language in LANGUAGES:
-        native = stock_strings(language)
+        native = corrected[language]
         table = (
             english
             if language == "English"

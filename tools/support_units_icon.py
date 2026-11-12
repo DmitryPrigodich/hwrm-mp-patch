@@ -1,5 +1,9 @@
 """Render the original geometric three-person SU glyph; no donor image is edited."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import math
 import struct
 

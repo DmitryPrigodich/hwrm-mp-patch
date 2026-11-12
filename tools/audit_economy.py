@@ -4,9 +4,12 @@ Research Lua is evaluated with file access removed and a strict data-only loader
 Lua4 table iteration is translated for inspection only; no runtime file is edited.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
-from pathlib import Path
 import re
 from lupa.lua51 import LuaRuntime
 from hwrm_common import CACHE, PROJECT, DONOR_SHA, ARCHIVE, index, save, sha

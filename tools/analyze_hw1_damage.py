@@ -1,5 +1,9 @@
 """Derived native invariants for the HW1 constant-hit diagnostic; not match balance."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from collections import Counter
 
 

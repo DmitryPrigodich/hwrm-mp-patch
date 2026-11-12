@@ -1,5 +1,9 @@
 """Native old/new hull HP and route speed after granted research, with controls."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 
 def cases(add, volumes):
     result = []

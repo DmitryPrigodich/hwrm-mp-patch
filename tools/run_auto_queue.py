@@ -1,5 +1,9 @@
 """Sequential native suite runner; refuses stale evidence and leaves healthy timeouts open."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 import time

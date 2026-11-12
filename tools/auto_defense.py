@@ -1,5 +1,9 @@
 """Private native missile-defense fixtures; never change the shipped fighter."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import re
 
 

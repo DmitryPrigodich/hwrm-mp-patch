@@ -1,12 +1,15 @@
 """Stage the official Toolkit's loose-file input. Never calls Steam/create/update."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 from pathlib import Path
 import shutil
 
 from hwrm_common import PROJECT, index, save, sha
-from hwmp24 import SOURCE, WORK
 from project_version import TITLE
 import install_hwmp24
 
@@ -23,10 +26,14 @@ def workshop_item_id():
     return identifier
 
 
-def prepare(preview=None, title=None):
+def prepare(preview=None, title=None, context=None):
+    from build_paths import paths
+
+    context = context or paths()
+    SOURCE, WORK = context.source, context.work
     from PIL import Image
 
-    install_hwmp24.release_files()
+    install_hwmp24.release_files(context.release)
     manifest = json.loads((WORK / "manifest.json").read_text(encoding="utf8"))
     if {name: sha(path) for name, path in index(SOURCE).items()} != manifest["files"]:
         raise ValueError("Prepared source changed after verification.")
@@ -80,7 +87,7 @@ def prepare(preview=None, title=None):
             "fix_revision": manifest["fix_revision"],
             "content_revision": revision,
             "source_inventory": manifest["files"],
-            "release_directory": str(install_hwmp24.RELEASE),
+            "release_directory": str(context.release),
             "preview_sha256": sha(preview) if preview else None,
             "artwork_kind": "owner_review_pending",
             "description_characters": len(description),
@@ -117,9 +124,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--candidate",
         action="store_true",
-        help="Stage the verified 2.4.5 candidate without replacing the ordinary release",
+        help="Stage the verified candidate without replacing the ordinary release",
     )
     args = parser.parse_args()
-    if args.candidate:
-        install_hwmp24.RELEASE = PROJECT / "local/HWMPPatch245-candidate"
-    print(json.dumps(prepare(args.preview, args.title), indent=2))
+    from build_paths import paths
+
+    print(json.dumps(prepare(args.preview, args.title, paths(args.candidate)), indent=2))

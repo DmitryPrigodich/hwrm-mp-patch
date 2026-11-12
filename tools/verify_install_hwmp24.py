@@ -1,5 +1,9 @@
 """Exercise installer ownership, backup and refusal paths in a disposable game tree."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 from pathlib import Path
 import tempfile

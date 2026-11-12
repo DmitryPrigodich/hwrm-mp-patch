@@ -1,9 +1,12 @@
 """Isolated native automatic test worlds. Build/install never launches a game."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 import re
 import shutil
@@ -450,7 +453,6 @@ end
     )
     plans = {}
     fixtures = {}
-    generated = []
     for mode in MODES:
         ships = []
         volumes = []

@@ -1,11 +1,14 @@
 """Create or verify a frozen text-only test-source archive, outside runtime composition."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
-from pathlib import Path
 import shutil
 
-from hwrm_common import PROJECT, index, save, sha
+from hwrm_common import PROJECT, save, sha
 
 DESTINATION = PROJECT / "examples/native-testgrounds/source"
 MANIFEST = DESTINATION.parent / "snapshot.json"

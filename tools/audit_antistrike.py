@@ -4,11 +4,14 @@ The coefficient index is explicitly incomplete: mean damage * armour * declared
 accuracy / base interval, per weapon definition. It is NOT ship DPS or a TTK.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 import math
 import re
-from pathlib import Path
 from hwrm_common import PROJECT, ARCHIVE, DONOR_SHA, save, sha
 from hwrm_inspect import record_config
 from lua4_data import Chunk, tables as classic_tables

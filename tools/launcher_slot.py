@@ -4,6 +4,10 @@ The inactive mod is preserved as a full, hash-verified backup outside the game.
 Default is a read-only plan. Never launches or closes the game/launcher.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -74,7 +78,8 @@ def state_for(slot, state_path=STATE):
     return value
 
 
-def switch(mode, apply=False, game=GAME, state_path=STATE, work=WORK, preview=None):
+def switch(mode, apply=False, game=GAME, state_path=STATE, work=WORK, preview=None, release=None):
+    release = Path(release) if release is not None else RELEASE
     if mode not in ("hwmp", "previous"):
         raise ValueError("Unknown slot selection.")
     game, slot = checked_slot(game)
@@ -83,11 +88,11 @@ def switch(mode, apply=False, game=GAME, state_path=STATE, work=WORK, preview=No
     if mode == "previous" and not selected:
         return {"changed": False, "active": "previous", "reason": "HWMP is not selected"}
 
-    payload = {"HWMPPatch24.big": RELEASE / "HWMPPatch24.big"}
+    payload = {"HWMPPatch24.big": release / "HWMPPatch24.big"}
     if mode == "hwmp":
-        release_files()  # Refuse stale or unverified source archives.
-        payload.update({language + ".big": RELEASE / (language + ".big") for language in LANGUAGES})
-        payload["config.txt"] = RELEASE / "config.txt"
+        release_files(release)  # Refuse stale or unverified source archives.
+        payload.update({language + ".big": release / (language + ".big") for language in LANGUAGES})
+        payload["config.txt"] = release / "config.txt"
         if preview is not None:
             preview = Path(preview).resolve(strict=True)
             if preview.suffix.lower() not in (".jpg", ".png"):
@@ -202,9 +207,19 @@ if __name__ == "__main__":
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--game-root", type=Path, default=GAME)
     parser.add_argument("--preview", type=Path)
+    parser.add_argument("--candidate", action="store_true")
     args = parser.parse_args()
+    from build_paths import paths
+
     print(
         json.dumps(
-            switch(args.selection, args.apply, args.game_root, preview=args.preview), indent=2
+            switch(
+                args.selection,
+                args.apply,
+                args.game_root,
+                preview=args.preview,
+                release=paths(args.candidate).release,
+            ),
+            indent=2,
         )
     )

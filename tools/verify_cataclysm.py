@@ -1,5 +1,9 @@
 """Source/native-Lua-parser contracts for Cataclysm. No native gameplay claim."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 import re
 import subprocess

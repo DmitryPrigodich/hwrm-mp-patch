@@ -1,5 +1,9 @@
 """Render canonical repository docs into the release's flat EN/RU layout."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from pathlib import Path
 import re
 from hwrm_common import PROJECT

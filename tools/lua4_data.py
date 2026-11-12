@@ -7,8 +7,10 @@ Format references: https://www.lua.org/source/4.0/lundump.c.html and lopcodes.h.
 
 from __future__ import annotations
 
-import hashlib
-import json
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import struct
 from dataclasses import dataclass
 from pathlib import Path

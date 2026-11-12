@@ -3,19 +3,18 @@
 Only Lua4's table iteration is translated in the test VM. Packaged code stays Lua4.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 from pathlib import Path
 import re
-import shutil
-import subprocess
 from lupa.lua51 import LuaRuntime
 from hwmp24 import (
     ROOT,
-    WORK,
     SOURCE,
-    RELEASE,
     DONOR,
-    BUILD,
     CACHE,
     START_FLEET_INPUTS,
     equal_collector_start,
@@ -117,8 +116,8 @@ def vm_for(source=SOURCE):
     return vm, load
 
 
-def check_effects():
-    vm, load = vm_for()
+def check_effects(source=SOURCE):
+    vm, load = vm_for(source)
     vm.execute("""
 unit('a',0,1,0,0.65);unit('b',1,0,1,1.25)
 groups.g={'a','b'};groups.a={'a'};groups.b={'b'}
@@ -184,8 +183,8 @@ assert(getn(GW_MEM_PROTO.target_types)==count+1)
     return "overlap/mixed baselines/mission changes/transport/salvage/destruction/reload passed"
 
 
-def check_groups_and_dock():
-    vm, _ = vm_for()
+def check_groups_and_dock(source=SOURCE):
+    vm, _ = vm_for(source)
     vm.execute("""
 groups.empty={};assert(getn(SobGroup_Split('empty'))==0)
 groups.g={'a','b','c','d','e'}
@@ -210,8 +209,8 @@ groups.Player_Ships0={};active=Universe_GetAllActiveShips();assert(SobGroup_Coun
     return "empty/dense split, bounded stalled dock retry with independent hull IDs, active ship refresh passed"
 
 
-def check_defense():
-    vm, load = vm_for()
+def check_defense(source=SOURCE):
+    vm, load = vm_for(source)
     load("data:ship/tai_defensefighter/tai_defensefighter.lua")
     vm.execute("""
 selections={};missiles={};attacks={};guardOrders={}
@@ -249,10 +248,10 @@ assert(getn(attacks)==2 and guardOrders[1]=='capital')
     )
 
 
-def check_transport():
+def check_transport(source=SOURCE):
     from hwrm_common import PROJECT
 
-    vm, load = vm_for()
+    vm, load = vm_for(source)
     load("data:scripts/playerspatch/ships_util/lib/frigates.lua")
     vm.execute((PROJECT / "tools/fixtures/transport.lua").read_text(encoding="ascii"))
     for race, label in (("kus", "Kus"), ("tai", "Tai")):
@@ -276,11 +275,11 @@ def check_transport():
     return "mock: stalled redock does not retain visibility/locks; mixed baselines/other owner native pre-disabled salvage/identity/other-owner mocks and deferred-Spawn recovery on both destruction callbacks passed"
 
 
-def check_tooltips():
+def check_tooltips(source=SOURCE):
     from production_data import RACES, catalog, effective_files
 
-    rows, expected, _ = catalog(SOURCE)
-    definitions = effective_files(SOURCE)
+    rows, expected, _ = catalog(source)
+    definitions = effective_files(source)
     checks = []
     from language_data import LANGUAGES
 
@@ -291,7 +290,7 @@ def check_tooltips():
         )
 
         def load(name):
-            path = SOURCE / (
+            path = source / (
                 "locale/" + language + "/" + name[7:] if name.startswith("locale:") else name[5:]
             )
             vm.execute(inspect_lua(path.read_text(encoding="ascii")))
@@ -352,11 +351,15 @@ def check_tooltips():
     return checks
 
 
-def verify_source():
+def verify_source(context=None):
+    from build_paths import paths
+
+    context = context or paths()
+    WORK, SOURCE = context.work, context.source
     manifest = json.loads((WORK / "manifest.json").read_text(encoding="utf8"))
     files = index(SOURCE)
     upstream = index(DONOR)
-    overrides = index(ROOT / "overrides")
+    overrides = index(Path(manifest["generated_overrides"]))
     from stock_assets import verify_composition
 
     missile_aliases = verify_composition(SOURCE, manifest, upstream, overrides)
@@ -444,9 +447,6 @@ def verify_source():
         assault_weapons.add(name)
     expected_weapons.update(assault_weapons)
     expected_weapons.update(missile_aliases)
-    from cataclysm import ship_paths
-
-    expected_weapons.update(ship_paths())
     assert {
         n for n, p in overrides.items() if p.suffix in (".ship", ".wepn", ".subs", ".miss")
     } == expected_weapons
@@ -473,14 +473,14 @@ def verify_source():
     from production_data import verify as verify_data
     from verify_effect_journal import verify as verify_journal
 
-    from verify_cataclysm import verify as verify_cataclysm
+    from verify_no_su import verify as verify_no_su
 
     from verify_kushan_callbacks import verify as verify_kushan_callbacks
 
     result = {
         "status": "passed",
-        "cataclysm": verify_cataclysm(),
-        "kushan_callback_loading": verify_kushan_callbacks(),
+        "support_units": verify_no_su(SOURCE),
+        "kushan_callback_loading": verify_kushan_callbacks(SOURCE),
         "production_data": verify_data(SOURCE),
         "files": len(files),
         "fix_revision": manifest["fix_revision"],
@@ -499,13 +499,13 @@ def verify_source():
             "weapons": sorted(assault_weapons),
             "all_other_normalized_text_unchanged": True,
         },
-        "effect_regression": check_effects(),
-        "effect_checkpoint_journal": verify_journal(vm_for),
-        "groups_and_dock": check_groups_and_dock(),
-        "missile_defense": check_defense(),
-        "transport": check_transport(),
+        "effect_regression": check_effects(SOURCE),
+        "effect_checkpoint_journal": verify_journal(lambda: vm_for(SOURCE)),
+        "groups_and_dock": check_groups_and_dock(SOURCE),
+        "missile_defense": check_defense(SOURCE),
+        "transport": check_transport(SOURCE),
         "research_id_fix": "ScoutSpeedLimiter internal ID only; cost/time/effect and display names unchanged",
-        "tooltips": check_tooltips(),
+        "tooltips": check_tooltips(SOURCE),
         "engine_tested": False,
         "installed": False,
     }
@@ -514,59 +514,21 @@ def verify_source():
     return result
 
 
-def verify_archive(archive):
-    from hwrm_archive import TOOL, native_aliases, data_file
-    from hwrm_common import short_path
+def verify_archive(archive, context=None):
+    from build_paths import paths
+    from hwrm_archive import verify_payload
 
-    archive = Path(archive)
-    sources = index(SOURCE)
-    results = []
-    from language_data import LANGUAGES
-
-    for path, language in [
-        (archive, None),
-        *[(archive.parent / (language + ".big"), language) for language in LANGUAGES],
-    ]:
-        target = BUILD / ("extracted-" + (language or "main"))
-        assert target.resolve().is_relative_to(BUILD.resolve())
-        if target.exists():
-            shutil.rmtree(target)
-        target.mkdir()
-        proc = subprocess.run(
-            [str(TOOL), "-a", str(path), "-e", short_path(target)], capture_output=True, text=True
-        )
-        save(
-            WORK / (target.name + "-log.json"),
-            {"exit": proc.returncode, "log": proc.stdout + proc.stderr},
-        )
-        assert proc.returncode == 0, (path, proc.returncode)
-        expected = {}
-        for name, source in sources.items():
-            if data_file(name):
-                if language is None:
-                    expected[name] = sha(source)
-            elif name.startswith("locale/" + (language or "English").lower() + "/"):
-                expected[name.split("/", 2)[2]] = sha(source)
-        assert {name: sha(p) for name, p in index(target).items()} == expected, path
-        results.append(
-            {
-                "archive": str(path),
-                "sha256": sha(path),
-                "files": len(expected),
-                "aliases": native_aliases(path),
-            }
-        )
-    report = {
-        "status": "passed",
-        "archives": results,
-        "full_extract_hash_comparison": True,
-        "engine_tested": False,
-        "installed": False,
-    }
-    save(WORK / "verification-package.json", report)
-    print(json.dumps(report))
+    context = context or paths()
+    report = verify_payload(context.source, archive)
+    save(context.work / "verification-package.json", report)
     return report
 
 
 if __name__ == "__main__":
-    verify_source()
+    import argparse
+    from build_paths import paths
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--candidate", action="store_true")
+    args = parser.parse_args()
+    verify_source(paths(args.candidate))

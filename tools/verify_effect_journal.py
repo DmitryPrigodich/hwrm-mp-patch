@@ -1,5 +1,9 @@
 """World rollback regressions. Lua 5.1 mocks do not prove native save/load."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 
 

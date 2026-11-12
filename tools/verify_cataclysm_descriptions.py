@@ -1,5 +1,9 @@
 """Description, native-dictionary and final callback contracts; no engine claim."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import re
 import json
 from lupa.lua51 import LuaRuntime
@@ -89,7 +93,6 @@ def verify(out, design):
             g.doscanpath = lambda *a: None
             vm.execute("strlower=string.lower;strsub=string.sub")
             g.GetProductionTimeSetting = lambda: 1
-            mode = [0]
             assert g.UI_RulesGetNumber is None
             assert g.GetGameSettingAsString is None
 

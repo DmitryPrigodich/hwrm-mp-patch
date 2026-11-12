@@ -1,5 +1,7 @@
 # Cataclysm Support Units mode
 
+> Reference only: SU is excluded from the current 2.4.6 candidate by owner decision on 2 November 2026. Published 2.4.5 and prior experiments are described below.
+
 [Русский](ru/CATACLYSM_2_4_5.md)
 
 Choose **HWMP 2.4.5 Cataclysm** under Game Type in skirmish/multiplayer. The existing Hiigaran, Vaygr, Kushan and Taiidan races share a weighted SU budget. Ordinary HWMP modes remain available in the same package.

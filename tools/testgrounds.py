@@ -4,6 +4,10 @@ Compose the already prepared full HWMP source plus isolated SCAR/menu resources.
 No gameplay definition may change, and neither consumers nor normal release move.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from project_credits import SHORT_CREDITS
 from datetime import datetime, timezone

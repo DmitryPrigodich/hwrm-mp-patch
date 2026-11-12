@@ -1,5 +1,9 @@
 """Real support-frigate docking and hyperspace, with mixed passenger baselines."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 
 def cases(add, volumes):
     result = []

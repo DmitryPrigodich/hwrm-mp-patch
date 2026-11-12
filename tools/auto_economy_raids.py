@@ -1,5 +1,9 @@
 """Three repeated native subsystem knockouts, with an alternate drop-off control."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 
 def cases(add, volumes, asteroids):
     result = []

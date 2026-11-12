@@ -1,5 +1,9 @@
 """Campaign-independent native BIG packaging and complete payload verification."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import struct
 import subprocess
 import shutil
@@ -87,7 +91,15 @@ def locale_toc(language, name, short):
 
 def package_source(source, release, filename, title):
     global ROOT
-    ROOT = Path(source).resolve()
+    previous = ROOT
+    try:
+        ROOT = Path(source).resolve()
+        return _package_source(release, filename, title)
+    finally:
+        ROOT = previous
+
+
+def _package_source(release, filename, title):
     release = Path(release).resolve()
     release.mkdir(parents=True, exist_ok=True)
     short = short_path(ROOT)

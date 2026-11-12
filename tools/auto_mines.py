@@ -1,6 +1,9 @@
 """Native SpaceMine targets held in place; no shipped weapon coefficients changed."""
 
-from pathlib import Path
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import re, shutil
 
 

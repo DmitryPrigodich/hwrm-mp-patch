@@ -1,5 +1,9 @@
 """Attach an owner-selected cover to existing, unpublished Workshop staging only."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 import json
 from pathlib import Path

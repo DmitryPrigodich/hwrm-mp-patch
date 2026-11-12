@@ -1,5 +1,9 @@
 """Offline regressions: never touch or stop a real game process."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import hashlib
 import os
 from pathlib import Path

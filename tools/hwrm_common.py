@@ -1,5 +1,9 @@
 """Shared, campaign-independent paths, file helpers and pinned native inputs."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import ctypes
 import hashlib
 import json

@@ -9,7 +9,7 @@ The repository composes pinned Test21 data with scoped overrides. It does not tr
 | Area | Implementation | Reason and constraint |
 |---|---|---|
 | Temporary ship effects | generated scripts/hwmp24/effects.lua | Each ship/squadron entry has its own original permission/speed plus a set of effect owners. Releasing one owner cannot release another. |
-| Native checkpoint journal | tools/templates/effect_journal.lua | Native SobGroup membership rewinds with the world; ship custom-code tables may retain post-save changes. Tables are caches, not authoritative save data. |
+| Native checkpoint journal | tools/templates/effects.lua | Native SobGroup membership rewinds with the world; ship custom-code tables may retain post-save changes. Tables are caches, not authoritative save data. |
 | Gravity callbacks | playerspatch/ships_util/lib/gravwells.lua | Save-safe previous target set, owner-scoped release on exit/finish/destruction and fast reassertion of unchanged locks. |
 | Transport | scripts/hwmp24/transport.lua | Preserve visibility and recover surviving off-map cargo on both support-frigate destruction paths. Redock progress cannot indefinitely hold release. |
 | Capture | SobGroup_NoSalvageScuttle plus ID forwarding | Native Dock can already report Scuttle=0. Keep the earlier idle permission by stable ship ID; do not guess an unknown cold-tow baseline. |
@@ -31,7 +31,7 @@ Public cooperation: `HWMP_SetAbilityAllowed(group, ability, allowed)` and `HWMP_
 
 ## Scoped numerical changes
 
-- Standard and2x Vaygr00 starts:7→6 collectors, matching Hiigaran6. Carrier/full-fleet starts already have6; empty starts remain empty.
+- Standard and2x `Vaygr00` starts:7→6 collectors, matching Hiigaran 6. Carrier/full-fleet starts already have6; empty starts remain empty.
 - Vaygr Assault Frigate: only the final speed-accuracy pair535/4→535/1.2 on three cannons. Other damage/range/falloff/cadence calls are preserved.
 - Missile platform right launcher:6000→5500 range. Conflicting early SuperUtilityArmour0.8 entry removed while retaining0.85. The missing Medium missile WF is a resource binding fix.
 

@@ -1,5 +1,9 @@
 """Native flight/attack geometry; resilient targets retain stock geometry/armour."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import re
 
 

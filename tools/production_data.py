@@ -1,5 +1,9 @@
 """Inspect native production/resource data; generate tooltip times, not game stats."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
 from pathlib import Path
 import re
@@ -110,9 +114,10 @@ def time_lua(values):
     )
 
 
-def generate():
+def generate(output=None):
+    output = Path(output) if output is not None else ROOT / "overrides"
     rows, values, _ = catalog()
-    target = ROOT / "overrides/scripts/productiontimes/buildtimes.lua"
+    target = output / "scripts/productiontimes/buildtimes.lua"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(time_lua(values), encoding="ascii", newline="\n")
     for number in range(5):
@@ -123,7 +128,7 @@ def generate():
             new = f'NewResourceType.{field}="${value}"'
             assert text.count(old) == 1, (relative, field)
             text = text.replace(old, new, 1)
-        target = ROOT / "overrides" / relative
+        target = output / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding="ascii", newline="\n")
     return {
@@ -213,7 +218,6 @@ def verify(source):
 def audit(source=None):
     rows, values, inputs = catalog(source)
     upstream = table(DONOR / "scripts/productiontimes/buildtimes.lua", "buildtimes")
-    files = effective_files(source)
     old_errors = []
     for name, shown in upstream.items():
         assert name in values, ("Uncatalogued upstream time", name)

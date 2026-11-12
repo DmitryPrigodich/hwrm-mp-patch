@@ -2,21 +2,18 @@
 
 [Русский](ru/README.md)
 
-## Current product
+## Current candidate 2.4.6
 
-- [Cataclysm rules and budgets](CATACLYSM_2_4_5.md)
-- [Known defects and validation limits](KNOWN_ISSUES.md)
-- [Current113ship prices](SUPPORT_UNITS_PRICES.md)
-- [Field acceptance checklist](CLOSURE_CHECKLIST.md)
-- [Install/use](LOCAL_INSTALLATION.md), [localization](LOCALIZATION.md), [credits](CREDITS.md)
+- [Review changes and SU removal](REVIEW_2_4_6.md)
+- [Known issues](KNOWN_ISSUES.md), [field acceptance](CLOSURE_CHECKLIST.md)
+- [Installation](LOCAL_INSTALLATION.md), [localization](LOCALIZATION.md), [credits](CREDITS.md)
 
 ## Development
 
-- [Architecture](PATCH_ENGINEERING.md), [update/release](UPDATE_WORKFLOW.md), [Workshop](WORKSHOP.md)
-- [Functional data and machine records](DATA_FORMATS.md)
-- [Native manual tests](NATIVE_TESTS.md), [SU harness](SU_BOUNDARY_TESTS.md)
-- [Latest review](CODE_REVIEW.md), [current publication](WORKSHOP_RELEASE.md)
+- [Architecture](PATCH_ENGINEERING.md), [update procedure](UPDATE_WORKFLOW.md)
+- [Functional data](DATA_FORMATS.md), [native tests](NATIVE_TESTS.md)
+- [Publication receipt (2.4.5 still live)](WORKSHOP_RELEASE.md), [Workshop tooling](WORKSHOP.md)
 
-## Historical material
+## Prior SU work
 
-[Archive index](archive/README.md): old audits, candidate identities, negative experiments and publication receipts. Historical numbers are not current instructions. English current pages live here; Russian current pages are under ru/. Archived source-language investigations remain labeled as such.
+Published 2.4.5: [rules](CATACLYSM_2_4_5.md), [prices](SUPPORT_UNITS_PRICES.md). Unpublished [Test1](CATACLYSM_2_4_6_TEST.md) and [price/capacity proposal](BACKLOG_2_4_6.md) are not candidate features. [Historical archive](archive/README.md).

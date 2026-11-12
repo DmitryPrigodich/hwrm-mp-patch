@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "files": [
+    "scripts/hwmp24/tooltips.lua",
+    "scripts/hwmp24/transport.lua"
+  ]
+}

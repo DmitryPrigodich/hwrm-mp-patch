@@ -1,5 +1,9 @@
 """Launch/collect only this task's isolated native automatic test processes."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from collections import Counter
 from datetime import datetime, timezone
@@ -10,7 +14,7 @@ import shutil
 import subprocess
 import time
 import zlib
-from hwrm_common import PROJECT, GAME, sha, save
+from hwrm_common import GAME, sha, save
 from auto_testgrounds import WORK, MODES
 from install_hwmp24 import active_processes
 

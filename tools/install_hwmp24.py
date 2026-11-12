@@ -5,6 +5,10 @@ The native launcher enumerates Steam subscriptions and the Banana slot only;
 this installer deliberately leaves that occupied slot alone.
 """
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -14,30 +18,42 @@ import shutil
 import subprocess
 
 from hwrm_common import GAME, PROJECT, index, save, sha
-from hwmp24 import IDENTITY, RELEASE, WORK
+from hwmp24 import IDENTITY, RELEASE
 
 MARKER = "package-id.txt"
 from release_layout import RELEASE_PAYLOAD as PAYLOAD
 
+LEGACY_REMOVED = frozenset(
+    name + suffix
+    for name in ("CATACLYSM_2_4_5", "SUPPORT_UNITS_PRICES", "SU_BOUNDARY_TESTS")
+    for suffix in (".md", ".ru.md")
+)
+LEGACY_REMOVED = LEGACY_REMOVED | {
+    "ASSET_DEDUPLICATION_2_4_1.md",
+    "ASSET_DEDUPLICATION_2_4_1.ru.md",
+    "NATIVE_FOLLOWUP_2026-10-25.md",
+}
 
-def release_files():
+
+def release_files(release=None):
+    release = Path(release) if release is not None else RELEASE
     sums = {}
-    for line in (RELEASE / "SHA256SUMS.txt").read_text(encoding="ascii").splitlines():
+    for line in (release / "SHA256SUMS.txt").read_text(encoding="ascii").splitlines():
         match = re.fullmatch(r"([0-9a-f]{64})  ([^/\\]+)", line)
         if not match or match[2] in sums:
             raise ValueError("Invalid release checksum list.")
         sums[match[2]] = match[1]
     if set(sums) != PAYLOAD:
         raise ValueError("Unexpected release files: " + repr(set(sums) ^ PAYLOAD))
-    if {p.name for p in RELEASE.iterdir()} != PAYLOAD | {"SHA256SUMS.txt"}:
+    if {p.name for p in release.iterdir()} != PAYLOAD | {"SHA256SUMS.txt"}:
         raise ValueError("Unexpected release directory contents.")
     for name, digest in sums.items():
-        if sha(RELEASE / name) != digest:
+        if sha(release / name) != digest:
             raise ValueError("Release checksum mismatch: " + name)
-    version = json.loads((RELEASE / "version.json").read_text(encoding="utf8"))
+    version = json.loads((release / "version.json").read_text(encoding="utf8"))
     if version["identity"] != IDENTITY:
         raise ValueError("Wrong package identity.")
-    verified = json.loads((WORK / "verification-package.json").read_text(encoding="utf8"))
+    verified = json.loads((release / "verification-package.json").read_text(encoding="utf8"))
     verified_sums = {Path(a["archive"]).name: a["sha256"] for a in verified["archives"]}
     if verified["status"] != "passed" or not verified["full_extract_hash_comparison"]:
         raise ValueError("Full archive verification is required.")
@@ -46,7 +62,7 @@ def release_files():
     for name in ("HWMPPatch24.big", *(language + ".big" for language in LANGUAGES)):
         if verified_sums.get(name) != sums[name]:
             raise ValueError("Archive verification is stale: " + name)
-    return {**sums, "SHA256SUMS.txt": sha(RELEASE / "SHA256SUMS.txt")}, version
+    return {**sums, "SHA256SUMS.txt": sha(release / "SHA256SUMS.txt")}, version
 
 
 def other_mod_files(root, target):
@@ -75,20 +91,38 @@ def active_processes(game):
     ]
 
 
-def install(game_root=GAME, apply=False):
+def install(game_root=GAME, apply=False, release=None):
+    release = Path(release) if release is not None else RELEASE
     game = Path(game_root).resolve()
     mods = (game / "HomeworldRM/DataWorkshopMODs").resolve(strict=True)
     target = (mods / "HWMPPatch24").resolve()
     if target.parent != mods or target.name != "HWMPPatch24" or target.is_symlink():
         raise ValueError("Unsafe installation target.")
-    sums, version = release_files()
+    sums, version = release_files(release)
+    obsolete = set()
     if target.exists():
         if not (target / MARKER).is_file() or (target / MARKER).read_text().strip() != IDENTITY:
             raise ValueError("Existing folder is not an owned HWMP24 installation: " + str(target))
-        if set(index(target)) - {n.lower() for n in PAYLOAD | {MARKER, "SHA256SUMS.txt"}}:
+        if set(index(target)) - {
+            n.lower() for n in PAYLOAD | LEGACY_REMOVED | {MARKER, "SHA256SUMS.txt"}
+        }:
             raise ValueError("Existing folder has unowned files; preserve them before updating.")
         if any(p.is_symlink() or p.is_junction() for p in target.rglob("*")):
             raise ValueError("Links are not allowed inside the installed package.")
+        obsolete = {
+            name for name in LEGACY_REMOVED if (target / name).is_file() and name not in PAYLOAD
+        }
+        if obsolete:
+            prior = {}
+            for line in (target / "SHA256SUMS.txt").read_text(encoding="ascii").splitlines():
+                match = re.fullmatch(r"([0-9a-f]{64})  ([^/\\]+)", line)
+                if not match:
+                    raise ValueError("Invalid prior ownership checksum list")
+                prior[match[2]] = match[1]
+            for name in obsolete:
+                if prior.get(name) != sha(target / name):
+                    raise ValueError("Changed or unproven obsolete owned file: " + name)
+
     result = {
         "identity": IDENTITY,
         "target": str(target),
@@ -132,10 +166,14 @@ def install(game_root=GAME, apply=False):
         temporary = target / (".hwmp24-" + name)
         if temporary.exists():
             raise ValueError("Unexpected staging file: " + str(temporary))
-        shutil.copy2(RELEASE / name, temporary)
+        shutil.copy2(release / name, temporary)
         if sha(temporary) != sums[name]:
             raise RuntimeError("Staging hash mismatch: " + name)
         temporary.replace(target / name)
+    # Obsolete SU documents are removed only after verified ownership and a full backup.
+    for name in obsolete:
+        (target / name).unlink()
+    result["removed_legacy_owned_files"] = sorted(obsolete)
     (target / MARKER).write_text(IDENTITY + "\n", encoding="ascii")
     if {n: sha(target / n) for n in sums} != sums:
         raise RuntimeError("Installed payload differs from verified release.")
@@ -154,5 +192,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--install", action="store_true")
     parser.add_argument("--game-root", type=Path, default=GAME)
+    parser.add_argument("--candidate", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(install(args.game_root, args.install), ensure_ascii=False, indent=2))
+    from build_paths import paths
+
+    print(
+        json.dumps(
+            install(args.game_root, args.install, paths(args.candidate).release),
+            ensure_ascii=False,
+            indent=2,
+        )
+    )

@@ -1,47 +1,16 @@
-[h1]HWMP Patch 2.4.5 - Cataclysm (Field Test)[/h1]
-Standalone Homeworld Remastered multiplayer patch based on the complete Players Patch 2.3Test build21, retaining the original four races. Use this package by itself; do not stack another Players Patch. Every MP client needs the same Workshop revision.
+[h1]HWMP Patch 2.4.6[/h1]
+Standalone Homeworld Remastered patch for the original four races, based on Players Patch 2.3 Test build 21. Use this complete package by itself and matching archives on every multiplayer peer.
 
-[h2]Cataclysm: Support Units mode[/h2]
-Choose [b]HWMP 2.4.5 Cataclysm[/b] under Game Type in skirmish/multiplayer. The existing Hiigaran, Vaygr, Kushan and Taiidan races use a shared weighted SU pool. Ordinary HWMP modes remain available.
+[h2]Support Units removed[/h2]
+Support Units have been removed in 2.4.6. HWRM's native cap accounting did not reliably enforce the weighted fleet budget: some low-cost ships contributed no supply, and construction could stop too early or exceed the intended limit. Classic unit caps are restored; the other fixes and localization improvements remain.
 
-[list]
-[*] Nominal budgets: Small 1440; Normal 1920; Large 2560; Huge 3840; Vast 7680.
-[*] SU prices in construction, tooltips and selected-ship descriptions; owned-fleet counter below Resource Units.
-[*] Existing carrier/shipyard count caps remain; carriers add no capacity. Zero-SU probes keep classic caps.
-[*] The HUD counts full configured squadron entries, including docked ones. Queued construction is excluded; surviving physical hulls are not measured.
-[*] four original-race menu emblems
-[*] Russian naming/encoding corrections
-[/list]
+[b]Почему убраны СУ:[/b] движок ненадёжно считал общий бюджет: часть дешёвых кораблей не занимала СУ, а строительство могло блокироваться раньше лимита или превышать его. В 2.4.6 возвращены классические лимиты; остальные исправления сохранены.
 
-[h2]Known SU limitation — please read[/h2]
-[b]The SU limiter is currently unreliable.[/b]
+[h2]Improvements retained[/h2]
+Gravity-well restoration and specific tested save/load fixes; support-frigate cargo recovery; capture/self-destruct permissions; independent docking recovery; Taiidan missile defense; Vaygr Medium missile binding; two scoped missile corrections; six-collector starts; approved Assault Frigate accuracy coefficient 1.2; six-language timing tooltips; Russian naming corrections; four race emblems and menu music.
 
-Native accounting of small fractional ship weights differs from the displayed nominal prices. Some compositions are refused early; others can exceed the displayed budget. The size of the mismatch depends on fleet composition and is not necessarily small.
-
-Native tests with the former 1900 budget reproduced ordinary-UI refusal at 1885 for a 15 SU order. Separate AI/backend tests completed paid construction to 1915/1900 even though every request first received CanBuild approval. The same overflow through the human UI, simultaneous producers, cancellations, replenishment, capture, saves/mode switching and two-client synchronization are not yet verified.
-
-[b]This update changes ceilings to multiples of 32; it does not fix fractional ship-cost accounting.[/b]
-
-Startup and readable SU UI have been checked on the preceding runtime. Source/Lua4 checks cover the new ceilings; no new native run of this ceiling revision is claimed. Full-match balance/stability remain field tests, without a crash-free guarantee.
-
-[h2]Shared fixes[/h2]
-[list]
-[*] Owner-safe gravity restoration with specific tested new save/load cases;
-[*] support-frigate cargo recovery;
-[*] per-ship capture/self-destruct permissions;
-[*] independent stalled-docking timers;
-[*] refreshed Taiidan missile-defense targets;
-[*] restored Vaygr Medium missile weapon-fire binding.
-[*] Accepted Hiigaran/Vaygr6/6 collector starts,
-[*] Accepted Assault Frigate final speed-accuracy multiplier 1.2
-[*] Accepted two scoped missile corrections.
-[*] Six native tooltip languages.
-[*] Old active-well saves predating the journal are not guaranteed.
-[/list]
-
-Please report Game Type, Unit Cap, race, matching archive hashes, displayed SU, queue state, RU spent and reproducible actions.
-Known limitations and current documentation:
-* https://github.com/DmitryPrigodich/hwrm-mp-patch/blob/codex/hwrm-mp-patch/docs/KNOWN_ISSUES.md
+[h2]Validation limits[/h2]
+Source, Lua 4, regression and full seven-BIG payload checks passed. A basic native launch and owner visual check completed; full matches and two-client validation of this release remain pending. Old active-gravity saves predating the journal are not guaranteed. Please report version/archive hashes, mode, race and reproducible actions.
 
 [h2]Credits[/h2]
 [list]

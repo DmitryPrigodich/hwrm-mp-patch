@@ -1,5 +1,9 @@
 """Check current Markdown links, EN/RU release pairs and source/readme consistency."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from pathlib import Path
 import re
 from hwrm_common import PROJECT
@@ -27,6 +31,15 @@ def verify():
         *(PROJECT / "docs").glob("*.md"),
         *(PROJECT / "docs/ru").glob("*.md"),
     ]
+    from prose_style import glued_prose
+
+    style = [
+        (str(p.relative_to(PROJECT)), glued_prose(p.read_text(encoding="utf8")))
+        for p in current
+        if "<!-- historical-redirect -->" not in p.read_text(encoding="utf8")
+    ]
+    bad_style = [(name, errors) for name, errors in style if errors]
+    assert not bad_style, bad_style
     errors = [error for p in current for error in broken_links(p, PROJECT)]
     assert not errors, errors
     documents = document_map()

@@ -1,5 +1,7 @@
 # Current Support Units prices
 
+> Reference only: SU is excluded from the current 2.4.6 candidate by owner decision on 2 November 2026. Published 2.4.5 and prior experiments are described below.
+
 [Русский](ru/SUPPORT_UNITS_PRICES.md)
 
 Current nominal prices for113 types. Entry price = per-hull price × configured buildBatch; this is not a physical surviving-hull measurement. Native enforcement remains defective: [known issues](KNOWN_ISSUES.md).

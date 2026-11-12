@@ -1,14 +1,18 @@
 """Temporary-filesystem checks for owned installation, rollback and slot restoration."""
 
-import hashlib
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 import json
+import shutil
 from pathlib import Path
 import tempfile
 from unittest.mock import patch
 
 import install_hwmp24 as installer
 import launcher_slot
-from hwrm_common import index, sha
+from hwrm_common import sha
 from hwmp24 import IDENTITY
 from language_data import LANGUAGES
 
@@ -52,6 +56,12 @@ def verify():
                 }
             )
         )
+        shutil.copy2(work / "verification-package.json", release / "verification-package.json")
+        sums = {path.name: sha(path) for path in release.iterdir() if path.name != "SHA256SUMS.txt"}
+        (release / "SHA256SUMS.txt").write_text(
+            "".join(digest + "  " + name + "\n" for name, digest in sorted(sums.items())),
+            encoding="ascii",
+        )
         game = root / "game"
         mods = game / "HomeworldRM/DataWorkshopMODs"
         slot = mods / "Gearbox/BananaMothership"
@@ -65,7 +75,6 @@ def verify():
         original = launcher_slot.inventory(slot)
         with (
             patch.object(installer, "RELEASE", release),
-            patch.object(installer, "WORK", work),
             patch.object(installer, "PROJECT", root),
             patch.object(installer, "active_processes", return_value=[]),
         ):
@@ -73,6 +82,18 @@ def verify():
             assert not plan["installed"] and not (mods / "HWMPPatch24").exists()
             installer.install(game, True)
             installer.install(game, True)
+            legacy = mods / "HWMPPatch24/SUPPORT_UNITS_PRICES.md"
+            legacy.write_text("owned old SU document", encoding="utf8")
+            checksums = mods / "HWMPPatch24/SHA256SUMS.txt"
+            checksums.write_text(
+                checksums.read_text(encoding="ascii") + sha(legacy) + "  " + legacy.name + "\n",
+                encoding="ascii",
+            )
+            legacy.write_text("changed user document", encoding="utf8")
+            expect_error(lambda: installer.install(game, True), ValueError)
+            legacy.write_text("owned old SU document", encoding="utf8")
+            migrated = installer.install(game, True)
+            assert not legacy.exists() and migrated["removed_legacy_owned_files"] == [legacy.name]
             assert (mods / "unrelated.txt").read_text() == "preserve me"
             assert launcher_slot.inventory(slot) == original
             (mods / "HWMPPatch24/unowned.txt").write_text("do not replace")
@@ -115,6 +136,7 @@ def verify():
             "read-only plan",
             "shared payload",
             "repeat/backup",
+            "verified obsolete SU document migration",
             "unowned refusal",
             "checksum refusal",
             "slot roundtrip",

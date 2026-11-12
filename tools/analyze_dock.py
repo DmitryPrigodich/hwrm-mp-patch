@@ -1,5 +1,9 @@
 """Derived native Dock invariants; raw observations remain unchanged."""
 
+from tool_safety import ensure_normal_python
+
+ensure_normal_python()
+
 from collections import defaultdict, Counter
 
 
